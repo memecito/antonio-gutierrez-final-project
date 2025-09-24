@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,9 +23,13 @@ public class Product {
     private Double price;
     @Enumerated
     @Column(name = "status")
-    private Status status;
+    private StatusProduct status;
     @Column(name = "created")
     private LocalDate createdAt;
 
+    //RELATIONS
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OrderProduct> orders;
 
 }

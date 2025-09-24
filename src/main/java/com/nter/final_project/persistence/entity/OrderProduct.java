@@ -11,19 +11,20 @@ import lombok.Setter;
 @Table(name = "ordersproducts")
 public class OrderProduct {
 
-    //todo crear las realciones OneToMany con order y product
-    //todo establecer clave primaria con las dos relaciones
-
     @EmbeddedId
+    private OrderProductId id = new OrderProductId();
+
     @Column(name = "amount")
-    private int amount;
+    private Integer amount;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    //RELATIONS
+    @ManyToOne
+    @MapsId("productId")
+    @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @ManyToOne
+    @MapsId("orderId")
+    @JoinColumn(name = "order_id")
     private Order order;
 }

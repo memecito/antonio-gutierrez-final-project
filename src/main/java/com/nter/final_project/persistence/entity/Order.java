@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,4 +23,8 @@ public class Order {
     private StatusOrder status;
     @Column(name = "created")
     private LocalDate createdAt;
+
+    //RELATIONS
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OrderProduct> products;
 }
