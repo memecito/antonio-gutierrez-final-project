@@ -15,7 +15,7 @@ public class Country {
 
     @Id
     @Column(name = "code", unique = true, nullable = false)
-    private Integer code;
+    private String code;
 
     @Column(name = "name", nullable = false)
     private String name;
