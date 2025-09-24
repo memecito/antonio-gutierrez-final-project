@@ -27,4 +27,8 @@ public class ApiUser {
     private LocalDate createdAt;
     @Column(name = "active")
     private boolean isActive;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "code")
+    private Country country;
 }
