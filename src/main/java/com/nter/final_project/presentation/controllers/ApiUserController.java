@@ -4,6 +4,7 @@ import com.nter.final_project.application.mappers.ApiUserMapped;
 import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
+import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
 import com.nter.final_project.presentation.dto.country.CountryInDto;
 import lombok.RequiredArgsConstructor;
@@ -34,27 +35,28 @@ public class ApiUserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
+    public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<?> created(@RequestBody ApiUserInDto apiUser) {
-        return ResponseEntity.ok("post user, logica por hacer");
+    public ResponseEntity<ApiUserOutDto> created(@RequestBody ApiUserInDto apiUser) {
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.created(apiUserMapped.toModel(apiUser))));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ApiUserInDto apiUser) {
-        return ResponseEntity.ok("update, logica por hacer");
+    public ResponseEntity<ApiUserOutDto> update(@PathVariable Long id, @RequestBody ApiUserInDto apiUser) {
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id,apiUserMapped.toModel(apiUser))));
     }
 
     @PutMapping("/{id}/country")
-    public ResponseEntity<?> updateCountry(@PathVariable Long id, @RequestBody CountryInDto country) {
+    public ResponseEntity<ApiUserOutDto> updateCountry(@PathVariable Long id, @RequestBody CountryInDto country) {
         return ResponseEntity.ok("update country, logica por hacer");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleted(@PathVariable Long id) {
+        apiUserService.deleted(id);
         return ResponseEntity.ok("delete user, logica por hacer");
     }
 }

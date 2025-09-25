@@ -1,6 +1,7 @@
 package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.services.ApiUserService;
+import com.nter.final_project.exception.EmailAlreadyExistException;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
@@ -36,29 +37,35 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Override
     public List<ApiUser> getByName(String name) {
         return apiUserRepository.findByFullName(name).orElseThrow(
-                () -> new EntityNotFoundException("No se ha encontrado ningun usuario con ese nombre")
+                () -> new EntityNotFoundException("No se ha encontrado ningun usuario con ese nombre, APS03")
         );
     }
 
     @Override
     public ApiUser getByEmail(String email) {
         return apiUserRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("No se ha encontrado ningun usuario con ese nombre")
+                () -> new EntityNotFoundException("No se ha encontrado ningun usuario con ese nombre, APS04")
         );
     }
 
     @Override
     public ApiUser created(ApiUser apiUser) {
-        return null;
+        if (apiUserRepository.findByEmail(apiUser.getEmail()).isPresent())
+            throw new EmailAlreadyExistException("este email ya esta registrado, APS05");
+
+        return apiUserRepository.save(apiUser);
     }
 
     @Override
     public ApiUser update(Long id, ApiUser apiUser) {
+
+
         return null;
     }
 
     @Override
     public void deleted(Long id) {
-
+        getById(id);
+        apiUserRepository.deleteById(id);
     }
 }
