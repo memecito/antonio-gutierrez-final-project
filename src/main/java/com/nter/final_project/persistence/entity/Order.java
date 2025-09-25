@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -18,11 +19,11 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     private Long id;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private StatusOrder status;
     @Column(name = "created")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     //RELATIONS
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

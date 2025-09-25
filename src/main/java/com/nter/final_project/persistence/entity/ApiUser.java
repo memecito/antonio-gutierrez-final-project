@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -24,7 +25,7 @@ public class ApiUser {
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "created")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     @Column(name = "active")
     private boolean isActive;
 

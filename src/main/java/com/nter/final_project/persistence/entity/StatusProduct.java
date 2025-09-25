@@ -1,7 +1,9 @@
 package com.nter.final_project.persistence.entity;
 
 public enum StatusProduct {
+    IN_STOCK,
+    USED,
     AVAILABLE,
-    NOT_AVAILABLE,
+    OUT_STOCK,
     DISCONTINUED
 }

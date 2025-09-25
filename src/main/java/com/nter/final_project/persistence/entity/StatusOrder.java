@@ -1,7 +1,12 @@
 package com.nter.final_project.persistence.entity;
 
 public enum StatusOrder {
-    PENDING,
+    PENDING_PAYMENT,
+    PROCESSING,
+    AWAITING,
+    SHIPPED,
+    DELIVERED,
     COMPLETED,
-    CANCELLED
+    CANCELLED,
+    RETURNED
 }

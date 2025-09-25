@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -21,11 +22,11 @@ public class Product {
     private String name;
     @Column(name = "price")
     private Double price;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private StatusProduct status;
     @Column(name = "created")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     //RELATIONS
 

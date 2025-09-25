@@ -35,7 +35,7 @@ public class ApiUserServiceImpl implements ApiUserService {
 
     @Override
     public List<ApiUser> getByName(String name) {
-        return apiUserRepository.findByFullname(name).orElseThrow(
+        return apiUserRepository.findByFullName(name).orElseThrow(
                 () -> new EntityNotFoundException("No se ha encontrado ningun usuario con ese nombre")
         );
     }
