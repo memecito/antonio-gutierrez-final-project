@@ -1,0 +1,49 @@
+package com.nter.final_project.application.services.impl;
+
+import com.nter.final_project.application.services.ApiUserService;
+import com.nter.final_project.persistence.entity.ApiUser;
+import com.nter.final_project.persistence.repository.ApiUserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+@Service
+@RequiredArgsConstructor
+public class ApiUserServiceImpl implements ApiUserService {
+
+    private final ApiUserRepository apiUserRepository;
+    @Override
+    public Page<ApiUser> getAll(int pageNumber, int pageSize ) {
+        Pageable pageable= PageRequest.of(pageNumber, pageSize);
+        return apiUserRepository.findAll(pageable);
+    }
+
+    @Override
+    public ApiUser getById(Long id) {
+        return ;
+    }
+
+    @Override
+    public ApiUser getByName(String name) {
+        return null;
+    }
+
+    @Override
+    public ApiUser created(ApiUser apiUser) {
+        return null;
+    }
+
+    @Override
+    public ApiUser update(Long id, ApiUser apiUser) {
+        return null;
+    }
+
+    @Override
+    public void deleted(Long id) {
+
+    }
+}

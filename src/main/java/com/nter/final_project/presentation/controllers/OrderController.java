@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class OrderController {
     @GetMapping
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", required = false) int pageNumber,
+                                    @RequestParam(defaultValue = "10", required = false) int pageSize) {
         return ResponseEntity.ok("get all user, logica por hacer");
     }
 
