@@ -1,6 +1,7 @@
 package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.services.ApiUserService;
+import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.repository.ApiUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,10 @@ public class ApiUserServiceImpl implements ApiUserService {
 
     @Override
     public ApiUser getById(Long id) {
-        return ;
+
+        return apiUserRepository.findById(id).orElseThrow(
+                ()-> new UserNotFounException("Usuario con id: "+id+" no encontrado, APS01")
+        );
     }
 
     @Override

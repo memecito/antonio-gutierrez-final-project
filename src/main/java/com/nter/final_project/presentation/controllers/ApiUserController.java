@@ -35,7 +35,7 @@ public class ApiUserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        return ResponseEntity.ok("get by id, logica por hacer");
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id)));
     }
 
     @PostMapping

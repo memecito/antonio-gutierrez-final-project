@@ -35,7 +35,7 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(customError, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    @ExceptionHandler(value = {EntityNotFoundException.class})
+    @ExceptionHandler(value = {EntityNotFoundException.class, UserNotFounException.class})
     public ResponseEntity<CustomError> handleEntityNotFound(RuntimeException ex) {
         CustomError customError = new CustomError(
                 HttpStatus.NOT_FOUND.value(),
