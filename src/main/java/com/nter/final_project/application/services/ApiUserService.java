@@ -10,7 +10,8 @@ public interface ApiUserService {
 
     Page<ApiUser> getAll(int pageNumber,int pageSize);
     ApiUser getById(Long id);
-    ApiUser getByName(String name);
+    List<ApiUser> getByName(String name);
+    ApiUser getByEmail(String email);
     ApiUser created(ApiUser apiUser);
     ApiUser update(Long id, ApiUser apiUser);
     void deleted(Long id);
