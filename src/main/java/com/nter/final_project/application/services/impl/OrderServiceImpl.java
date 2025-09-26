@@ -2,7 +2,6 @@ package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.mappers.OrderMapped;
 import com.nter.final_project.application.services.OrderService;
-import com.nter.final_project.exception.EntityDuplicateException;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.repository.OrderRepository;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {

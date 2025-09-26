@@ -4,7 +4,6 @@ import com.nter.final_project.persistence.entity.Order;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 public interface OrderService {
     Page<Order> getAll(int pageNumber, int pageSize);

@@ -3,14 +3,11 @@ package com.nter.final_project.application.services.impl;
 import com.nter.final_project.application.services.OrderProductService;
 import com.nter.final_project.persistence.entity.OrderProduct;
 import com.nter.final_project.persistence.repository.OrderProductRepository;
-import com.nter.final_project.persistence.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class OrderProductServiceImpl implements OrderProductService {

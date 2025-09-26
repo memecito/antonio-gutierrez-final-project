@@ -3,8 +3,6 @@ package com.nter.final_project.application.services;
 import com.nter.final_project.persistence.entity.OrderProduct;
 import org.springframework.data.domain.Page;
 
-import java.util.Set;
-
 public interface OrderProductService {
     Page<OrderProduct> getAll(int pageNumber, int pageSize);
     OrderProduct getById(Long id);
