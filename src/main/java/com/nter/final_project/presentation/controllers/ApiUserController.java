@@ -3,7 +3,6 @@ package com.nter.final_project.presentation.controllers;
 import com.nter.final_project.application.mappers.ApiUserMapped;
 import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.persistence.entity.ApiUser;
-import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
@@ -11,7 +10,6 @@ import com.nter.final_project.presentation.dto.country.CountryInDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +29,9 @@ public class ApiUserController {
             @RequestParam(defaultValue = "0", required = false) int pageNumber,
             @RequestParam(defaultValue = "10", required = false) int pageSize
     ) {
-
-        return ResponseEntity.ok(apiUserService.getAll(pageNumber,pageSize).map(apiUserMapped::toDtoMini));
+        Page<ApiUser> userPage= apiUserService.getAll(pageNumber,pageSize);
+        Page<ApiUserOutDtoMini> userMiniPage=  userPage.map(apiUserMapped::toDtoMini);
+        return ResponseEntity.ok(userMiniPage);
     }
 
     @GetMapping("/{id}")
@@ -58,9 +57,6 @@ public class ApiUserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleted(@PathVariable Long id) {
         apiUserService.deleted(id);
-        return ResponseEntity.ok(BasicResponseDto.builder()
-                .status(HttpStatus.OK.value())
-                .message("usuario borrado")
-                .build());
+        return ResponseEntity.ok("delete user, logica por hacer");
     }
 }
