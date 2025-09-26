@@ -35,9 +35,4 @@ public class OrderController {
     public ResponseEntity<?> updateCountry(@PathVariable Long id, @RequestBody CountryInDto country) {
         return ResponseEntity.ok("update country, logica por hacer");
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleted(@PathVariable Long id){
-        return ResponseEntity.ok("delete user, logica por hacer");
-    }
 }

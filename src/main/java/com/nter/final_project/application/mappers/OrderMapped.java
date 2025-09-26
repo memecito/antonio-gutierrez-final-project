@@ -8,6 +8,7 @@ import com.nter.final_project.presentation.dto.order.OrderOutDto;
 import com.nter.final_project.presentation.dto.order.OrderOutDtoMIni;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = {ApiUserService.class, ProductService.class})
 public interface OrderMapped {
@@ -20,12 +21,14 @@ public interface OrderMapped {
 
     //INPUT
     @Mapping(target = "user", source = "user", qualifiedByName = "getUserById")
-    @Mapping(target = "products", source = "products", qualifiedByName = "getProductById")
+    //@Mapping(target = "products", source = "products", qualifiedByName = "getProductById")
     Order toModel(OrderInDto orderInDto);
 
     //OUPUT
     OrderOutDto toDto(Order order);
 
     OrderOutDtoMIni toDtoMini(Order order);
+
+    Order update(@MappingTarget Order target, Order source);
     //UPDATE
 }
