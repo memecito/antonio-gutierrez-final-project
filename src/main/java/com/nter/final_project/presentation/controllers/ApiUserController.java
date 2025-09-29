@@ -6,6 +6,7 @@ import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
+import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoOrders;
 import com.nter.final_project.presentation.dto.country.CountryInDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,11 @@ public class ApiUserController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id)));
+    }
+
+    @GetMapping("/{id}/orders")
+    public ResponseEntity<ApiUserOutDtoOrders> getUserOrderById(@PathVariable Long id) {
+        return ResponseEntity.ok(apiUserMapped.toDtoOrders(apiUserService.getById(id)));
     }
 
     @PostMapping
