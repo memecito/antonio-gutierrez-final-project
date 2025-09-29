@@ -1,12 +1,24 @@
 package com.nter.final_project.application.services.impl;
 
+import com.nter.final_project.application.mappers.OrderProductMapper;
 import com.nter.final_project.application.services.OrderProductService;
+import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.entity.OrderProduct;
+import com.nter.final_project.persistence.repository.OrderProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
+@RequiredArgsConstructor
 public class OrderProductServiceImpl implements OrderProductService {
+
+    private final OrderProductRepository productRepository;
+    private final OrderProductMapper mapper;
     @Override
     public Set<OrderProduct> getAll() {
         return Set.of();
@@ -23,8 +35,10 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
-    public OrderProduct created(OrderProduct OrderProduct) {
-        return null;
+    @Transactional
+    public List<OrderProduct> created(Order order) {
+        return productRepository.saveAll(order.getOrderProducts());
+
     }
 
     @Override

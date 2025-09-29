@@ -1,7 +1,6 @@
 package com.nter.final_project.persistence.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -9,11 +8,12 @@ import java.io.Serializable;
 @Embeddable
 public class OrderProductId implements Serializable {
 
-    @Column(name = "product_id")
-    private Long productId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
-    @Column(name = "order_id")
-    private Long orderId;
-
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
 }

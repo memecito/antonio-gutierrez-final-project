@@ -40,10 +40,12 @@ public class ApiUserController {
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id)));
     }
 
+    /*
     @GetMapping("/{id}/orders")
     public ResponseEntity<ApiUserOutDtoOrders> getUserOrderById(@PathVariable Long id) {
         return ResponseEntity.ok(apiUserMapped.toDtoOrders(apiUserService.getById(id)));
     }
+     */
 
     @PostMapping
     public ResponseEntity<ApiUserOutDto> created(@RequestBody ApiUserInDto apiUser) {
