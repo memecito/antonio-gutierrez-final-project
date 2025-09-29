@@ -11,5 +11,5 @@ public interface CountryService {
     Country getByName(String name);
     Country created(Country Country);
     Country update(Long id, Country Country);
-    void deleted(Long id);
+    void deleted(String code);
 }

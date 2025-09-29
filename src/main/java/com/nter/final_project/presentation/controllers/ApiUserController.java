@@ -50,7 +50,7 @@ public class ApiUserController {
     }
 
     @PutMapping("/{id}/country")
-    public ResponseEntity<ApiUserOutDto> updateCountry(@PathVariable Long id, @RequestBody CountryInDto country) {
+    public ResponseEntity<?> updateCountry(@PathVariable Long id, @RequestBody CountryInDto country) {
         return ResponseEntity.ok("update country, logica por hacer");
     }
 
