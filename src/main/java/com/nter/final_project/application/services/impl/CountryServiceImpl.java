@@ -50,8 +50,8 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public Country update(Long id, Country country) {
-        Country cFound = getByCode(country.getCode());
+    public Country update(String code, Country country) {
+        Country cFound = getByCode(code);
         return countryMapped.update(cFound, country);
     }
 

@@ -1,8 +1,17 @@
 package com.nter.final_project.presentation.controllers;
 
+import com.nter.final_project.application.mappers.OrderMapped;
+import com.nter.final_project.application.services.OrderService;
+import com.nter.final_project.persistence.repository.OrderRepository;
+import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
 import com.nter.final_project.presentation.dto.country.CountryInDto;
+import com.nter.final_project.presentation.dto.order.OrderInDto;
+import com.nter.final_project.presentation.dto.order.OrderOutDto;
+import com.nter.final_project.presentation.dto.order.OrderOutDtoMIni;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,34 +19,41 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
+
+    private final OrderService orderService;
+    private final OrderMapped orderMapped;
+
+
+
     @GetMapping
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0", required = false) int pageNumber,
-                                    @RequestParam(defaultValue = "10", required = false) int pageSize) {
-        return ResponseEntity.ok("get all user, logica por hacer");
+    public ResponseEntity<Page<OrderOutDtoMIni>> getAll(@RequestParam(defaultValue = "0", required = false) int pageNumber,
+                                                       @RequestParam(defaultValue = "10", required = false) int pageSize) {
+        return ResponseEntity.ok(orderService.getAll(pageNumber,pageSize)
+                .map(orderMapped::toDtoMini));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
-        return ResponseEntity.ok("get by id, logica por hacer");
+    public ResponseEntity<OrderOutDto> getById(@PathVariable Long id) {
+
+        return ResponseEntity.ok(orderMapped.toDto(orderService.getById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<?> created(@RequestBody ApiUserInDto apiUser) {
-        return ResponseEntity.ok("post user, logica por hacer");
+    public ResponseEntity<OrderOutDto> created(@RequestBody OrderInDto order) {
+        return ResponseEntity.ok(orderMapped.toDto(orderService.created(orderMapped.toModel(order))));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ApiUserInDto apiUser) {
-        return ResponseEntity.ok("update, logica por hacer");
-    }
-
-    @PutMapping("/{id}/country")
-    public ResponseEntity<?> updateCountry(@PathVariable Long id, @RequestBody CountryInDto country) {
-        return ResponseEntity.ok("update country, logica por hacer");
+    public ResponseEntity<OrderOutDto> update(@PathVariable Long id, @RequestBody OrderInDto order) {
+        return ResponseEntity.ok(orderMapped.toDto(orderService.update(id,orderMapped.toModel(order))));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleted(@PathVariable Long id){
-        return ResponseEntity.ok("delete user, logica por hacer");
+    public ResponseEntity<BasicResponseDto> deleted(@PathVariable Long id) {
+        orderService.deleted(id);
+        return ResponseEntity.ok(BasicResponseDto.builder()
+                .status(HttpStatus.OK.value())
+                .message("Orden eliminada")
+                .build());
     }
 }

@@ -10,6 +10,6 @@ public interface CountryService {
     Country getByCode(String code);
     Country getByName(String name);
     Country created(Country Country);
-    Country update(Long id, Country Country);
+    Country update(String code, Country Country);
     void deleted(String code);
 }
