@@ -1,0 +1,30 @@
+¿como creo un pedido?
+¿puedo crear una orden directamente y luego ir añadiendo productos?
+
+para mi lo logico es crear un OrderProduct directamente, es decir, creo una orden y dentro
+de esa orden añado los productos y la cantidad, con lo cual me creo un
+Dto de OrderProdcut que contenga un dto de order y un array con los id de los productos y las cantidades
+es decir un array de objetos "id, amount";
+con lo que quedaria:
+un Json:
+{
+    "user": "id",
+    "products":
+    [
+        {
+            "product": "id",
+            "amount": "number"
+        },
+        {
+            "product": "id",
+            "amount": "number"
+        },
+        {
+            "product": "id",
+            "amount": "number"
+        }
+    ]
+}
+
+Otra consideracion es que fuera desde el usuario desde donde se creara el pedido
+entonces solo tendira que mandar una lista de productos y cantidades...
