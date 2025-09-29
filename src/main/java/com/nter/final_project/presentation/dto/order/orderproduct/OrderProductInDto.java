@@ -1,4 +1,4 @@
-package com.nter.final_project.presentation.dto.order;
+package com.nter.final_project.presentation.dto.order.orderproduct;
 
 import lombok.Getter;
 import lombok.Setter;
