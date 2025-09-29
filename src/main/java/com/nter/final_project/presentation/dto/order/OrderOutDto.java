@@ -12,7 +12,7 @@ public record OrderOutDto(
         StatusOrder status,
         LocalDate createdAt,
         ApiUserOutDtoMini user,
-        Set<OrderProductOutDtoMini> orderProduct
+        Set<OrderProductOutDtoMini> products
 
         //todo falta establecer como se ven los productos
 ) {

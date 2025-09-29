@@ -20,8 +20,6 @@ public class OrderController {
     private final OrderService orderService;
     private final OrderMapped orderMapped;
 
-
-
     @GetMapping
     public ResponseEntity<Page<OrderOutDtoMIni>> getAll(@RequestParam(defaultValue = "0", required = false) int pageNumber,
                                                        @RequestParam(defaultValue = "10", required = false) int pageSize) {
