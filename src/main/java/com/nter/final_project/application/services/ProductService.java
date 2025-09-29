@@ -4,8 +4,6 @@ import com.nter.final_project.persistence.entity.Product;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 
-import java.util.Set;
-
 public interface ProductService {
     Page<Product> getAll(int pageNumber, int pageSize);
     @Named("getProductById")
