@@ -2,9 +2,10 @@ package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.services.OrderProductService;
 import com.nter.final_project.persistence.entity.OrderProduct;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
-
+@Service
 public class OrderProductServiceImpl implements OrderProductService {
     @Override
     public Set<OrderProduct> getAll() {

@@ -3,7 +3,9 @@ package com.nter.final_project.application.services.impl;
 import com.nter.final_project.application.services.ProductService;
 import com.nter.final_project.persistence.entity.Product;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ProductServiceImpl implements ProductService {
     @Override
     public Page<Product> getAll(int pageNumber,int pageSize) {

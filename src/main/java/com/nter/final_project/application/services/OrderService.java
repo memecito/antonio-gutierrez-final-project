@@ -2,6 +2,8 @@ package com.nter.final_project.application.services;
 
 import com.nter.final_project.persistence.entity.Order;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
 
 public interface OrderService {
     Page<Order> getAll(int pageNumber, int pageSize);

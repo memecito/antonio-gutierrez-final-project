@@ -3,7 +3,9 @@ package com.nter.final_project.application.services.impl;
 import com.nter.final_project.application.services.OrderService;
 import com.nter.final_project.persistence.entity.Order;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 
+@Service
 public class OrderServiceImpl implements OrderService {
     @Override
     public Page<Order> getAll(int pageNumber, int pageSize) {
