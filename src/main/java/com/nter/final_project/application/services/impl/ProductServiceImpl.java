@@ -1,39 +1,64 @@
 package com.nter.final_project.application.services.impl;
 
+import com.nter.final_project.application.mappers.ProductMapped;
 import com.nter.final_project.application.services.ProductService;
+import com.nter.final_project.exception.EntityDuplicateException;
+import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Product;
+import com.nter.final_project.persistence.entity.StatusProduct;
+import com.nter.final_project.persistence.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
+
+    private final ProductRepository productRepository;
+    private final ProductMapped productMapped;
     @Override
     public Page<Product> getAll(int pageNumber,int pageSize) {
-        return null;
+        Pageable pageable= PageRequest.of(pageNumber, pageSize);
+        return productRepository.findAll(pageable);
     }
 
     @Override
     public Product getById(Long id) {
-        return null;
+
+        return productRepository.findById(id).orElseThrow(
+                ()-> new EntityNotFoundException("Producto no encontrado, PS01")
+        );
     }
 
     @Override
     public Product getByName(String name) {
-        return null;
+
+        return productRepository.findByName(name).orElseThrow(
+                ()-> new EntityNotFoundException("Producto no encontrado, PS02")
+        ) ;
     }
 
     @Override
-    public Product created(Product Product) {
-        return null;
+    public Product created(Product product) {
+        if(productRepository.findByName(product.getName()).isPresent())
+            throw new EntityDuplicateException("Ya existe un producto con este nombre");
+        return productRepository.save(product);
     }
 
     @Override
-    public Product update(Long id, Product Product) {
-        return null;
+    public Product update(Long id, Product product) {
+        Product prorductFound= getById(id);
+        return productMapped.update(prorductFound, product);
     }
 
     @Override
     public void deleted(Long id) {
+        Product productFound= getById(id);
+        productFound.setStatus(StatusProduct.DISCONTINUED);
+        productRepository.save(productFound);
 
     }
 }

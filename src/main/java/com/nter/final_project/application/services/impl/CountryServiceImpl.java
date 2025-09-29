@@ -59,6 +59,5 @@ public class CountryServiceImpl implements CountryService {
     public void deleted(String code) {
         getByCode(code);
         countryRepository.deleteByCode(code);
-
     }
 }

@@ -65,7 +65,8 @@ public class ApiUserServiceImpl implements ApiUserService {
 
     @Override
     public void deleted(Long id) {
-        getById(id);
-        apiUserRepository.deleteById(id);
+        ApiUser userFound= getById(id);
+        userFound.setActive(false);
+        apiUserRepository.save(userFound);
     }
 }
