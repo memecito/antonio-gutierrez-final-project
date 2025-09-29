@@ -27,7 +27,7 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public Country getByCode(String code) {
-        return countryRepository.findByCode(code).orElseThrow(
+        return countryRepository.findByCode(code.toUpperCase()).orElseThrow(
                 () -> new EntityNotFoundException("pais no encontrado, CS01")
         );
     }
@@ -42,11 +42,12 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public Country created(Country country) {
-        if (countryRepository.findByCode(country.getCode()).isPresent())
+        if (countryRepository.findByCode(country.getCode().toUpperCase()).isPresent())
             throw new EntityDuplicateException("este codigo de pais ya esta en uso, CS03");
         if (countryRepository.findByName(country.getName()).isPresent())
             throw new EntityDuplicateException("este nombre de pais ya esta en uso, CS04");
-        return null;
+        country.setCode(country.getCode().toUpperCase());
+        return countryRepository.save(country);
     }
 
     @Override

@@ -5,9 +5,10 @@ import com.nter.final_project.presentation.dto.product.ProductInDto;
 import com.nter.final_project.presentation.dto.product.ProductOutDto;
 import com.nter.final_project.presentation.dto.product.ProductOutDtoMIni;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {OrderMapped.class})
 public interface ProductMapped {
 
     //INPUT
