@@ -6,6 +6,7 @@ import com.nter.final_project.persistence.entity.Product;
 import com.nter.final_project.persistence.repository.ProductRepository;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.product.ProductInDto;
+import com.nter.final_project.presentation.dto.product.ProductOutDto;
 import com.nter.final_project.presentation.dto.product.ProductOutDtoMIni;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
