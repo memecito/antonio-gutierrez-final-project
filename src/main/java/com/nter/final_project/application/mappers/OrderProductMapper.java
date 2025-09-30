@@ -10,11 +10,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(
-        componentModel = "spring"
+        componentModel = "spring",
+        uses = {ProductService.class}
 )
 public interface OrderProductMapper {
     //INPUT
-    @Mapping(source = "product_id", target = "product.id")
+    @Mapping(source = "product_id", target = "product", qualifiedByName = "getProductById")
     @Mapping(target = "order", ignore = true)
     OrderProduct toModel(OrderProductInDto orderProductInDto);
 

@@ -2,6 +2,7 @@ package com.nter.final_project.presentation.controllers;
 
 import com.nter.final_project.application.mappers.OrderMapped;
 import com.nter.final_project.application.services.OrderService;
+import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.order.OrderInDto;
 import com.nter.final_project.presentation.dto.order.OrderOutDto;
@@ -29,8 +30,8 @@ public class OrderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<OrderOutDto> getById(@PathVariable Long id) {
-
-        return ResponseEntity.ok(orderMapped.toDto(orderService.getById(id)));
+        Order order= orderService.getById(id);
+        return ResponseEntity.ok(orderMapped.toDto(order));
     }
 
     @PostMapping

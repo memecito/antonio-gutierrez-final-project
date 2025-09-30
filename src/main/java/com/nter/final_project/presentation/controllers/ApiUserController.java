@@ -1,6 +1,7 @@
 package com.nter.final_project.presentation.controllers;
 
 import com.nter.final_project.application.mappers.ApiUserMapped;
+import com.nter.final_project.application.mappers.CountryMapped;
 import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
@@ -22,15 +23,21 @@ public class ApiUserController {
     private final ApiUserService apiUserService;
     private final ApiUserMapped apiUserMapped;
 
+    private final CountryMapped countryMapped;
+
     @GetMapping
+    public ResponseEntity<Page<ApiUserOutDtoMini>> getAllActive(
+            @RequestParam(defaultValue = "0", required = false) int pageNumber,
+            @RequestParam(defaultValue = "10", required = false) int pageSize
+    ) {
+        return ResponseEntity.ok(apiUserService.getAllActive(pageNumber, pageSize)
+                .map(apiUserMapped::toDtoMini));
+    }
+    @GetMapping("/all")
     public ResponseEntity<Page<ApiUserOutDtoMini>> getAll(
             @RequestParam(defaultValue = "0", required = false) int pageNumber,
             @RequestParam(defaultValue = "10", required = false) int pageSize
     ) {
-        /*
-        Page<ApiUser> userPage = apiUserService.getAll(pageNumber, pageSize);
-        Page<ApiUserOutDtoMini> userMiniPage = userPage.map(apiUserMapped::toDtoMini);
-         */
         return ResponseEntity.ok(apiUserService.getAll(pageNumber, pageSize)
                 .map(apiUserMapped::toDtoMini));
     }
@@ -57,9 +64,9 @@ public class ApiUserController {
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id, apiUserMapped.toModel(apiUser))));
     }
 
-    @PutMapping("/{id}/country")
-    public ResponseEntity<?> updateCountry(@PathVariable Long id, @RequestBody CountryInDto country) {
-        return ResponseEntity.ok("update country, logica por hacer");
+    @PatchMapping("/{id}/country")
+    public ResponseEntity<ApiUserOutDto> updateCountry(@PathVariable Long id, @RequestBody CountryInDto country) {
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id, countryMapped.toModel(country))));
     }
 
     @DeleteMapping("/{id}")
@@ -70,4 +77,5 @@ public class ApiUserController {
                 .message("Usuario eliminado")
                 .build());
     }
+
 }

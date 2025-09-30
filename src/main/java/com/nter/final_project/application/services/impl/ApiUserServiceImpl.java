@@ -1,10 +1,13 @@
 package com.nter.final_project.application.services.impl;
 
+import com.nter.final_project.application.mappers.ApiUserMapped;
 import com.nter.final_project.application.services.ApiUserService;
+import com.nter.final_project.application.services.CountryService;
 import com.nter.final_project.exception.EmailAlreadyExistException;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
+import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.persistence.repository.ApiUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +22,9 @@ import java.util.List;
 public class ApiUserServiceImpl implements ApiUserService {
 
     private final ApiUserRepository apiUserRepository;
+    private final ApiUserMapped apiUserMapped;
+
+    private final CountryService countryService;
 
     @Override
     public Page<ApiUser> getAll(int pageNumber, int pageSize) {
@@ -27,8 +33,12 @@ public class ApiUserServiceImpl implements ApiUserService {
     }
 
     @Override
-    public ApiUser getById(Long id) {
+    public Page<ApiUser> getAllActive(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return apiUserRepository.findByIsActiveTrue(pageable);    }
 
+    @Override
+    public ApiUser getById(Long id) {
         return apiUserRepository.findById(id).orElseThrow(
                 () -> new UserNotFounException("Usuario con id: " + id + " no encontrado, APS01")
         );
@@ -52,15 +62,21 @@ public class ApiUserServiceImpl implements ApiUserService {
     public ApiUser created(ApiUser apiUser) {
         if (apiUserRepository.findByEmail(apiUser.getEmail()).isPresent())
             throw new EmailAlreadyExistException("este email ya esta registrado, APS05");
-
         return apiUserRepository.save(apiUser);
     }
 
     @Override
     public ApiUser update(Long id, ApiUser apiUser) {
+        ApiUser userFound= getById(id);
+        return apiUserMapped.update(userFound,apiUser);
+    }
 
-
-        return null;
+    @Override
+    public ApiUser updateCountry(Long id, Country country) {
+        ApiUser userFound= getById(id);
+        Country countryFound= countryService.getByCode(country.getCode());
+        userFound.setCountry(countryFound);
+        return apiUserRepository.save(userFound);
     }
 
     @Override
