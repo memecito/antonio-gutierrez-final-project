@@ -1,8 +1,7 @@
 package com.nter.final_project.presentation.dto.product;
 
-import com.nter.final_project.persistence.entity.OrderProduct;
+import com.nter.final_project.persistence.entity.OrdersProducts;
 import com.nter.final_project.persistence.entity.StatusProduct;
-import com.nter.final_project.presentation.dto.order.OrderOutDtoMIni;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -13,6 +12,6 @@ public record ProductOutDto(
         Double price,
         StatusProduct status,
         LocalDate createdAt,
-        Set<OrderProduct> orders
+        Set<OrdersProducts> orders
 ) {
 }

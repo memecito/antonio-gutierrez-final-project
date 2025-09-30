@@ -29,7 +29,8 @@ public class Product {
     private LocalDateTime createdAt;
 
     //RELATIONS
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OrderProduct> orders;
+    @OneToMany
+    private Set<OrdersProducts> ordersProducts;
+
 
 }

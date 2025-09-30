@@ -5,8 +5,7 @@ import com.nter.final_project.application.services.OrderProductService;
 import com.nter.final_project.application.services.OrderService;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Order;
-import com.nter.final_project.persistence.entity.OrderProduct;
-import com.nter.final_project.persistence.entity.OrderProductId;
+import com.nter.final_project.persistence.entity.OrdersProducts;
 import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,9 +46,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getById(Long id) {
-        return orderRepository.findById(id).orElseThrow(
+        Order oder=  orderRepository.findById(id).orElseThrow(
                 ()->new EntityNotFoundException("Orden no encontrada, OS01")
         );
+        return oder;
     }
 
     @Override
@@ -58,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
     public Order created(Order order) {
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(StatusOrder.PROCESSING);
-        Set<OrderProduct> orderProducts= order.getOrderProducts();
+       // Set<OrdersProducts> orderProducts= order.OrdersProducts();
         //order.setOrderProducts(null);
         orderRepository.save(order);
         productService.created(order);

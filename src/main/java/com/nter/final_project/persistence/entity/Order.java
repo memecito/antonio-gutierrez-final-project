@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -26,8 +25,9 @@ public class Order {
     private LocalDateTime createdAt;
 
     //RELATIONS
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OrderProduct> orderProducts;
+    @OneToMany
+    private Set<OrdersProducts> ordersProducts;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

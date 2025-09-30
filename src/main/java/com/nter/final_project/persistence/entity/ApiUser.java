@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,4 +32,10 @@ public class ApiUser {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "code")
     private Country country;
+
+    /*
+    @OneToMany(mappedBy = "user")
+    private Set<Order> orders;
+
+     */
 }

@@ -14,7 +14,6 @@ import org.mapstruct.MappingTarget;
 @Mapper(
         componentModel = "spring",
         uses = {
-                ApiUserService.class,
                 OrderProductMapper.class})
 public interface OrderMapped {
 //todo tienes que mapear la entradas de ordenes para que te den el usuario,
@@ -24,12 +23,12 @@ public interface OrderMapped {
 
     //INPUT
     @Mapping(target = "user.id", source = "user")
-    @Mapping(target = "orderProducts", source = "products")
+    @Mapping(target = "ordersProducts.orderProductId.product.id", source = "products.product_id" )
     Order toModel(OrderInDto orderInDto);
 
     //OUPUT
-    @Mapping(target = "products", source = "orderProducts")
     @Mapping(target = "user", source = "user")
+    @Mapping(target = "products", source = "ordersProducts")
     OrderOutDto toDto(Order order);
 
     OrderOutDtoMIni toDtoMini(Order order);

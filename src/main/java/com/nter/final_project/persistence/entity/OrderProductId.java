@@ -1,19 +1,18 @@
 package com.nter.final_project.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.context.annotation.EnableMBeanExport;
 
-import java.io.Serializable;
-@Data
+@Getter
+@Setter
 @Embeddable
-public class OrderProductId implements Serializable {
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
+public class OrderProductId {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
     private Product product;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "order_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
     private Order order;
-
 }
