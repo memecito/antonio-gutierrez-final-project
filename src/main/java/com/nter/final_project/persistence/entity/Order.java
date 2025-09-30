@@ -26,7 +26,7 @@ public class Order {
     private LocalDateTime createdAt;
 
     //RELATIONS
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderProduct> orderProducts;
 
     @ManyToOne(fetch = FetchType.LAZY)
