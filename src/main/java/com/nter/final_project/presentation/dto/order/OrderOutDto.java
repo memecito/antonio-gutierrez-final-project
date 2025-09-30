@@ -11,7 +11,7 @@ public record OrderOutDto(
         Long id,
         StatusOrder status,
         LocalDate createdAt,
-        ApiUserOutDtoMini user,
+        Long user,
         Set<OrderProductOutDtoMini> products
 
         //todo falta establecer como se ven los productos

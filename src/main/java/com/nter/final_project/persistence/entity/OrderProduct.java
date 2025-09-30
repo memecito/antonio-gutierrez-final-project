@@ -8,14 +8,26 @@ import lombok.Setter;
 @Setter
 
 @Entity
-@Table(name = "ordersproducts")
+@Table(
+        name = "ordersproducts",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_order_product_id",
+                        columnNames = {"product_id", "order_id"})})
 public class OrderProduct {
 
-    @EmbeddedId
-    private OrderProductId id = new OrderProductId();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "amount")
     private Integer amount;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "order_id", nullable = true)
+    private Order order;
 }

@@ -29,7 +29,7 @@ public interface OrderMapped {
 
     //OUPUT
     @Mapping(target = "products", source = "orderProducts")
-    @Mapping(target = "user", source = "user")
+    @Mapping(target = "user", source = "user.id")
     OrderOutDto toDto(Order order);
 
     OrderOutDtoMIni toDtoMini(Order order);

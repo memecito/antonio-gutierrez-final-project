@@ -9,10 +9,10 @@ import java.io.Serializable;
 public class OrderProductId implements Serializable {
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product", nullable = false)
     private Product product;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "order", nullable = false)
     private Order order;
 }

@@ -37,6 +37,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     @Override
     @Transactional
     public List<OrderProduct> created(Order order) {
+        order.getOrderProducts().forEach(orderProduct -> orderProduct.setOrder(order));
         return productRepository.saveAll(order.getOrderProducts());
 
     }
