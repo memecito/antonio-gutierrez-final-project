@@ -13,11 +13,12 @@ import org.mapstruct.Mapping;
         uses = {ProductService.class})
 public interface OrderProductMapper {
     //INPUT
-    @Mapping(target = "product", source = "id", qualifiedByName = "getProductById")
+    @Mapping(target = "orderProductId.product.id", source = "id")
+    @Mapping(target = "orderProductId.order", ignore = true)
     OrderProduct toModel(OrderProductInDto orderProductInDto);
 
     //OUTPUT
-    @Mapping(target = "id", source = "product.id")
+    @Mapping(target = "id", source = "orderProductId.product.id")
     OrderProductOutDtoMini toDtoMini(OrderProduct orderProduct);
 
     OrderProductOutDto toDto(OrderProduct orderProduct);

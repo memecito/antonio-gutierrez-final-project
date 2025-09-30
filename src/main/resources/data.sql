@@ -208,7 +208,7 @@ INSERT INTO orders (user_id, status, created) VALUES
 (6, 'completed', '2025-09-15 17:00:00');
 
 
-INSERT INTO ordersproducts (order_id, product_id, amount) VALUES
+INSERT INTO order_product (order_id, product_id, amount) VALUES
 (1, 1, 1),
 (1, 3, 2),
 (2, 9, 1),

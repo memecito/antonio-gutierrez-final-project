@@ -5,7 +5,6 @@ import com.nter.final_project.application.services.OrderProductService;
 import com.nter.final_project.application.services.OrderService;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Order;
-import com.nter.final_project.persistence.entity.OrderProduct;
 import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -56,8 +55,8 @@ public class OrderServiceImpl implements OrderService {
     public Order created(Order order) {
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(StatusOrder.PROCESSING);
-        Set<OrderProduct> orderProducts= order.getOrderProducts();
-        //order.setOrderProducts(null);
+
+
         orderRepository.save(order);
         productService.created(order);
         return order;

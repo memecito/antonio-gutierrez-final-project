@@ -23,13 +23,15 @@ public interface OrderMapped {
 // y desde alli mandar a las demas
 
     //INPUT
-    @Mapping(target = "user.id", source = "user")
+    @Mapping(target = "user", source = "user", qualifiedByName = "getUserById")
     @Mapping(target = "orderProducts", source = "products")
     Order toModel(OrderInDto orderInDto);
 
+
     //OUPUT
-    @Mapping(target = "products", source = "orderProducts")
+    //@Mapping(target = "products", source = "orderProducts")
     @Mapping(target = "user", source = "user")
+    @Mapping(target = "products", source = "orderProducts")
     OrderOutDto toDto(Order order);
 
     OrderOutDtoMIni toDtoMini(Order order);

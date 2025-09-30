@@ -1,34 +1,18 @@
 package com.nter.final_project.persistence.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-
 @Entity
-@Table(name = "ordersproducts",
-        uniqueConstraints = {
-        @UniqueConstraint(
-                name = "uk_order_product",
-                columnNames = {"order_id", "product_id"})})
+@Table(name = "order_product")
 public class OrderProduct {
+    @EmbeddedId
+    private OrderProductId orderProductId= new OrderProductId();
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "amount")
-    private Integer amount;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
-    private Order order;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-
+    private int amount;
 }

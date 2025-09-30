@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public final class OrderProductInDto {
-
     private Long id;
     private int amount;
 }

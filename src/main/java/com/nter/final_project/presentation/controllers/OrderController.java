@@ -2,6 +2,7 @@ package com.nter.final_project.presentation.controllers;
 
 import com.nter.final_project.application.mappers.OrderMapped;
 import com.nter.final_project.application.services.OrderService;
+import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.order.OrderInDto;
 import com.nter.final_project.presentation.dto.order.OrderOutDto;
@@ -35,7 +36,8 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderOutDto> created(@RequestBody OrderInDto order) {
-        return ResponseEntity.ok(orderMapped.toDto(orderService.created(orderMapped.toModel(order))));
+        Order ord= orderMapped.toModel(order);
+        return ResponseEntity.ok(orderMapped.toDto(orderService.created(ord)));
     }
 
     @PutMapping("/{id}")
