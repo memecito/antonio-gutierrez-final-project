@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import jakarta.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +44,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product created(Product product) {
         if(productRepository.findByName(product.getName()).isPresent())
             throw new EntityDuplicateException("Ya existe un producto con este nombre");
@@ -50,12 +52,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product update(Long id, Product product) {
         Product prorductFound= getById(id);
         return productMapped.update(prorductFound, product);
     }
 
     @Override
+    @Transactional
     public void deleted(Long id) {
         Product productFound= getById(id);
         productFound.setStatus(StatusProduct.DISCONTINUED);

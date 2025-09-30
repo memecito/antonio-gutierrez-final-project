@@ -7,7 +7,7 @@ import com.nter.final_project.persistence.entity.OrderProduct;
 import com.nter.final_project.persistence.repository.OrderProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -44,11 +44,13 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
+    @Transactional
     public OrderProduct update(Long id, OrderProduct OrderProduct) {
         return null;
     }
 
     @Override
+    @Transactional
     public void deleted(Long id) {
 
     }

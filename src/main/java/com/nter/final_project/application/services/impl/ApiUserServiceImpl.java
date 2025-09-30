@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import jakarta.transaction.Transactional;
+
 
 import java.util.List;
 
@@ -49,6 +51,7 @@ public class ApiUserServiceImpl implements ApiUserService {
     }
 
     @Override
+    @Transactional
     public ApiUser created(ApiUser apiUser) {
         if (apiUserRepository.findByEmail(apiUser.getEmail()).isPresent())
             throw new EmailAlreadyExistException("este email ya esta registrado, APS05");
@@ -57,6 +60,7 @@ public class ApiUserServiceImpl implements ApiUserService {
     }
 
     @Override
+    @Transactional
     public ApiUser update(Long id, ApiUser apiUser) {
 
 
@@ -64,6 +68,7 @@ public class ApiUserServiceImpl implements ApiUserService {
     }
 
     @Override
+    @Transactional
     public void deleted(Long id) {
         ApiUser userFound= getById(id);
         userFound.setActive(false);
