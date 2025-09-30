@@ -3,7 +3,6 @@ package com.nter.final_project.application.services;
 import com.nter.final_project.persistence.entity.Order;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -18,6 +17,10 @@ public interface OrderService {
     @Named("findOrderByUser")
     Set<Order> getByUser(Long id);
 
+    @Named("findOrderByProduct")
+    Set<Order> getByProduct(Long id);
+
+    @Named("findOrderById")
     Order getById(Long id);
 
     Order created(Order Order);

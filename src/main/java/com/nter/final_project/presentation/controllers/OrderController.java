@@ -34,6 +34,11 @@ public class OrderController {
         return ResponseEntity.ok(orderMapped.toDto(orderService.getById(id)));
     }
 
+    @GetMapping("/product/{id}")
+    public ResponseEntity<?> getByProduct(@PathVariable Long id){
+        return ResponseEntity.ok(orderService.getByProduct(id));
+    }
+
     @PostMapping
     public ResponseEntity<OrderOutDto> created(@RequestBody OrderInDto order) {
         Order ord= orderMapped.toModel(order);

@@ -11,6 +11,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "order_product")
 public class OrderProduct {
+
     @EmbeddedId
     private OrderProductId orderProductId= new OrderProductId();
 

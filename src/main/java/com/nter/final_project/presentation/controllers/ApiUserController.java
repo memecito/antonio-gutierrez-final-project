@@ -8,6 +8,7 @@ import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoOrders;
 import com.nter.final_project.presentation.dto.country.CountryInDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -27,10 +28,6 @@ public class ApiUserController {
             @RequestParam(defaultValue = "0", required = false) int pageNumber,
             @RequestParam(defaultValue = "10", required = false) int pageSize
     ) {
-        /*
-        Page<ApiUser> userPage = apiUserService.getAll(pageNumber, pageSize);
-        Page<ApiUserOutDtoMini> userMiniPage = userPage.map(apiUserMapped::toDtoMini);
-         */
         return ResponseEntity.ok(apiUserService.getAll(pageNumber, pageSize)
                 .map(apiUserMapped::toDtoMini));
     }
@@ -48,7 +45,7 @@ public class ApiUserController {
      */
 
     @PostMapping
-    public ResponseEntity<ApiUserOutDto> created(@RequestBody ApiUserInDto apiUser) {
+    public ResponseEntity<ApiUserOutDto> created(@Valid @RequestBody ApiUserInDto apiUser) {
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.created(apiUserMapped.toModel(apiUser))));
     }
 
@@ -58,7 +55,7 @@ public class ApiUserController {
     }
 
     @PutMapping("/{id}/country")
-    public ResponseEntity<?> updateCountry(@PathVariable Long id, @RequestBody CountryInDto country) {
+    public ResponseEntity<?> updateCountry(@PathVariable Long id,@Valid @RequestBody CountryInDto country) {
         return ResponseEntity.ok("update country, logica por hacer");
     }
 

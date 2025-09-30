@@ -26,7 +26,7 @@ public class Product {
     @Column(name = "status")
     private StatusProduct status;
     @Column(name = "created")
-    private LocalDateTime createdAt;
+    private LocalDateTime created= LocalDateTime.now();
 
     @OneToMany(mappedBy = "orderProductId.product", orphanRemoval = true)
     private Set<OrderProduct> orderProducts = new LinkedHashSet<>();

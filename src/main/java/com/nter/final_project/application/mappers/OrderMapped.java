@@ -1,8 +1,6 @@
 package com.nter.final_project.application.mappers;
 
 import com.nter.final_project.application.services.ApiUserService;
-import com.nter.final_project.application.services.ProductService;
-import com.nter.final_project.application.services.impl.ApiUserServiceImpl;
 import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.presentation.dto.order.OrderInDto;
 import com.nter.final_project.presentation.dto.order.OrderOutDto;
@@ -23,6 +21,7 @@ public interface OrderMapped {
 // y desde alli mandar a las demas
 
     //INPUT
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", source = "user", qualifiedByName = "getUserById")
     @Mapping(target = "orderProducts", source = "products")
     Order toModel(OrderInDto orderInDto);
