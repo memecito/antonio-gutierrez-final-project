@@ -15,5 +15,4 @@ public class OrderProductId implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
-
 }

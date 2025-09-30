@@ -59,8 +59,9 @@ public class OrderServiceImpl implements OrderService {
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(StatusOrder.PROCESSING);
         Set<OrderProduct> orderProducts= order.getOrderProducts();
-        //order.setOrderProducts(null);
+        order.setOrderProducts(null);
         orderRepository.save(order);
+        order.setOrderProducts(orderProducts);
         productService.created(order);
         return order;
     }

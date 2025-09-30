@@ -27,6 +27,7 @@ public class Order {
 
     //RELATIONS
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(nullable = true)
     private Set<OrderProduct> orderProducts;
 
     @ManyToOne(fetch = FetchType.LAZY)
