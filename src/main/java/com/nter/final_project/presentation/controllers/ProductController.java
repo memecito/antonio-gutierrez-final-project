@@ -8,6 +8,8 @@ import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.product.ProductInDto;
 import com.nter.final_project.presentation.dto.product.ProductOutDto;
 import com.nter.final_project.presentation.dto.product.ProductOutDtoMIni;
+import com.nter.final_project.presentation.dto.product.ProductUpdateDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -41,8 +43,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductOutDto> update(@PathVariable Long id, @RequestBody ProductInDto product) {
-        return ResponseEntity.ok(productMapped.toDto(productService.update(id, productMapped.toModel(product))));
+    public ResponseEntity<ProductOutDto> update(@PathVariable Long id,@Valid @RequestBody ProductUpdateDto product) {
+        return ResponseEntity.ok(productMapped.toDto(productService.update(id, productMapped.toModelUpdate(product))));
     }
 
     @DeleteMapping("/{id}")

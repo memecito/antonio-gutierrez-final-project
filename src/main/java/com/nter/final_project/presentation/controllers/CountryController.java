@@ -7,6 +7,8 @@ import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.country.CountryInDto;
 import com.nter.final_project.presentation.dto.country.CountryOutDto;
 import com.nter.final_project.presentation.dto.country.CountryOutDtoMini;
+import com.nter.final_project.presentation.dto.country.CountryUpdateDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -41,9 +43,9 @@ public class CountryController {
     }
 
     @PutMapping("/{code}")
-    public ResponseEntity<?> update(@PathVariable String code, @RequestBody CountryInDto country) {
+    public ResponseEntity<?> update(@PathVariable String code,@Valid @RequestBody CountryUpdateDto country) {
         return ResponseEntity.ok(countryMapped.toDto(
-                countryService.update(code, countryMapped.toModel(country))));
+                countryService.update(code, countryMapped.toModelUpdate(country))));
     }
 
     @DeleteMapping("/{code}")

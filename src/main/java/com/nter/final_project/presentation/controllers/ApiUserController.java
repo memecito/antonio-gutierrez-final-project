@@ -5,10 +5,7 @@ import com.nter.final_project.application.mappers.CountryMapped;
 import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
-import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
-import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
-import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
-import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoOrders;
+import com.nter.final_project.presentation.dto.apiuser.*;
 import com.nter.final_project.presentation.dto.country.CountryInDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -54,8 +51,8 @@ public class ApiUserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ApiUserInDto apiUser) {
-        ApiUser user= apiUserMapped.toModel(apiUser);
+    public ResponseEntity<?> update(@PathVariable Long id,@Valid @RequestBody ApiUserUpdateDto apiUser) {
+        ApiUser user= apiUserMapped.toModelUpdate(apiUser);
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id, user)));
     }
 
