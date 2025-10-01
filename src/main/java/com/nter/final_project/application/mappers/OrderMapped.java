@@ -5,9 +5,7 @@ import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.presentation.dto.order.OrderInDto;
 import com.nter.final_project.presentation.dto.order.OrderOutDto;
 import com.nter.final_project.presentation.dto.order.OrderOutDtoMIni;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
 @Mapper(
         componentModel = "spring",
@@ -38,6 +36,6 @@ public interface OrderMapped {
     OrderOutDtoMIni toDtoMini(Order order);
 
     //UPDATE
-    @Mapping(target = "id", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Order update(@MappingTarget Order targer, Order source);
 }

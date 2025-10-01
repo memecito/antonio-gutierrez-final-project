@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -23,6 +24,14 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapped productMapped;
+
+
+    @Override
+    public Page<Product> getAllAvailable(int pageNumber, int pageSize) {
+        Pageable pageable= PageRequest.of(pageNumber, pageSize);
+        return productRepository.findByStatusNot(StatusProduct.DISCONTINUED, pageable);
+    }
+
     @Override
     public Page<Product> getAll(int pageNumber,int pageSize) {
         Pageable pageable= PageRequest.of(pageNumber, pageSize);
@@ -35,6 +44,8 @@ public class ProductServiceImpl implements ProductService {
         Product p= productRepository.findById(id).orElseThrow(
                 ()-> new EntityNotFoundException("Producto no encontrado, PS01")
         );
+        if(Objects.equals(p.getStatus(),StatusProduct.DISCONTINUED))
+            throw new EntityNotFoundException("Producto descatalogado");
         return p;
     }
 
@@ -57,6 +68,7 @@ public class ProductServiceImpl implements ProductService {
     public Product created(Product product) {
         if(productRepository.findByName(product.getName()).isPresent())
             throw new EntityDuplicateException("Ya existe un producto con este nombre");
+        product.setStatus(StatusProduct.AVAILABLE);
         return productRepository.save(product);
     }
 
@@ -65,6 +77,13 @@ public class ProductServiceImpl implements ProductService {
     public Product update(Long id, Product product) {
         Product prorductFound= getById(id);
         return productMapped.update(prorductFound, product);
+    }
+
+    @Override
+    public Product updateStatus(String name) {
+        Product product = getByName(name);
+        product.setStatus(StatusProduct.AVAILABLE);
+        return productRepository.save(product);
     }
 
     @Override

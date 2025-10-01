@@ -44,12 +44,13 @@ public class ProductRepositoryImpl implements ProductCriteriaRepository {
                     countPredicates.add(cb.like(countRoot.get(key), "%" + value + "%"));
                     break;
                 case "pricemin":
-                    dataPredicates.add(cb.greaterThanOrEqualTo(dataRoot.get(key), value));
-                    dataPredicates.add(cb.greaterThanOrEqualTo(dataRoot.get(key), value));
+                    dataPredicates.add(cb.greaterThanOrEqualTo(dataRoot.get("price"), value));
+                    dataPredicates.add(cb.greaterThanOrEqualTo(dataRoot.get("price"), value));
                     break;
                 case "pricemax":
-                    dataPredicates.add(cb.lessThanOrEqualTo(dataRoot.get(key), value));
-                    dataPredicates.add(cb.lessThanOrEqualTo(dataRoot.get(key), value));
+                    dataPredicates.add(cb.lessThanOrEqualTo(dataRoot.get("price"), value));
+                    dataPredicates.add(cb.lessThanOrEqualTo(dataRoot.get("price"), value));
+                    break;
                 case "status":
                 case "created":
                     dataPredicates.add(cb.equal(dataRoot.get(key), value));

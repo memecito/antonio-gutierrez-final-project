@@ -7,6 +7,9 @@ import org.springframework.data.domain.Page;
 import java.util.Map;
 
 public interface ProductService {
+
+    Page<Product> getAllAvailable(int pageNumber, int pageSize);
+
     Page<Product> getAll(int pageNumber, int pageSize);
 
     @Named("getProductById")
@@ -19,6 +22,8 @@ public interface ProductService {
     Product created(Product Product);
 
     Product update(Long id, Product Product);
+
+    Product updateStatus(String name);
 
     void deleted(Long id);
 }

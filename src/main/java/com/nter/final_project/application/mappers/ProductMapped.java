@@ -6,9 +6,7 @@ import com.nter.final_project.presentation.dto.product.ProductInDto;
 import com.nter.final_project.presentation.dto.product.ProductOutDto;
 import com.nter.final_project.presentation.dto.product.ProductOutDtoMIni;
 import com.nter.final_project.presentation.dto.product.ProductUpdateDto;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
 @Mapper(
         componentModel = "spring",
@@ -34,9 +32,9 @@ public interface ProductMapped {
 
     ProductOutDtoMIni toDtoMini(Product product);
 
-    @Mapping(target = "id", ignore = true)
     ProductOutDto toDto(Product product);
 
     //METODS
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Product update(@MappingTarget Product target, Product source);
 }
