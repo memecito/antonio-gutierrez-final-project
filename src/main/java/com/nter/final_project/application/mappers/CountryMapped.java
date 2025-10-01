@@ -12,6 +12,7 @@ import org.mapstruct.MappingTarget;
 public interface CountryMapped {
 
     //INPUT
+    @Mapping(target = "apiUsers", ignore = true)
     Country toModel(CountryInDto country);
 
     //OUPUT

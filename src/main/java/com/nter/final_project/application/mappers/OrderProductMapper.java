@@ -21,5 +21,7 @@ public interface OrderProductMapper {
     @Mapping(target = "id", source = "orderProductId.product.id")
     OrderProductOutDtoMini toDtoMini(OrderProduct orderProduct);
 
+    @Mapping(source = "orderProductId.order", target = "order")
+    @Mapping(source = "orderProductId.product", target = "product")
     OrderProductOutDto toDto(OrderProduct orderProduct);
 }

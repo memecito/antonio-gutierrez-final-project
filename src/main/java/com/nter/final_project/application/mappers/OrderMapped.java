@@ -24,6 +24,8 @@ public interface OrderMapped {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", source = "user", qualifiedByName = "getUserById")
     @Mapping(target = "orderProducts", source = "products")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "status",ignore = true, defaultValue = "processing")
     Order toModel(OrderInDto orderInDto);
 
 

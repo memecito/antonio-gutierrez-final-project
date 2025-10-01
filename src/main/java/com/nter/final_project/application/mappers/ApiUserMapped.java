@@ -20,6 +20,8 @@ public interface ApiUserMapped {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "country", source = "country", qualifiedByName = "getCountryByCode")
     @Mapping(target = "password", conditionQualifiedByName = "isNonEmptyString")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "active",ignore = true, defaultValue = "true")
     ApiUser toModel(ApiUserInDto apiUserInDto);
 
     //OUPUT

@@ -14,6 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
+import java.util.Map;
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -41,6 +44,12 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByName(name).orElseThrow(
                 ()-> new EntityNotFoundException("Producto no encontrado, PS02")
         ) ;
+    }
+
+    @Override
+    public Page<Product> getByCriteria(Map<String, String> params, int pageNumber, int pageSize) {
+        Pageable pageable= PageRequest.of(pageNumber,pageSize);
+        return productRepository.findProductByCustomParam(params,pageable);
     }
 
     @Override

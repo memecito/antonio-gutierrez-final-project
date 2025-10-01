@@ -19,9 +19,11 @@ public interface ProductMapped {
     //INPUT
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "created", ignore = true)
+    @Mapping(target = "orderProducts",ignore = true)
     Product toModel(ProductInDto product);
 
     //OUPUT
+
     ProductOutDtoMIni toDtoMini(Product product);
 
     ProductOutDto toDto(Product product);

@@ -9,6 +9,6 @@ public record ProductOutDtoMIni (
         String name,
         Double price,
         StatusProduct status,
-        LocalDate createdAt
+        LocalDate created
 ){
 }
