@@ -1,7 +1,6 @@
 package com.nter.final_project.presentation.controllers;
 
 import com.nter.final_project.application.mappers.OrderMapped;
-import com.nter.final_project.application.mappers.OrderProductMapper;
 import com.nter.final_project.application.services.OrderService;
 import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
@@ -9,6 +8,7 @@ import com.nter.final_project.presentation.dto.order.OrderInDto;
 import com.nter.final_project.presentation.dto.order.OrderOutDto;
 import com.nter.final_project.presentation.dto.order.OrderOutDtoMIni;
 import com.nter.final_project.presentation.dto.order.OrderUpdateDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -42,13 +42,13 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderOutDto> created(@RequestBody OrderInDto order) {
+    public ResponseEntity<OrderOutDto> created(@Valid @RequestBody OrderInDto order) {
         Order ord= orderMapped.toModel(order);
         return ResponseEntity.ok(orderMapped.toDto(orderService.created(ord)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderOutDto> update(@PathVariable Long id, @RequestBody OrderUpdateDto orderUpdateDto) {
+    public ResponseEntity<OrderOutDto> update(@PathVariable Long id,@Valid @RequestBody OrderUpdateDto orderUpdateDto) {
         return ResponseEntity.ok(orderMapped.toDto(orderService.update(id,orderMapped.toModelUpdate(orderUpdateDto))));
     }
 

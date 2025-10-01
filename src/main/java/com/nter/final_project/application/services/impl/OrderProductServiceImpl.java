@@ -2,6 +2,7 @@ package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.mappers.OrderProductMapper;
 import com.nter.final_project.application.services.OrderProductService;
+import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.entity.OrderProduct;
@@ -38,7 +39,11 @@ public class OrderProductServiceImpl implements OrderProductService {
     @Transactional
     public List<OrderProduct> created(Order order) {
         order.getOrderProducts().forEach(orderProduct ->
-                orderProduct.getOrderProductId().setOrder(order));
+                {
+                    if(orderProduct.getAmount()<0)
+                        throw new BadRequestException("la candidad debe ser mayor de 0");
+                    orderProduct.getOrderProductId().setOrder(order);
+                });
         return productRepository.saveAll(order.getOrderProducts());
     }
 
@@ -50,6 +55,8 @@ public class OrderProductServiceImpl implements OrderProductService {
         );
         if(orderProduct.getAmount()==0)
             delete(orderProduct.getOrderProductId());
+        if(orderProduct.getAmount()<0)
+            throw new BadRequestException("la candidad debe ser mayor de 0");
         return mapper.update(orderProductFound, orderProduct);
     }
 
