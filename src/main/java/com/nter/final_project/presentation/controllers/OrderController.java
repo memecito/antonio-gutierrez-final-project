@@ -3,6 +3,8 @@ package com.nter.final_project.presentation.controllers;
 import com.nter.final_project.application.mappers.OrderMapped;
 import com.nter.final_project.application.services.OrderService;
 import com.nter.final_project.persistence.entity.Order;
+import com.nter.final_project.persistence.entity.StatusOrder;
+import com.nter.final_project.persistence.entity.StatusProduct;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.order.OrderInDto;
 import com.nter.final_project.presentation.dto.order.OrderOutDto;
@@ -52,12 +54,17 @@ public class OrderController {
         return ResponseEntity.ok(orderMapped.toDto(orderService.update(id,orderMapped.toModelUpdate(orderUpdateDto))));
     }
 
+    @PutMapping("/{id}/status/{status}")
+    public ResponseEntity<OrderOutDto> updateStatus(@PathVariable Long id, @PathVariable String status){
+        return ResponseEntity.ok(orderMapped.toDto(orderService.updateStatus(id,status)));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<BasicResponseDto> deleted(@PathVariable Long id) {
         orderService.deleted(id);
         return ResponseEntity.ok(BasicResponseDto.builder()
                 .status(HttpStatus.OK.value())
-                .message("Orden eliminada")
+                .message("Orden cancelada")
                 .build());
     }
 }

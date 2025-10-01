@@ -2,9 +2,11 @@ package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.mappers.ProductMapped;
 import com.nter.final_project.application.services.ProductService;
+import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EntityDuplicateException;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Product;
+import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.entity.StatusProduct;
 import com.nter.final_project.persistence.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -80,8 +83,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product updateStatus(String name) {
         Product product = getByName(name);
+
+
         product.setStatus(StatusProduct.AVAILABLE);
         return productRepository.save(product);
     }

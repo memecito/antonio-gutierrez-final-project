@@ -7,6 +7,7 @@ import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.apiuser.*;
 import com.nter.final_project.presentation.dto.country.CountryInDto;
+import com.nter.final_project.presentation.dto.country.CountryUpdateDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -57,8 +58,8 @@ public class ApiUserController {
     }
 
     @PatchMapping("/{id}/country")
-    public ResponseEntity<?> updateCountry(@PathVariable Long id, @RequestBody CountryInDto country) {
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id, countryMapped.toModel(country))));
+    public ResponseEntity<?> updateCountry(@PathVariable Long id,@Valid @RequestBody CountryUpdateDto country) {
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id, countryMapped.toModelUpdate(country))));
     }
 
     @PutMapping("/{id}/desactived")

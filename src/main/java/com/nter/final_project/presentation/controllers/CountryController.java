@@ -38,7 +38,7 @@ public class CountryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> created(@RequestBody CountryInDto country) {
+    public ResponseEntity<?> created(@Valid @RequestBody CountryInDto country) {
         return ResponseEntity.ok(countryMapped.toDto(countryService.created(countryMapped.toModel(country))));
     }
 
