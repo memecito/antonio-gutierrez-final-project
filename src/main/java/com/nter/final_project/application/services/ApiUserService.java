@@ -18,6 +18,7 @@ public interface ApiUserService {
     ApiUser created(ApiUser apiUser);
     ApiUser update(Long id, ApiUser apiUser);
     ApiUser updateCountry(Long id, Country country);
-    ApiUser updateStatus(Long id);
+    ApiUser statusDesactive(Long id);
+    ApiUser statusActived(Long id);
     void deleted(Long id);
 }

@@ -85,11 +85,18 @@ public class ApiUserServiceImpl implements ApiUserService {
     }
 
     @Override
-    public ApiUser updateStatus(Long id) {
+    public ApiUser statusDesactive(Long id) {
         ApiUser userFound= getById(id);
         userFound.setActive(false);
         return apiUserRepository.save(userFound);
     }
+
+    @Override
+    public ApiUser statusActived(Long id) {
+        ApiUser userFound= getById(id);
+        userFound.setActive(true);
+        return apiUserRepository.save(userFound);    }
+
 
     @Override
     @Transactional

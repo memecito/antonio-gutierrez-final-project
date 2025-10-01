@@ -62,10 +62,14 @@ public class ApiUserController {
     }
 
     @PutMapping("/{id}/desactived")
-    public ResponseEntity<?> updateState(@PathVariable Long id){
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateStatus(id)));
+    public ResponseEntity<ApiUserOutDto> statusDesactived(@PathVariable Long id){
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.statusDesactive(id)));
     }
 
+    @PutMapping("/{id}/actived")
+    public ResponseEntity<ApiUserOutDto> statusActived(@PathVariable Long id){
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.statusActived(id)));
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<BasicResponseDto> deleted(@PathVariable Long id) {
         apiUserService.deleted(id);
