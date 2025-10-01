@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
@@ -26,11 +26,11 @@ public class Product {
     @Column(name = "status")
     private StatusProduct status;
     @Column(name = "created")
-    private LocalDateTime createdAt;
+    private LocalDateTime created= LocalDateTime.now();
+
+    @OneToMany(mappedBy = "orderProductId.product", orphanRemoval = true)
+    private Set<OrderProduct> orderProducts = new LinkedHashSet<>();
 
     //RELATIONS
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OrderProduct> orders;
 
 }

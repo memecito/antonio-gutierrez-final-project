@@ -29,9 +29,8 @@ public class CountryController {
         return ResponseEntity.ok(countryMini);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{code}")
     public ResponseEntity<CountryOutDto> getById(@PathVariable String code) {
-
         return ResponseEntity.ok(
                 countryMapped.toDto(countryService.getByCode(code)));
     }
@@ -41,13 +40,13 @@ public class CountryController {
         return ResponseEntity.ok(countryMapped.toDto(countryService.created(countryMapped.toModel(country))));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{code}")
     public ResponseEntity<?> update(@PathVariable String code, @RequestBody CountryInDto country) {
         return ResponseEntity.ok(countryMapped.toDto(
                 countryService.update(code, countryMapped.toModel(country))));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{code}")
     public ResponseEntity<?> deleted(@PathVariable String code) {
         countryService.deleted(code);
         return ResponseEntity.ok(BasicResponseDto.builder()

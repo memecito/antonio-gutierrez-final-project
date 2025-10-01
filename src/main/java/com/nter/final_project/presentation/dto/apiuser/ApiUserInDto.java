@@ -21,5 +21,5 @@ public final class ApiUserInDto {
     @NotBlank(message = "contraseña requerida")
     private String password;
 
-    private String code_country;
+    private String country;
 }

@@ -1,19 +1,21 @@
 package com.nter.final_project.persistence.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.Data;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.io.Serializable;
-@Data
+@Getter
+@Setter
 @Embeddable
-public class OrderProductId implements Serializable {
+public class OrderProductId {
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
-    @Column(name = "product_id")
-    private Long productId;
-
-    @Column(name = "order_id")
-    private Long orderId;
-
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
 }

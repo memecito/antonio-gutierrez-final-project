@@ -1,38 +1,84 @@
 package com.nter.final_project.application.services.impl;
 
+import com.nter.final_project.application.mappers.OrderMapped;
+import com.nter.final_project.application.services.OrderProductService;
 import com.nter.final_project.application.services.OrderService;
+import com.nter.final_project.application.services.ProductService;
+import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Order;
+import com.nter.final_project.persistence.entity.StatusOrder;
+import com.nter.final_project.persistence.repository.OrderRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import jakarta.transaction.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
+
+    private final OrderRepository orderRepository;
+    private final OrderMapped orderMapped;
+
+    private final OrderProductService orderProductService;
+    private final ProductService productService;
+
     @Override
     public Page<Order> getAll(int pageNumber, int pageSize) {
-        return null;
+        Pageable pageable= PageRequest.of(pageNumber, pageSize);
+        return orderRepository.findAll(pageable);
+
+    }
+
+    @Override
+    public Page<Order> getByDate(LocalDateTime starDate, LocalDateTime endDate, int pageNumber, int pageSize) {
+        Pageable pageable= PageRequest.of(pageNumber, pageSize);
+        return orderRepository.findByCreatedAtBetween(starDate,endDate,pageable);
+    }
+
+    @Override
+    public Set<Order> getByUser(Long id) {
+        return orderRepository.findByUser_Id(id);
+    }
+
+    @Override
+    public Set<Order> getByProduct(Long id) {
+        return orderRepository.findByOrderProducts_OrderProductId_Product(productService.getById(id));
     }
 
     @Override
     public Order getById(Long id) {
-        return null;
+        return orderRepository.findById(id).orElseThrow(
+                ()->new EntityNotFoundException("Orden no encontrada, OS01")
+        );
     }
 
     @Override
-    public Order getByName(String name) {
-        return null;
+    @Transactional
+    public Order created(Order order) {
+        order.setCreatedAt(LocalDateTime.now());
+        order.setStatus(StatusOrder.PROCESSING);
+
+
+        orderRepository.save(order);
+        orderProductService.created(order);
+        return order;
     }
 
     @Override
-    public Order created(Order Order) {
-        return null;
+    @Transactional
+    public Order update(Long id, Order order) {
+        Order orderFound= getById(id);
+        return orderMapped.update(orderFound,order);
     }
 
     @Override
-    public Order update(Long id, Order Order) {
-        return null;
-    }
-
-    @Override
+    @Transactional
     public void deleted(Long id) {
 
     }

@@ -9,7 +9,7 @@ public record ApiUserOutDto (
         String fullName,
         String email,
         LocalDate createdAt,
-        boolean isActive,
+        boolean active,
         CountryOutDtoMini country
 ) {
 

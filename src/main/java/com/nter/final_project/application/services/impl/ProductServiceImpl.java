@@ -12,6 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import jakarta.transaction.Transactional;
+
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -28,9 +32,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getById(Long id) {
 
-        return productRepository.findById(id).orElseThrow(
+        Product p= productRepository.findById(id).orElseThrow(
                 ()-> new EntityNotFoundException("Producto no encontrado, PS01")
         );
+        return p;
     }
 
     @Override
@@ -42,6 +47,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Page<Product> getByCriteria(Map<String, String> params, int pageNumber, int pageSize) {
+        Pageable pageable= PageRequest.of(pageNumber,pageSize);
+        return productRepository.findProductByCustomParam(params,pageable);
+    }
+
+    @Override
+    @Transactional
     public Product created(Product product) {
         if(productRepository.findByName(product.getName()).isPresent())
             throw new EntityDuplicateException("Ya existe un producto con este nombre");
@@ -49,12 +61,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product update(Long id, Product product) {
         Product prorductFound= getById(id);
         return productMapped.update(prorductFound, product);
     }
 
     @Override
+    @Transactional
     public void deleted(Long id) {
         Product productFound= getById(id);
         productFound.setStatus(StatusProduct.DISCONTINUED);

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -25,9 +24,9 @@ public class ApiUser {
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "created")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt= LocalDateTime.now();
     @Column(name = "active")
-    private boolean isActive;
+    private boolean active= true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "code")

@@ -1,10 +1,21 @@
 package com.nter.final_project.persistence.repository;
 
 import com.nter.final_project.persistence.entity.Order;
+import com.nter.final_project.persistence.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 
+import java.time.LocalDateTime;
+import java.util.Set;
+
 public interface OrderRepository extends JpaRepository<Order, Long> {
+    Set<Order> findByOrderProducts_OrderProductId_Product(Product product);
+
+    Page<Order> findByCreatedAtBetween(LocalDateTime createdAtStart, LocalDateTime createdAtEnd, Pageable pageable);
+
+    Set<Order> findByUser_Id(Long id);
 }

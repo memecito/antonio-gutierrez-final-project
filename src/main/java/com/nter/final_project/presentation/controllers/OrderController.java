@@ -2,6 +2,7 @@ package com.nter.final_project.presentation.controllers;
 
 import com.nter.final_project.application.mappers.OrderMapped;
 import com.nter.final_project.application.services.OrderService;
+import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.order.OrderInDto;
 import com.nter.final_project.presentation.dto.order.OrderOutDto;
@@ -20,8 +21,6 @@ public class OrderController {
     private final OrderService orderService;
     private final OrderMapped orderMapped;
 
-
-
     @GetMapping
     public ResponseEntity<Page<OrderOutDtoMIni>> getAll(@RequestParam(defaultValue = "0", required = false) int pageNumber,
                                                        @RequestParam(defaultValue = "10", required = false) int pageSize) {
@@ -35,9 +34,15 @@ public class OrderController {
         return ResponseEntity.ok(orderMapped.toDto(orderService.getById(id)));
     }
 
+    @GetMapping("/product/{id}")
+    public ResponseEntity<?> getByProduct(@PathVariable Long id){
+        return ResponseEntity.ok(orderService.getByProduct(id));
+    }
+
     @PostMapping
     public ResponseEntity<OrderOutDto> created(@RequestBody OrderInDto order) {
-        return ResponseEntity.ok(orderMapped.toDto(orderService.created(orderMapped.toModel(order))));
+        Order ord= orderMapped.toModel(order);
+        return ResponseEntity.ok(orderMapped.toDto(orderService.created(ord)));
     }
 
     @PutMapping("/{id}")

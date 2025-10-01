@@ -1,30 +1,19 @@
 package com.nter.final_project.persistence.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-
 @Entity
-@Table(name = "ordersproducts")
+@Table(name = "order_product")
 public class OrderProduct {
 
     @EmbeddedId
-    private OrderProductId id = new OrderProductId();
+    private OrderProductId orderProductId= new OrderProductId();
 
-    @Column(name = "amount")
-    private Integer amount;
-
-    //RELATIONS
-    @ManyToOne
-    @MapsId("productId")
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    @ManyToOne
-    @MapsId("orderId")
-    @JoinColumn(name = "order_id")
-    private Order order;
+    private int amount;
 }
