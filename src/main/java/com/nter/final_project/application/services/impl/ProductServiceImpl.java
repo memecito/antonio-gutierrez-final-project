@@ -9,17 +9,16 @@ import com.nter.final_project.persistence.entity.Product;
 import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.entity.StatusProduct;
 import com.nter.final_project.persistence.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import jakarta.transaction.Transactional;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor

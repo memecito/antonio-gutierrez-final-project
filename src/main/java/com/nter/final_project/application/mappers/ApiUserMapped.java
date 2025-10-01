@@ -1,6 +1,5 @@
 package com.nter.final_project.application.mappers;
 
-import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.application.services.CountryService;
 import com.nter.final_project.application.services.OrderService;
 import com.nter.final_project.persistence.entity.ApiUser;
@@ -52,7 +51,7 @@ public interface ApiUserMapped {
     }
 
     @Named("mapCountry")
-    default Country mapCountry(Country country){return country;};
+    default Country mapCountry(Country country){return country;}
 
 
 
