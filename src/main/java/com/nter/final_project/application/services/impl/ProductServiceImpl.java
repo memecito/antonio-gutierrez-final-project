@@ -84,12 +84,24 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Product updateStatus(String name) {
+    public Product updateStatus(Long  id, String status) {
+        Product product = getById(id);
+        final String normalizedStatus = status.trim().toUpperCase();
+        boolean isValidStatus = Arrays.stream(StatusOrder.values())
+                .anyMatch(enumValue -> enumValue.name().equals(normalizedStatus));
+
+        if (!isValidStatus) {
+            throw new BadRequestException("El estado '" + status + "' no es válido.");
+        }
+        product.setStatus(StatusProduct.valueOf(normalizedStatus));
+        return product;
+    }
+
+    @Override
+    public Product getActived(String name) {
         Product product = getByName(name);
-
-
         product.setStatus(StatusProduct.AVAILABLE);
-        return productRepository.save(product);
+        return product;
     }
 
     @Override

@@ -11,5 +11,4 @@ public final class ProductUpdateDto {
     private String name;
     @Min(value = 1, message = "precio minimo requerido")
     private Double price;
-    private StatusProduct status;
 }

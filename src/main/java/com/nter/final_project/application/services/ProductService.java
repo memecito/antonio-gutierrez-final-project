@@ -23,7 +23,9 @@ public interface ProductService {
 
     Product update(Long id, Product Product);
 
-    Product updateStatus(String name);
+    Product updateStatus(Long id, String status);
+
+    Product getActived(String name);
 
     void deleted(Long id);
 }

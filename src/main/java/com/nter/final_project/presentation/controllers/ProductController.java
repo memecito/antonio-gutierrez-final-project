@@ -70,9 +70,14 @@ public class ProductController {
         return ResponseEntity.ok(productMapped.toDto(productService.update(id, productMapped.toModelUpdate(product))));
     }
 
-    @PutMapping("/name/{name}/available")
-    public ResponseEntity<ProductOutDto> updateStatus(@PathVariable String name) {
-        return ResponseEntity.ok(productMapped.toDto(productService.updateStatus(name)));
+    @PutMapping("/{id}/status/{status}")
+    public ResponseEntity<ProductOutDto> updateStatus(@PathVariable Long id, @PathVariable String status) {
+        return ResponseEntity.ok(productMapped.toDto(productService.updateStatus(id, status)));
+    }
+
+    @PutMapping("/name/{name}/actived")
+    public ResponseEntity<ProductOutDto> getAtvive(@PathVariable String name) {
+        return ResponseEntity.ok(productMapped.toDto(productService.getActived(name)));
     }
 
     @DeleteMapping("/{id}")
