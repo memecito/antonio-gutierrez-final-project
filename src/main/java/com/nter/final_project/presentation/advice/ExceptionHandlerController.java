@@ -95,8 +95,10 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(customError, HttpStatus.I_AM_A_TEAPOT);
     }
 
-    @ExceptionHandler(EmailAlreadyExistException.class)
-    public ResponseEntity<CustomError> handleBadRequestException(EmailAlreadyExistException ex) {
+    @ExceptionHandler(value = {
+            EmailAlreadyExistException.class,
+            EntityDuplicateException.class})
+    public ResponseEntity<CustomError> handleBadRequestException(RuntimeException ex) {
         CustomError customError = new CustomError(
                 HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS.value(),
                 "Duplicado",

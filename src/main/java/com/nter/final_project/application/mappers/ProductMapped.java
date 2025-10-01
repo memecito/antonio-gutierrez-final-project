@@ -26,6 +26,7 @@ public interface ProductMapped {
 
     ProductOutDtoMIni toDtoMini(Product product);
 
+    @Mapping(target = "id", ignore = true)
     ProductOutDto toDto(Product product);
 
     //METODS

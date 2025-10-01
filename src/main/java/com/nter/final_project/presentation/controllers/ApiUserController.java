@@ -1,7 +1,9 @@
 package com.nter.final_project.presentation.controllers;
 
 import com.nter.final_project.application.mappers.ApiUserMapped;
+import com.nter.final_project.application.mappers.CountryMapped;
 import com.nter.final_project.application.services.ApiUserService;
+import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
@@ -22,6 +24,8 @@ public class ApiUserController {
 
     private final ApiUserService apiUserService;
     private final ApiUserMapped apiUserMapped;
+
+    private final CountryMapped countryMapped;
 
     @GetMapping
     public ResponseEntity<Page<ApiUserOutDtoMini>> getAll(
@@ -50,13 +54,19 @@ public class ApiUserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiUserOutDto> update(@PathVariable Long id, @RequestBody ApiUserInDto apiUser) {
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id, apiUserMapped.toModel(apiUser))));
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ApiUserInDto apiUser) {
+        ApiUser user= apiUserMapped.toModel(apiUser);
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id, user)));
     }
 
-    @PutMapping("/{id}/country")
-    public ResponseEntity<?> updateCountry(@PathVariable Long id,@Valid @RequestBody CountryInDto country) {
-        return ResponseEntity.ok("update country, logica por hacer");
+    @PatchMapping("/{id}/country")
+    public ResponseEntity<?> updateCountry(@PathVariable Long id, @RequestBody CountryInDto country) {
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id, countryMapped.toModel(country))));
+    }
+
+    @PutMapping("/{id}/desactived")
+    public ResponseEntity<?> updateState(@PathVariable Long id){
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateStatus(id)));
     }
 
     @DeleteMapping("/{id}")

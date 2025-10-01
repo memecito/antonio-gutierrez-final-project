@@ -7,6 +7,7 @@ import com.nter.final_project.presentation.dto.order.orderproduct.OrderProductOu
 import com.nter.final_project.presentation.dto.order.orderproduct.OrderProductOutDtoMini;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(
         componentModel = "spring",
@@ -24,4 +25,8 @@ public interface OrderProductMapper {
     @Mapping(source = "orderProductId.order", target = "order")
     @Mapping(source = "orderProductId.product", target = "product")
     OrderProductOutDto toDto(OrderProduct orderProduct);
+
+    //METODOS
+    @Mapping(target = "orderProductId", ignore = true)
+    OrderProduct update(@MappingTarget OrderProduct target, OrderProduct source);
 }

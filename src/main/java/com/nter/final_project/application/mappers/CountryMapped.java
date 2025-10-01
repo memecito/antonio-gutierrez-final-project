@@ -22,5 +22,7 @@ public interface CountryMapped {
     CountryOutDtoMini toDtoMini(Country country);
 
     //UPDATE
+    @Mapping(target = "code", ignore = true)
+
     Country update(@MappingTarget Country target, Country source);
 }

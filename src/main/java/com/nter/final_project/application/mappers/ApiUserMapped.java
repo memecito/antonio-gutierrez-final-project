@@ -1,8 +1,10 @@
 package com.nter.final_project.application.mappers;
 
+import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.application.services.CountryService;
 import com.nter.final_project.application.services.OrderService;
 import com.nter.final_project.persistence.entity.ApiUser;
+import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
@@ -12,7 +14,6 @@ import org.mapstruct.*;
         componentModel = "spring",
         uses = {
                 CountryService.class,
-                OrderMapped.class,
                 OrderService.class})
 public interface ApiUserMapped {
 
@@ -24,20 +25,16 @@ public interface ApiUserMapped {
     @Mapping(target = "active",ignore = true, defaultValue = "true")
     ApiUser toModel(ApiUserInDto apiUserInDto);
 
+
+
     //OUPUT
     ApiUserOutDto toDto(ApiUser apiUser);
 
     ApiUserOutDtoMini toDtoMini(ApiUser apiUser);
 
-    /*
-    La ide es que atraves del endpoint se sonsiga todas las ordenes de un usuario
-
-    @Mapping(target = "orders", qualifiedByName = "java(getOrders(id)")
-    ApiUserOutDtoOrders toDtoOrder(ApiUser apiUser);
-     */
-
-
     //UPDATE
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "country", source = "country", qualifiedByName = "mapCountry")
     ApiUser update(@MappingTarget ApiUser target, ApiUser source);
 
     @Condition
@@ -45,6 +42,11 @@ public interface ApiUserMapped {
     default boolean isNonEmptyString(String value) {
         return value != null && !value.isEmpty();
     }
+
+    @Named("mapCountry")
+    default Country mapCountry(Country country){return country;};
+
+
 
 
 

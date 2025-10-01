@@ -38,5 +38,6 @@ public interface OrderMapped {
     OrderOutDtoMIni toDtoMini(Order order);
 
     //UPDATE
+    @Mapping(target = "id", ignore = true)
     Order update(@MappingTarget Order targer, Order source);
 }

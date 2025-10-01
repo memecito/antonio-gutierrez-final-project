@@ -8,12 +8,12 @@ import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.repository.OrderRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -30,21 +30,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<Order> getAll(int pageNumber, int pageSize) {
-        Pageable pageable= PageRequest.of(pageNumber, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return orderRepository.findAll(pageable);
 
     }
 
     @Override
     public Page<Order> getByDate(LocalDateTime starDate, LocalDateTime endDate, int pageNumber, int pageSize) {
-        Pageable pageable= PageRequest.of(pageNumber, pageSize);
-        return orderRepository.findByCreatedAtBetween(starDate,endDate,pageable);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return orderRepository.findByCreatedAtBetween(starDate, endDate, pageable);
     }
 
-    @Override
-    public Set<Order> getByUser(Long id) {
-        return orderRepository.findByUser_Id(id);
-    }
 
     @Override
     public Set<Order> getByProduct(Long id) {
@@ -54,16 +50,16 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getById(Long id) {
         return orderRepository.findById(id).orElseThrow(
-                ()->new EntityNotFoundException("Orden no encontrada, OS01")
+                () -> new EntityNotFoundException("Orden no encontrada, OS01")
         );
     }
+
 
     @Override
     @Transactional
     public Order created(Order order) {
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(StatusOrder.PROCESSING);
-
 
         orderRepository.save(order);
         orderProductService.created(order);
@@ -73,12 +69,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order update(Long id, Order order) {
-        Order orderFound= getById(id);
-        return orderMapped.update(orderFound,order);
+        Order orderFound = getById(id);
+        return orderMapped.update(orderFound, order);
     }
 
     @Override
-    @Transactional
     public void deleted(Long id) {
 
     }

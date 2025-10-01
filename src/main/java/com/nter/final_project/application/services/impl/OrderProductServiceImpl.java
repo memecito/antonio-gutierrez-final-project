@@ -2,10 +2,13 @@ package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.mappers.OrderProductMapper;
 import com.nter.final_project.application.services.OrderProductService;
+import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.entity.OrderProduct;
+import com.nter.final_project.persistence.entity.OrderProductId;
 import com.nter.final_project.persistence.repository.OrderProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
@@ -21,17 +24,15 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     public Set<OrderProduct> getAll() {
-        return Set.of();
+        return (Set<OrderProduct>) productRepository.findAll();
     }
 
     @Override
-    public OrderProduct getById(Long id) {
-        return null;
-    }
+    public OrderProduct getById(OrderProductId id) {
 
-    @Override
-    public OrderProduct getByName(String name) {
-        return null;
+        return productRepository.findById(id).orElseThrow(
+                ()-> new EntityNotFoundException("Orden no encontrada, OPS01")
+        );
     }
 
     @Override
@@ -45,13 +46,9 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     @Transactional
-    public OrderProduct update(Long id, OrderProduct OrderProduct) {
-        return null;
+    public OrderProduct update(OrderProductId id, OrderProduct orderProduct) {
+        OrderProduct orderProductFound= getById(id);
+        return mapper.update(orderProductFound, orderProduct);
     }
 
-    @Override
-    @Transactional
-    public void deleted(Long id) {
-
-    }
 }

@@ -1,10 +1,14 @@
 package com.nter.final_project.application.services.impl;
 
+import com.nter.final_project.application.mappers.ApiUserMapped;
 import com.nter.final_project.application.services.ApiUserService;
+import com.nter.final_project.application.services.CountryService;
+import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EmailAlreadyExistException;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
+import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.persistence.repository.ApiUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,12 +19,16 @@ import jakarta.transaction.Transactional;
 
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class ApiUserServiceImpl implements ApiUserService {
 
     private final ApiUserRepository apiUserRepository;
+    private final ApiUserMapped apiUserMapped;
+
+    private final CountryService countryService;
 
     @Override
     public Page<ApiUser> getAll(int pageNumber, int pageSize) {
@@ -62,9 +70,25 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Override
     @Transactional
     public ApiUser update(Long id, ApiUser apiUser) {
+        ApiUser userFound= getById(id);
+        if(!Objects.equals(userFound.getEmail(),apiUser.getEmail()))
+            throw new BadRequestException("No se puede cambiar el email, APS06");
+       return apiUserMapped.update(userFound, apiUser) ;
+    }
 
+    @Override
+    public ApiUser updateCountry(Long id, Country country) {
+        Country countryFound= countryService.getByCode(country.getCode());
+        ApiUser userFound= getById(id);
+        userFound.setCountry(countryFound);
+        return apiUserRepository.save(userFound);
+    }
 
-        return null;
+    @Override
+    public ApiUser updateStatus(Long id) {
+        ApiUser userFound= getById(id);
+        userFound.setActive(false);
+        return apiUserRepository.save(userFound);
     }
 
     @Override
