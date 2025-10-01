@@ -29,7 +29,6 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     public OrderProduct getById(OrderProductId id) {
-
         return productRepository.findById(id).orElseThrow(
                 ()-> new EntityNotFoundException("Orden no encontrada, OPS01")
         );
@@ -41,14 +40,22 @@ public class OrderProductServiceImpl implements OrderProductService {
         order.getOrderProducts().forEach(orderProduct ->
                 orderProduct.getOrderProductId().setOrder(order));
         return productRepository.saveAll(order.getOrderProducts());
-
     }
 
     @Override
     @Transactional
     public OrderProduct update(OrderProductId id, OrderProduct orderProduct) {
-        OrderProduct orderProductFound= getById(id);
+        OrderProduct orderProductFound= productRepository.findById(id).orElse(
+                productRepository.save(orderProduct)
+        );
+        if(orderProduct.getAmount()==0)
+            delete(orderProduct.getOrderProductId());
         return mapper.update(orderProductFound, orderProduct);
+    }
+
+    @Override
+    public void delete(OrderProductId id) {
+        productRepository.delete(getById(id));
     }
 
 }

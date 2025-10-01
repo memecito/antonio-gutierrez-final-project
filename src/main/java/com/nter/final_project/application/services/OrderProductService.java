@@ -13,4 +13,5 @@ public interface OrderProductService {
     OrderProduct getById(OrderProductId id);
     List<OrderProduct> created(Order oder);
     OrderProduct update(OrderProductId id, OrderProduct orderProduct);
+    void delete(OrderProductId id);
 }

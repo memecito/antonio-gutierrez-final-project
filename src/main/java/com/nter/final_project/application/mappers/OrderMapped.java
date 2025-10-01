@@ -5,6 +5,7 @@ import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.presentation.dto.order.OrderInDto;
 import com.nter.final_project.presentation.dto.order.OrderOutDto;
 import com.nter.final_project.presentation.dto.order.OrderOutDtoMIni;
+import com.nter.final_project.presentation.dto.order.OrderUpdateDto;
 import org.mapstruct.*;
 
 @Mapper(
@@ -25,6 +26,9 @@ public interface OrderMapped {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "status",ignore = true, defaultValue = "processing")
     Order toModel(OrderInDto orderInDto);
+
+    @Mapping(target = "orderProducts", source = "products")
+    Order toModelUpdate(OrderUpdateDto orderUpdateDto);
 
 
     //OUPUT

@@ -6,6 +6,8 @@ import com.nter.final_project.application.services.OrderService;
 import com.nter.final_project.application.services.ProductService;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Order;
+import com.nter.final_project.persistence.entity.OrderProduct;
+import com.nter.final_project.persistence.entity.OrderProductId;
 import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.repository.OrderRepository;
 import jakarta.transaction.Transactional;
@@ -60,7 +62,6 @@ public class OrderServiceImpl implements OrderService {
     public Order created(Order order) {
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(StatusOrder.PROCESSING);
-
         orderRepository.save(order);
         orderProductService.created(order);
         return order;
@@ -70,7 +71,13 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Order update(Long id, Order order) {
         Order orderFound = getById(id);
-        return orderMapped.update(orderFound, order);
+        order.getOrderProducts().forEach(
+                orderProduct -> {
+                    orderProduct.getOrderProductId().setOrder(orderFound);
+                    orderProductService.update(orderProduct.getOrderProductId(),orderProduct);
+                }
+        );
+      return orderFound;
     }
 
     @Override

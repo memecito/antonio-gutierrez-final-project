@@ -1,6 +1,7 @@
 package com.nter.final_project.application.services;
 
 import com.nter.final_project.persistence.entity.Order;
+import com.nter.final_project.persistence.entity.OrderProduct;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 
@@ -22,7 +23,7 @@ public interface OrderService {
 
     Order created(Order Order);
 
-    Order update(Long id, Order Order);
+    Order update(Long id, Order order);
 
     void deleted(Long id);
 }
