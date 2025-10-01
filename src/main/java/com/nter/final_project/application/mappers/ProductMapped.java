@@ -5,6 +5,7 @@ import com.nter.final_project.persistence.entity.Product;
 import com.nter.final_project.presentation.dto.product.ProductInDto;
 import com.nter.final_project.presentation.dto.product.ProductOutDto;
 import com.nter.final_project.presentation.dto.product.ProductOutDtoMIni;
+import com.nter.final_project.presentation.dto.product.ProductUpdateDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -19,9 +20,16 @@ public interface ProductMapped {
     //INPUT
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "created", ignore = true)
-    @Mapping(target = "orderProducts",ignore = true)
+    @Mapping(target = "orderProducts", ignore = true)
+    @Mapping(target = "status", ignore = true, defaultValue = "available")
     Product toModel(ProductInDto product);
 
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "created", ignore = true)
+    @Mapping(target = "orderProducts", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    Product toModelUpdate(ProductUpdateDto productUpdateDto);
     //OUPUT
 
     ProductOutDtoMIni toDtoMini(Product product);

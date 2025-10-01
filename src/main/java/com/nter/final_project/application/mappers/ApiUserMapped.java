@@ -8,6 +8,7 @@ import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
+import com.nter.final_project.presentation.dto.apiuser.ApiUserUpdateDto;
 import org.mapstruct.*;
 
 @Mapper(
@@ -24,6 +25,13 @@ public interface ApiUserMapped {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "active",ignore = true, defaultValue = "true")
     ApiUser toModel(ApiUserInDto apiUserInDto);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "country", source = "country", qualifiedByName = "getCountryByCode")
+    @Mapping(target = "password", conditionQualifiedByName = "isNonEmptyString")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "active",ignore = true, defaultValue = "true")
+    ApiUser toModelUpdate(ApiUserUpdateDto apiUserUpdateDto);
 
 
 

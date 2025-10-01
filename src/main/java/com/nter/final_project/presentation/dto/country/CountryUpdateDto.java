@@ -1,18 +1,10 @@
 package com.nter.final_project.presentation.dto.country;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-public final class CountryInDto {
+public final class CountryUpdateDto {
     @NotBlank(message = "codigo obligatorio")
     @Size(min = 2, max = 2, message = "tamaño del codigo erroneo")
     private String code;
-    @NotBlank(message = "nombre obligatorio")
-    private String name;
 }

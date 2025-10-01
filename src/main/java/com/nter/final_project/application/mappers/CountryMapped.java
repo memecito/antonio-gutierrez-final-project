@@ -4,6 +4,7 @@ import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.presentation.dto.country.CountryInDto;
 import com.nter.final_project.presentation.dto.country.CountryOutDto;
 import com.nter.final_project.presentation.dto.country.CountryOutDtoMini;
+import com.nter.final_project.presentation.dto.country.CountryUpdateDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -15,6 +16,10 @@ public interface CountryMapped {
     @Mapping(target = "apiUsers", ignore = true)
     Country toModel(CountryInDto country);
 
+    @Mapping(target = "apiUsers", ignore = true)
+    @Mapping(target = "name", ignore = true)
+    Country toModelUpdate(CountryUpdateDto country);
+
     //OUPUT
     @Mapping(target = "users", source = "apiUsers")
     CountryOutDto toDto(Country country);
@@ -23,6 +28,5 @@ public interface CountryMapped {
 
     //UPDATE
     @Mapping(target = "code", ignore = true)
-
     Country update(@MappingTarget Country target, Country source);
 }
