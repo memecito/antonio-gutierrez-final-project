@@ -2,11 +2,11 @@ package com.nter.final_project.application.services;
 
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Country;
+import com.nter.final_project.presentation.dto.auth.AuthToken;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ApiUserService {
 
@@ -20,5 +20,6 @@ public interface ApiUserService {
     ApiUser updateCountry(Long id, Country country);
     ApiUser statusDesactive(Long id);
     ApiUser statusActived(Long id);
+    AuthToken autentificate (ApiUser user);
     void deleted(Long id);
 }
