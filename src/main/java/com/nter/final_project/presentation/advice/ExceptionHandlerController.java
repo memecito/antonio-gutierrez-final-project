@@ -30,7 +30,7 @@ public class ExceptionHandlerController {
         CustomError customError = new CustomError(
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 "Faltan campos",
-                errors.toString()
+                errors
         );
         return new ResponseEntity<>(customError, HttpStatus.UNPROCESSABLE_ENTITY);
     }
