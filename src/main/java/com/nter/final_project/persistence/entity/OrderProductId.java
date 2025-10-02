@@ -3,7 +3,6 @@ package com.nter.final_project.persistence.entity;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 @Getter

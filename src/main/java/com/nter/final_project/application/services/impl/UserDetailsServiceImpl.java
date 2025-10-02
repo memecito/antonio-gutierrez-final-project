@@ -1,6 +1,5 @@
 package com.nter.final_project.application.services.impl;
 
-import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.repository.ApiUserRepository;

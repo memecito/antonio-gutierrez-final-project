@@ -6,7 +6,6 @@ import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EntityDuplicateException;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Product;
-import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.entity.StatusProduct;
 import com.nter.final_project.persistence.repository.ProductRepository;
 import jakarta.transaction.Transactional;

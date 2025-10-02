@@ -26,3 +26,11 @@ security:
     secret-key: c5cce0a3980ae936bbb7ec9c526f4057043c28b0da0bbb5caca7b713ad2de9df
     access-token-expiration: 3600000
     refresh-token-expiration: 604800000
+
+loggin:
+  file:
+    path:
+      logs/
+    name:
+      logs/application.log
+
