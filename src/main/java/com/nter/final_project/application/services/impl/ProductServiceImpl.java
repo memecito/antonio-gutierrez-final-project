@@ -86,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
     public Product updateStatus(Long  id, String status) {
         Product product = getById(id);
         final String normalizedStatus = status.trim().toUpperCase();
-        boolean isValidStatus = Arrays.stream(StatusOrder.values())
+        boolean isValidStatus = Arrays.stream(StatusProduct.values())
                 .anyMatch(enumValue -> enumValue.name().equals(normalizedStatus));
 
         if (!isValidStatus) {

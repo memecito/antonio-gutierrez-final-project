@@ -2,13 +2,9 @@ package com.nter.final_project.presentation.controllers;
 
 import com.nter.final_project.application.mappers.ProductMapped;
 import com.nter.final_project.application.services.ProductService;
-import com.nter.final_project.persistence.entity.Product;
-import com.nter.final_project.persistence.repository.ProductRepository;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
-import com.nter.final_project.presentation.dto.product.ProductInDto;
-import com.nter.final_project.presentation.dto.product.ProductOutDto;
-import com.nter.final_project.presentation.dto.product.ProductOutDtoMIni;
-import com.nter.final_project.presentation.dto.product.ProductUpdateDto;
+import com.nter.final_project.presentation.dto.PageResponse;
+import com.nter.final_project.presentation.dto.product.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,11 +23,11 @@ public class ProductController {
     private final ProductMapped productMapped;
 
     @GetMapping
-    public ResponseEntity<Page<ProductOutDtoMIni>> getAllAvailable(@RequestParam(defaultValue = "0", required = false) int page,
-                                                                   @RequestParam(defaultValue = "10", required = false) int size) {
+    public ResponseEntity<PageResponse<ProductOutDtoMIni>> getAllAvailable(@RequestParam(defaultValue = "0", required = false) int page,
+                                                                           @RequestParam(defaultValue = "10", required = false) int size) {
 
-        return ResponseEntity.ok(productService.getAllAvailable(page, size)
-                .map(productMapped::toDtoMini));
+        return ResponseEntity.ok(new PageResponse<>(productService.getAllAvailable(page, size)
+                .map(productMapped::toDtoMini)));
     }
 
     @GetMapping("/all")
@@ -70,9 +66,9 @@ public class ProductController {
         return ResponseEntity.ok(productMapped.toDto(productService.update(id, productMapped.toModelUpdate(product))));
     }
 
-    @PutMapping("/{id}/status/{status}")
-    public ResponseEntity<ProductOutDto> updateStatus(@PathVariable Long id, @PathVariable String status) {
-        return ResponseEntity.ok(productMapped.toDto(productService.updateStatus(id, status)));
+    @PutMapping("/{id}/status")
+    public ResponseEntity<ProductOutDto> updateStatus(@PathVariable Long id, @RequestBody ProductStatusInDto status) {
+        return ResponseEntity.ok(productMapped.toDto(productService.updateStatus(id, productMapped.toModelStatus(status))));
     }
 
     @PutMapping("/name/{name}/actived")

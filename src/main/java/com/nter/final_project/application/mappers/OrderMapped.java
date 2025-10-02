@@ -2,10 +2,7 @@ package com.nter.final_project.application.mappers;
 
 import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.persistence.entity.Order;
-import com.nter.final_project.presentation.dto.order.OrderInDto;
-import com.nter.final_project.presentation.dto.order.OrderOutDto;
-import com.nter.final_project.presentation.dto.order.OrderOutDtoMIni;
-import com.nter.final_project.presentation.dto.order.OrderUpdateDto;
+import com.nter.final_project.presentation.dto.order.*;
 import org.mapstruct.*;
 
 @Mapper(
@@ -29,6 +26,13 @@ public interface OrderMapped {
 
     @Mapping(target = "orderProducts", source = "products")
     Order toModelUpdate(OrderUpdateDto orderUpdateDto);
+
+    default String toModelStatus( OrderStatusInDto statusInDto){
+        if (statusInDto == null) {
+            return null;
+        }
+        return statusInDto.getStatus();
+    }
 
 
     //OUPUT

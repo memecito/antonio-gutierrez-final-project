@@ -3,13 +3,9 @@ package com.nter.final_project.presentation.controllers;
 import com.nter.final_project.application.mappers.OrderMapped;
 import com.nter.final_project.application.services.OrderService;
 import com.nter.final_project.persistence.entity.Order;
-import com.nter.final_project.persistence.entity.StatusOrder;
-import com.nter.final_project.persistence.entity.StatusProduct;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
-import com.nter.final_project.presentation.dto.order.OrderInDto;
-import com.nter.final_project.presentation.dto.order.OrderOutDto;
-import com.nter.final_project.presentation.dto.order.OrderOutDtoMIni;
-import com.nter.final_project.presentation.dto.order.OrderUpdateDto;
+import com.nter.final_project.presentation.dto.PageResponse;
+import com.nter.final_project.presentation.dto.order.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,10 +22,10 @@ public class OrderController {
     private final OrderMapped orderMapped;
 
     @GetMapping
-    public ResponseEntity<Page<OrderOutDtoMIni>> getAll(@RequestParam(defaultValue = "0", required = false) int pageNumber,
+    public ResponseEntity<PageResponse<OrderOutDtoMIni>> getAll(@RequestParam(defaultValue = "0", required = false) int pageNumber,
                                                        @RequestParam(defaultValue = "10", required = false) int pageSize) {
-        return ResponseEntity.ok(orderService.getAll(pageNumber,pageSize)
-                .map(orderMapped::toDtoMini));
+        return ResponseEntity.ok(new PageResponse<>(orderService.getAll(pageNumber,pageSize)
+                .map(orderMapped::toDtoMini)));
     }
 
     @GetMapping("/{id}")
@@ -54,9 +50,10 @@ public class OrderController {
         return ResponseEntity.ok(orderMapped.toDto(orderService.update(id,orderMapped.toModelUpdate(orderUpdateDto))));
     }
 
-    @PutMapping("/{id}/status/{status}")
-    public ResponseEntity<OrderOutDto> updateStatus(@PathVariable Long id, @PathVariable String status){
-        return ResponseEntity.ok(orderMapped.toDto(orderService.updateStatus(id,status)));
+    @PutMapping("/{id}/status")
+    public ResponseEntity<OrderOutDto> updateStatus(@PathVariable Long id, @RequestBody OrderStatusInDto status){
+        String statusStr= orderMapped.toModelStatus(status);
+        return ResponseEntity.ok(orderMapped.toDto(orderService.updateStatus(id, statusStr)));
     }
 
     @DeleteMapping("/{id}")

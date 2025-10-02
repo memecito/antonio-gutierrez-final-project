@@ -4,6 +4,7 @@ import com.nter.final_project.application.mappers.CountryMapped;
 import com.nter.final_project.application.services.CountryService;
 import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
+import com.nter.final_project.presentation.dto.PageResponse;
 import com.nter.final_project.presentation.dto.country.CountryInDto;
 import com.nter.final_project.presentation.dto.country.CountryOutDto;
 import com.nter.final_project.presentation.dto.country.CountryOutDtoMini;
@@ -24,11 +25,10 @@ public class CountryController {
     private final CountryMapped countryMapped;
 
     @GetMapping
-    public ResponseEntity<Page<CountryOutDtoMini>> getAll(@RequestParam(defaultValue = "0", required = false) int pageNumber,
-                                                          @RequestParam(defaultValue = "10", required = false) int pageSize) {
-        Page<Country> countryPage = countryService.getAll(pageNumber, pageSize);
-        Page<CountryOutDtoMini> countryMini = countryPage.map(countryMapped::toDtoMini);
-        return ResponseEntity.ok(countryMini);
+    public ResponseEntity<PageResponse<CountryOutDtoMini>> getAll(@RequestParam(defaultValue = "0", required = false) int pageNumber,
+                                               @RequestParam(defaultValue = "10", required = false) int pageSize) {
+
+        return ResponseEntity.ok(new PageResponse<>(countryService.getAll(pageNumber, pageSize).map(countryMapped::toDtoMini)));
     }
 
     @GetMapping("/{code}")

@@ -2,11 +2,12 @@ package com.nter.final_project.presentation.controllers;
 
 import com.nter.final_project.application.mappers.ApiUserMapped;
 import com.nter.final_project.application.mappers.CountryMapped;
+import com.nter.final_project.application.mappers.PageResponseMapped;
 import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
+import com.nter.final_project.presentation.dto.PageResponse;
 import com.nter.final_project.presentation.dto.apiuser.*;
-import com.nter.final_project.presentation.dto.country.CountryInDto;
 import com.nter.final_project.presentation.dto.country.CountryUpdateDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +24,16 @@ public class ApiUserController {
     private final ApiUserService apiUserService;
     private final ApiUserMapped apiUserMapped;
 
+    private final PageResponseMapped pageMapped;
     private final CountryMapped countryMapped;
 
     @GetMapping
-    public ResponseEntity<Page<ApiUserOutDtoMini>> getAll(
+    public ResponseEntity<PageResponse<ApiUserOutDtoMini>> getAll(
             @RequestParam(defaultValue = "0", required = false) int pageNumber,
             @RequestParam(defaultValue = "10", required = false) int pageSize
     ) {
-        return ResponseEntity.ok(apiUserService.getAll(pageNumber, pageSize)
-                .map(apiUserMapped::toDtoMini));
+        return ResponseEntity.ok(new PageResponse<>(apiUserService.getAll(pageNumber, pageSize)
+                .map(apiUserMapped::toDtoMini)));
     }
 
     @GetMapping("/{id}")

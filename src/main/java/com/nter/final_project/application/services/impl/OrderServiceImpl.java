@@ -7,19 +7,20 @@ import com.nter.final_project.application.services.ProductService;
 import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Order;
-import com.nter.final_project.persistence.entity.OrderProduct;
-import com.nter.final_project.persistence.entity.OrderProductId;
 import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.repository.OrderRepository;
+import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.async.StandardServletAsyncWebRequest;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -62,8 +63,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Order created(Order order) {
         order.setCreatedAt(LocalDateTime.now());
-        order.setStatus(StatusOrder.PROCESSING);
-        //orderRepository.save(order);
+        order.setStatus(StatusOrder.PENDING_PAYMENT);
         orderProductService.created(order);
         return order;
     }
@@ -84,7 +84,18 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order updateStatus(Long id, String status) {
-        Order orderFound = getById(id);
+        return checkStatus(getById(id),status);
+    }
+
+    @Override
+    @Transactional
+    public void deleted(Long id) {
+        Order order = getById(id);
+        order.setStatus(StatusOrder.CANCELLED);
+        //orderRepository.save(order);
+    }
+
+    public Order checkStatus(Order order, String status) {
         final String normalizedStatus = status.trim().toUpperCase();
         boolean isValidStatus = Arrays.stream(StatusOrder.values())
                 .anyMatch(enumValue -> enumValue.name().equals(normalizedStatus));
@@ -92,16 +103,11 @@ public class OrderServiceImpl implements OrderService {
         if (!isValidStatus) {
             throw new BadRequestException("El estado '" + status + "' no es válido.");
         }
-        orderFound.setStatus(StatusOrder.valueOf(normalizedStatus));
-        return orderFound;
-        //return orderRepository.save(orderFound);
-    }
-
-    @Override
-    @Transactional
-    public void deleted(Long id) {
-        Order order= getById(id);
-        order.setStatus(StatusOrder.CANCELLED);
-        //orderRepository.save(order);
+        int saltos = order.getStatus().compareTo(StatusOrder.valueOf(normalizedStatus));
+        if ((saltos < (-1) || saltos > 1) && !Objects.equals(normalizedStatus, StatusOrder.CANCELLED.toString())) {
+            throw new BadRequestException("Cambio de estado no valido");
+        }
+        order.setStatus(StatusOrder.valueOf(normalizedStatus));
+       return order;
     }
 }

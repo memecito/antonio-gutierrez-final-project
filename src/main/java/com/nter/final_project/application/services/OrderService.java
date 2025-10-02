@@ -26,7 +26,7 @@ public interface OrderService {
 
     Order update(Long id, Order order);
 
-    Order updateStatus(Long id, String status);
+    Order updateStatus(Long id , String status);
 
     void deleted(Long id);
 }

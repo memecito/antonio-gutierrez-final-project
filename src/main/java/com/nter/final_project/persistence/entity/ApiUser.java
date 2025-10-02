@@ -26,7 +26,7 @@ public class ApiUser {
     @Column(name = "created")
     private LocalDateTime createdAt= LocalDateTime.now();
     @Column(name = "active")
-    private boolean active= true;
+    private Boolean active= true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "code")

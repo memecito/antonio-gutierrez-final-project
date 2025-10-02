@@ -106,4 +106,16 @@ public class ExceptionHandlerController {
         );
         return new ResponseEntity<>(customError, HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
     }
+
+    @ExceptionHandler(value = {
+            IllegalArgumentException.class
+    })
+    public ResponseEntity<CustomError> hadleIllegalArguement(IllegalArgumentException ex){
+        CustomError customError = new CustomError(
+                HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS.value(),
+                "Argumento no valido",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(customError, HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
+    }
 }

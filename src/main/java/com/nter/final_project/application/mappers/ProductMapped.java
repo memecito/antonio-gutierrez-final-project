@@ -1,11 +1,10 @@
 package com.nter.final_project.application.mappers;
 
 import com.nter.final_project.application.services.OrderService;
+import com.nter.final_project.application.services.ProductService;
 import com.nter.final_project.persistence.entity.Product;
-import com.nter.final_project.presentation.dto.product.ProductInDto;
-import com.nter.final_project.presentation.dto.product.ProductOutDto;
-import com.nter.final_project.presentation.dto.product.ProductOutDtoMIni;
-import com.nter.final_project.presentation.dto.product.ProductUpdateDto;
+import com.nter.final_project.presentation.dto.order.OrderStatusInDto;
+import com.nter.final_project.presentation.dto.product.*;
 import org.mapstruct.*;
 
 @Mapper(
@@ -28,6 +27,14 @@ public interface ProductMapped {
     @Mapping(target = "orderProducts", ignore = true)
     @Mapping(target = "status", ignore = true)
     Product toModelUpdate(ProductUpdateDto productUpdateDto);
+
+    default String toModelStatus( ProductStatusInDto statusInDto){
+        if (statusInDto == null) {
+            return null;
+        }
+        return statusInDto.getStatus();
+    }
+
     //OUPUT
 
     ProductOutDtoMIni toDtoMini(Product product);
