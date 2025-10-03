@@ -15,11 +15,13 @@ public interface ApiUserService {
     ApiUser getById(Long id);
     List<ApiUser> getByName(String name);
     ApiUser getByEmail(String email);
+    AuthToken sigin(AuthToken userToken);
+    AuthToken autentificate (ApiUser user);
+    AuthToken register(ApiUser user);
     ApiUser created(ApiUser apiUser);
     ApiUser update(Long id, ApiUser apiUser);
     ApiUser updateCountry(Long id, Country country);
     ApiUser statusDesactive(Long id);
     ApiUser statusActived(Long id);
-    AuthToken autentificate (ApiUser user);
     void deleted(Long id);
 }

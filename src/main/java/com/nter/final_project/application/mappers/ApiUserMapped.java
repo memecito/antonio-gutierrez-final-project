@@ -9,6 +9,7 @@ import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserUpdateDto;
+import com.nter.final_project.presentation.dto.auth.AuthInDto;
 import org.mapstruct.*;
 import org.springframework.data.domain.Page;
 
@@ -24,16 +25,23 @@ public interface ApiUserMapped {
     @Mapping(target = "country", source = "country", qualifiedByName = "getCountryByCode")
     @Mapping(target = "password", conditionQualifiedByName = "isNonEmptyString")
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "active",ignore = true, defaultValue = "true")
+    @Mapping(target = "active", ignore = true, defaultValue = "true")
     ApiUser toModel(ApiUserInDto apiUserInDto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "country", source = "country", qualifiedByName = "getCountryByCode")
     @Mapping(target = "password", conditionQualifiedByName = "isNonEmptyString")
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "active",ignore = true, defaultValue = "true")
+    @Mapping(target = "active", ignore = true, defaultValue = "true")
     ApiUser toModelUpdate(ApiUserUpdateDto apiUserUpdateDto);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "fullName", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "active", ignore = true)
+    @Mapping(target = "admin", ignore = true)
+    @Mapping(target = "country", ignore = true)
+    ApiUser toModelAuth(AuthInDto authInDto);
 
 
     //OUPUT
@@ -55,10 +63,9 @@ public interface ApiUserMapped {
     }
 
     @Named("mapCountry")
-    default Country mapCountry(Country country){return country;}
-
-
-
+    default Country mapCountry(Country country) {
+        return country;
+    }
 
 
 }

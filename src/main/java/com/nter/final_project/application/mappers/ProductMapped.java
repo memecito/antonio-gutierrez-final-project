@@ -1,9 +1,7 @@
 package com.nter.final_project.application.mappers;
 
 import com.nter.final_project.application.services.OrderService;
-import com.nter.final_project.application.services.ProductService;
 import com.nter.final_project.persistence.entity.Product;
-import com.nter.final_project.presentation.dto.order.OrderStatusInDto;
 import com.nter.final_project.presentation.dto.product.*;
 import org.mapstruct.*;
 

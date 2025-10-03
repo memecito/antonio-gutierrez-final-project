@@ -35,15 +35,22 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(registry ->
-                        registry.requestMatchers("/auth/**").permitAll()
+                        registry
+                                //acceso permitido a todos
+                                .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
+                                //acceso users Admin completo, User acceso solo a search
                                 .requestMatchers("/users/*/country").authenticated()
+                                .requestMatchers("/users").authenticated()
                                 .requestMatchers("/users/**").hasRole("ADMIN")
+                                //acceso products Admin completo, User solo get
                                 .requestMatchers("/products/search").authenticated()
                                 .requestMatchers("/products/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.POST).hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT).hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
+                                //acceso Orders Admin completo, User get and post solo los suyos
+                                .requestMatchers("/orders/**").authenticated()
+                                //acceso Countries Admin completo, user solo get
+                                .requestMatchers( HttpMethod.GET,"/countries").authenticated()
+                                .requestMatchers("/countries/**").hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers

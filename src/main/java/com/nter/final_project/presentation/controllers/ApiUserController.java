@@ -7,7 +7,10 @@ import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.PageResponse;
-import com.nter.final_project.presentation.dto.apiuser.*;
+import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
+import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
+import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
+import com.nter.final_project.presentation.dto.apiuser.ApiUserUpdateDto;
 import com.nter.final_project.presentation.dto.country.CountryUpdateDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +35,8 @@ public class ApiUserController {
             @RequestParam(defaultValue = "0", required = false) int pageNumber,
             @RequestParam(defaultValue = "10", required = false) int pageSize
     ) {
-        return ResponseEntity.ok(new PageResponse<>(apiUserService.getAll(pageNumber, pageSize)
+        Page<ApiUser> apiUsers=apiUserService.getAll(pageNumber, pageSize);
+        return ResponseEntity.ok(new PageResponse<>(apiUsers
                 .map(apiUserMapped::toDtoMini)));
     }
 

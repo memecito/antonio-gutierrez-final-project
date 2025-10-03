@@ -10,8 +10,8 @@ import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.persistence.repository.ApiUserRepository;
-import com.nter.final_project.presentation.dto.PageResponse;
 import com.nter.final_project.presentation.dto.auth.AuthToken;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,8 +20,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import jakarta.transaction.Transactional;
-    
 
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +33,7 @@ public class ApiUserServiceImpl implements ApiUserService {
 
     private final CountryService countryService;
     private final PasswordEncoder passwordEncoder;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
     private final JwtService jwtService;
 
@@ -65,6 +63,34 @@ public class ApiUserServiceImpl implements ApiUserService {
     public ApiUser getByEmail(String email) {
         return apiUserRepository.findByEmail(email).orElseThrow(
                 () -> new EntityNotFoundException("No se ha encontrado ningun usuario con ese nombre, APS04")
+        );
+    }
+
+    @Override
+    public AuthToken sigin(AuthToken userToken) {
+        return null;
+    }
+    @Override
+    public AuthToken autentificate(ApiUser user) {
+        ApiUser userFound= getByEmail(user.getEmail());
+        if(!passwordEncoder.matches(user.getPassword(), userFound.getPassword()))
+            throw new BadRequestException("Invalid credentails, APS07");
+        UserDetails userDetails= userDetailsService.loadUserByUsername(userFound.getEmail());
+
+        return new AuthToken(
+                jwtService.generateAccessToken(userDetails)
+        );
+    }
+
+    @Override
+    @Transactional
+    public AuthToken register(ApiUser user) {
+
+        ApiUser userRegister= created(user);
+        UserDetails userDetails= userDetailsService.loadUserByUsername(userRegister.getEmail());
+
+        return new AuthToken(
+                jwtService.generateAccessToken(userDetails)
         );
     }
 
@@ -109,17 +135,7 @@ public class ApiUserServiceImpl implements ApiUserService {
         userFound.setActive(true);
         return apiUserRepository.save(userFound);    }
 
-    @Override
-    public AuthToken autentificate(ApiUser user) {
-        ApiUser userFound= getByEmail(user.getEmail());
-        if(!passwordEncoder.matches(user.getPassword(), userFound.getPassword()))
-            throw new BadRequestException("Invalid credentails, APS07");
-        UserDetails userDetails= userDetailsService.loadUserByUsername(userFound.getEmail());
 
-        return new AuthToken(
-                jwtService.generateAccessToken(userDetails)
-        );
-    }
 
 
     @Override

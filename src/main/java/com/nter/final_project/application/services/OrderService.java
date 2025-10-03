@@ -1,8 +1,6 @@
 package com.nter.final_project.application.services;
 
 import com.nter.final_project.persistence.entity.Order;
-import com.nter.final_project.persistence.entity.OrderProduct;
-import com.nter.final_project.persistence.entity.StatusOrder;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 

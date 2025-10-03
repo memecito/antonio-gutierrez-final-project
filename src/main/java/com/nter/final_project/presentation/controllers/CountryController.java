@@ -2,7 +2,6 @@ package com.nter.final_project.presentation.controllers;
 
 import com.nter.final_project.application.mappers.CountryMapped;
 import com.nter.final_project.application.services.CountryService;
-import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.PageResponse;
 import com.nter.final_project.presentation.dto.country.CountryInDto;
@@ -11,7 +10,6 @@ import com.nter.final_project.presentation.dto.country.CountryOutDtoMini;
 import com.nter.final_project.presentation.dto.country.CountryUpdateDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
