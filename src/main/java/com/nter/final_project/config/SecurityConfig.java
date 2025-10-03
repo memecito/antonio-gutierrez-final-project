@@ -65,11 +65,11 @@ public class SecurityConfig {
         exceptionHandling
                 .accessDeniedHandler((request, response, accessDeniedException) ->
                         handlerExceptionResolver.resolveException(request, response, null,
-                                new UnauthorizedException("Access denied: insufficient privileges")))
+                                new UnauthorizedException("Access denied: insufficient privileges, SC01")))
 
                 .authenticationEntryPoint((request, response, authException) ->
                         handlerExceptionResolver.resolveException(request, response, null,
-                                new UnauthenticatedException("Access denied: invalid credentials")));
+                                new UnauthenticatedException("Access denied: invalid credentials, SC02")));
     }
 
     @Bean
