@@ -35,10 +35,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(registry ->
-                        registry.requestMatchers("/auth/register").permitAll()
-                                .requestMatchers("/auth/login").permitAll()
+                        registry.requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers(HttpMethod.GET).hasRole("USER")
+                                .requestMatchers("/users/*/country").authenticated()
+                                .requestMatchers("/users/**").hasRole("ADMIN")
+                                .requestMatchers("/products/search").authenticated()
+                                .requestMatchers("/products/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST).hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT).hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
