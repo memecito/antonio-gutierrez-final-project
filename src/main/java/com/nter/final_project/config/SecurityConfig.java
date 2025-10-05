@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 //acceso users Admin completo, User acceso solo a search
                                 .requestMatchers("/users/*/country").authenticated()
                                 .requestMatchers("/users").authenticated()
+                                .requestMatchers("/users/*").authenticated()
                                 .requestMatchers("/users/**").hasRole("ADMIN")
                                 //acceso products Admin completo, User solo get
                                 .requestMatchers("/products/search").authenticated()

@@ -12,11 +12,13 @@ import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserUpdateDto;
 import com.nter.final_project.presentation.dto.country.CountryUpdateDto;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,8 +43,10 @@ public class ApiUserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id)));
+    public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id,@NonNull HttpServletRequest request) {
+
+        String authHeader = request.getHeader("Authorization");
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id, authHeader)));
     }
 
     /*

@@ -11,6 +11,7 @@ import java.util.List;
 public interface ApiUserService {
 
     Page<ApiUser> getAll(int pageNumber,int pageSize);
+    ApiUser getById(Long id, String authHeader);
     @Named("getUserById")
     ApiUser getById(Long id);
     List<ApiUser> getByName(String name);

@@ -3,10 +3,7 @@ package com.nter.final_project.application.services.impl;
 import com.nter.final_project.application.mappers.ApiUserMapped;
 import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.application.services.CountryService;
-import com.nter.final_project.exception.BadRequestException;
-import com.nter.final_project.exception.EmailAlreadyExistException;
-import com.nter.final_project.exception.EntityNotFoundException;
-import com.nter.final_project.exception.UserNotFounException;
+import com.nter.final_project.exception.*;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.persistence.repository.ApiUserRepository;
@@ -17,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -45,8 +41,18 @@ public class ApiUserServiceImpl implements ApiUserService {
     }
 
     @Override
-    public ApiUser getById(Long id) {
+    public ApiUser getById(Long id, String token) {
+        ApiUser userToken = extractUser(token);
+        ApiUser userfound = getById(id);
+        //todo gestionar bien el acceso o con un if anidado o pensar otra condicion
+        if ((!userToken.getAdmin()) || (!Objects.equals(userfound.getEmail(), userToken.getEmail()))) {
+            throw new UnauthorizedException("No tienes permisos para entrar");
+        }
+        return userfound;
+    }
 
+    @Override
+    public ApiUser getById(Long id) {
         return apiUserRepository.findById(id).orElseThrow(
                 () -> new UserNotFounException("Usuario con id: " + id + " no encontrado, APS01")
         );
@@ -70,12 +76,13 @@ public class ApiUserServiceImpl implements ApiUserService {
     public AuthToken sigin(AuthToken userToken) {
         return null;
     }
+
     @Override
     public AuthToken autentificate(ApiUser user) {
-        ApiUser userFound= getByEmail(user.getEmail());
-        if(!passwordEncoder.matches(user.getPassword(), userFound.getPassword()))
+        ApiUser userFound = getByEmail(user.getEmail());
+        if (!passwordEncoder.matches(user.getPassword(), userFound.getPassword()))
             throw new BadRequestException("Invalid credentails, APS07");
-        UserDetails userDetails= userDetailsService.loadUserByUsername(userFound.getEmail());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userFound.getEmail());
 
         return new AuthToken(
                 jwtService.generateAccessToken(userDetails)
@@ -86,8 +93,8 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Transactional
     public AuthToken register(ApiUser user) {
 
-        ApiUser userRegister= created(user);
-        UserDetails userDetails= userDetailsService.loadUserByUsername(userRegister.getEmail());
+        ApiUser userRegister = created(user);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userRegister.getEmail());
 
         return new AuthToken(
                 jwtService.generateAccessToken(userDetails)
@@ -108,41 +115,54 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Override
     @Transactional
     public ApiUser update(Long id, ApiUser apiUser) {
-        ApiUser userFound= getById(id);
-        if(!Objects.equals(userFound.getEmail(),apiUser.getEmail()))
+        ApiUser userFound = getById(id);
+        if (!Objects.equals(userFound.getEmail(), apiUser.getEmail()))
             throw new BadRequestException("No se puede cambiar el email, APS06");
-       return apiUserMapped.update(userFound, apiUser) ;
+        return apiUserMapped.update(userFound, apiUser);
     }
 
     @Override
     public ApiUser updateCountry(Long id, Country country) {
-        Country countryFound= countryService.getByCode(country.getCode());
-        ApiUser userFound= getById(id);
+        Country countryFound = countryService.getByCode(country.getCode());
+        ApiUser userFound = getById(id);
         userFound.setCountry(countryFound);
         return apiUserRepository.save(userFound);
     }
 
     @Override
     public ApiUser statusDesactive(Long id) {
-        ApiUser userFound= getById(id);
+        ApiUser userFound = getById(id);
         userFound.setActive(false);
         return apiUserRepository.save(userFound);
     }
 
     @Override
     public ApiUser statusActived(Long id) {
-        ApiUser userFound= getById(id);
+        ApiUser userFound = getById(id);
         userFound.setActive(true);
-        return apiUserRepository.save(userFound);    }
-
-
+        return apiUserRepository.save(userFound);
+    }
 
 
     @Override
     @Transactional
     public void deleted(Long id) {
-        ApiUser userFound= getById(id);
+        ApiUser userFound = getById(id);
         userFound.setActive(false);
         apiUserRepository.save(userFound);
+    }
+
+    private ApiUser extractUser(String authorization) {
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            throw new UnauthenticatedException("Usuario no valido");
+        }
+        try {
+            final String token = authorization.substring(7);
+            return apiUserRepository.findByEmail(jwtService.extractUsername(token)).orElseThrow(
+                    () -> new UserNotFounException("Violacion de seguridad, token no existe")
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
