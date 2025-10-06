@@ -1,11 +1,17 @@
 package com.nter.final_project.application.services.impl;
 
+import com.nter.final_project.application.services.ApiUserService;
+import com.nter.final_project.exception.UnauthenticatedException;
+import com.nter.final_project.exception.UnauthorizedException;
+import com.nter.final_project.persistence.entity.ApiUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +20,15 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
+
+    @Lazy
+    @Autowired
+    private ApiUserService apiUserService;
 
     @Value("${security.jwt.secret-key}")
     private String secretKey;
@@ -77,7 +88,7 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+      return extractExpiration(token).before(new Date());
     }
 
     private boolean isTokenOfType(String token, String expectedType) {
@@ -106,5 +117,34 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public ApiUser extractUser(String authorization) {
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            throw new UnauthenticatedException("Usuario no valido");
+        }
+        try {
+            final String token = authorization.substring(7);
+            return apiUserService.getByEmail(extractUsername(token));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /***
+     *
+     * @param id
+     * @param token
+     * @return boolean
+     */
+    public boolean authorization(Long id, String token) {
+        ApiUser userToken = extractUser(token);
+        if (userToken.getAdmin()) {
+            return true;
+        }
+        if (!Objects.equals(apiUserService.getById(id).getEmail(), userToken.getEmail())) {
+            throw new UnauthorizedException("No tienes permisos para entrar, JWS01");
+        }
+        return true;
     }
 }

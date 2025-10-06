@@ -17,7 +17,7 @@ public interface ProductService {
 
     Product getByName(String name);
 
-    Page<Product> getByCriteria(Map<String, String> params, int page, int size);
+    Page<Product> getByCriteria(Map<String, String> params, int page, int sizem);
 
     Product created(Product Product);
 

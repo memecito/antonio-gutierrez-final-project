@@ -15,15 +15,17 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final ApiUserRepository apiUserRepository;
+
     @Override
     public UserDetails loadUserByUsername(String usermail) throws UsernameNotFoundException {
 
-        ApiUser user= apiUserRepository.findByEmail(usermail).orElseThrow(
-                ()-> new UserNotFounException("Usuario no encontrado, UDS01")
+
+        ApiUser user = apiUserRepository.findByEmail(usermail).orElseThrow(
+                () -> new UserNotFounException("Usuario no encontrado, UDS01")
         );
 
         return User.builder()
-                .username(user.getFullName())
+                .username(user.getEmail())
                 .password(user.getPassword())
                 .roles(getRoles(user.getAdmin()))
                 .build();
@@ -31,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private String[] getRoles(boolean rol) {
         if (rol)
-            return new String []{"ADMIN","USER"};
+            return new String[]{"ADMIN", "USER"};
 
         return new String[]{"USER"};
     }

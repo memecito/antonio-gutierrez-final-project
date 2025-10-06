@@ -30,7 +30,7 @@ public class ExceptionHandlerController {
         CustomError customError = new CustomError(
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 "Faltan campos",
-                errors.toString()
+                errors
         );
         return new ResponseEntity<>(customError, HttpStatus.UNPROCESSABLE_ENTITY);
     }
@@ -65,8 +65,9 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(customError, HttpStatus.I_AM_A_TEAPOT);
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<CustomError> handleFUnauthorizedException(UnauthorizedException ex) {
+    @ExceptionHandler(value = {UnauthorizedException.class,UnauthenticatedException.class
+    })
+    public ResponseEntity<CustomError> handleFUnauthorizedException(Exception ex) {
         CustomError customError = new CustomError(
                 HttpStatus.I_AM_A_TEAPOT.value(),
                 "Direccion no permitida",
@@ -75,7 +76,8 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(customError, HttpStatus.I_AM_A_TEAPOT);
     }
 
-    @ExceptionHandler(UnauthenticatedException.class)
+    /*
+    @ExceptionHandler()
     public ResponseEntity<CustomError> handleUnauthenticatedException(UnauthenticatedException ex) {
         CustomError customError = new CustomError(
                 HttpStatus.I_AM_A_TEAPOT.value(),
@@ -84,6 +86,20 @@ public class ExceptionHandlerController {
         );
         return new ResponseEntity<>(customError, HttpStatus.I_AM_A_TEAPOT);
     }
+
+     */
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<CustomError> handleTokenException(InvalidTokenException ex){
+        CustomError customError= new CustomError(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Token no valido",
+                ex.getMessage()
+        );
+                return new ResponseEntity<>(customError, HttpStatus.UNAUTHORIZED);
+    }
+
+
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<CustomError> handleBadRequestException(BadRequestException ex) {

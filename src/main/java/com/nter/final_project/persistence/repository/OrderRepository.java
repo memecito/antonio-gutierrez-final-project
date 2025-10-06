@@ -14,5 +14,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Page<Order> findByCreatedAtBetween(LocalDateTime createdAtStart, LocalDateTime createdAtEnd, Pageable pageable);
 
-    Set<Order> findByUser_Id(Long id);
+    Page<Order> findByUser_Id(Long id, Pageable pageable);
+
 }

@@ -31,17 +31,30 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
     private final HandlerExceptionResolver handlerExceptionResolver;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(registry ->
-                        registry.requestMatchers("/auth/register").permitAll()
-                                .requestMatchers("/auth/login").permitAll()
+                        registry
+                                //acceso permitido a todos
+                                .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers(HttpMethod.GET).hasRole("USER")
-                                .requestMatchers(HttpMethod.POST).hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT).hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
+                                //acceso users Admin completo, User acceso solo a search
+                                .requestMatchers("/users/*").authenticated()
+                                .requestMatchers("/users/*/country").authenticated()
+                                .requestMatchers("/users/**").hasRole("ADMIN")
+                                //acceso products Admin completo, User solo get
+                                .requestMatchers(HttpMethod.GET,"/products/search").authenticated()
+                                .requestMatchers("/products/**").hasRole("ADMIN")
+                                //acceso Orders Admin completo, User get and post solo los suyos
+                                .requestMatchers("/orders").authenticated()
+                                .requestMatchers("/order/all").hasRole("ADMIN")
+                                .requestMatchers("/orders/deleted").hasRole("ADMIN")
+                                .requestMatchers("/orders/*/status").hasRole("ADMIN")
+                                //acceso Countries Admin completo, user solo get
+                                .requestMatchers(HttpMethod.GET, "/countries").authenticated()
+                                .requestMatchers("/countries/**").hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers
@@ -56,11 +69,11 @@ public class SecurityConfig {
         exceptionHandling
                 .accessDeniedHandler((request, response, accessDeniedException) ->
                         handlerExceptionResolver.resolveException(request, response, null,
-                                new UnauthorizedException("Access denied: insufficient privileges")))
+                                new UnauthorizedException("Access denied: insufficient privileges, SC01")))
 
                 .authenticationEntryPoint((request, response, authException) ->
                         handlerExceptionResolver.resolveException(request, response, null,
-                                new UnauthenticatedException("Access denied: invalid credentials")));
+                                new UnauthenticatedException("Access denied: invalid credentials, SC02")));
     }
 
     @Bean

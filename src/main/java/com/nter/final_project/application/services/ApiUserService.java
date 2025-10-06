@@ -2,7 +2,6 @@ package com.nter.final_project.application.services;
 
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Country;
-import com.nter.final_project.presentation.dto.auth.AuthToken;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 
@@ -11,6 +10,7 @@ import java.util.List;
 public interface ApiUserService {
 
     Page<ApiUser> getAll(int pageNumber,int pageSize);
+    ApiUser getById(Long id, String authHeader);
     @Named("getUserById")
     ApiUser getById(Long id);
     List<ApiUser> getByName(String name);
@@ -18,8 +18,9 @@ public interface ApiUserService {
     ApiUser created(ApiUser apiUser);
     ApiUser update(Long id, ApiUser apiUser);
     ApiUser updateCountry(Long id, Country country);
+    ApiUser updateAdmin(Long id);
+    ApiUser downgroudnAdmin(Long id);
     ApiUser statusDesactive(Long id);
     ApiUser statusActived(Long id);
-    AuthToken autentificate (ApiUser user);
     void deleted(Long id);
 }

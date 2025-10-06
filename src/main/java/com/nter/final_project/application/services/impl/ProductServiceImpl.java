@@ -26,6 +26,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapped productMapped;
 
+    private final JwtService jwtService;
+
 
     @Override
     public Page<Product> getAllAvailable(int pageNumber, int pageSize) {

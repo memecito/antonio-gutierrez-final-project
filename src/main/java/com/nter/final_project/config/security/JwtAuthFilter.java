@@ -2,6 +2,8 @@ package com.nter.final_project.config.security;
 
 import com.nter.final_project.application.services.impl.JwtService;
 import com.nter.final_project.application.services.impl.UserDetailsServiceImpl;
+import com.nter.final_project.exception.InvalidTokenException;
+import com.nter.final_project.presentation.advice.ExceptionHandlerController;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,9 +23,11 @@ import java.io.IOException;
 @Configuration
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
+
     private final JwtService jwtService;
     private final UserDetailsServiceImpl userDetailsService;
     private final HandlerExceptionResolver handlerExceptionResolver;
+    private final ExceptionHandlerController handlerController;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -56,15 +60,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                    filterChain.doFilter(request, response);
+                    return;
+
+                } else {
+                    handlerExceptionResolver.resolveException(request, response, null,
+                            new InvalidTokenException("Token invalid or expired, JwtAFS01"));
                 }
             }
-            // Movemos doFilter fuera del bloque condicional para asegurar que siempre se llame una vez.
             filterChain.doFilter(request, response);
         } catch (Exception ex) {
             // Capturamos cualquier excepción durante el procesamiento del token y la delegamos al handler.
             // Esto evita que la cadena de filtros continúe si el token es inválido.
-            handlerExceptionResolver.resolveException(request, response, null, ex);
+            // todo throw  new InvalidTokenException("Fallo en la autentificacion, JAF01");
+            handlerExceptionResolver.resolveException(request, response, null, new InvalidTokenException("Token invalid or expired, JwtAFS02"));
         }
     }
+
 }
 

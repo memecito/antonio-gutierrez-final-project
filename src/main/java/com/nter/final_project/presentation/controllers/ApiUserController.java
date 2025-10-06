@@ -12,6 +12,7 @@ import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserUpdateDto;
 import com.nter.final_project.presentation.dto.country.CountryUpdateDto;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,18 +30,22 @@ public class ApiUserController {
     private final PageResponseMapped pageMapped;
     private final CountryMapped countryMapped;
 
+
     @GetMapping
     public ResponseEntity<PageResponse<ApiUserOutDtoMini>> getAll(
             @RequestParam(defaultValue = "0", required = false) int pageNumber,
             @RequestParam(defaultValue = "10", required = false) int pageSize
     ) {
-        return ResponseEntity.ok(new PageResponse<>(apiUserService.getAll(pageNumber, pageSize)
+        Page<ApiUser> apiUsers = apiUserService.getAll(pageNumber, pageSize);
+        return ResponseEntity.ok(new PageResponse<>(apiUsers
                 .map(apiUserMapped::toDtoMini)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id)));
+    public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id, HttpServletRequest request) {
+
+        String authHeader = request.getHeader("Authorization");
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id, authHeader)));
     }
 
     /*
@@ -56,25 +61,31 @@ public class ApiUserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id,@Valid @RequestBody ApiUserUpdateDto apiUser) {
-        ApiUser user= apiUserMapped.toModelUpdate(apiUser);
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ApiUserUpdateDto apiUser) {
+        ApiUser user = apiUserMapped.toModelUpdate(apiUser);
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id, user)));
     }
 
     @PatchMapping("/{id}/country")
-    public ResponseEntity<?> updateCountry(@PathVariable Long id,@Valid @RequestBody CountryUpdateDto country) {
+    public ResponseEntity<?> updateCountry(@PathVariable Long id, @Valid @RequestBody CountryUpdateDto country) {
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id, countryMapped.toModelUpdate(country))));
     }
 
     @PutMapping("/{id}/desactived")
-    public ResponseEntity<ApiUserOutDto> statusDesactived(@PathVariable Long id){
+    public ResponseEntity<ApiUserOutDto> statusDesactived(@PathVariable Long id) {
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.statusDesactive(id)));
     }
 
     @PutMapping("/{id}/actived")
-    public ResponseEntity<ApiUserOutDto> statusActived(@PathVariable Long id){
+    public ResponseEntity<ApiUserOutDto> statusActived(@PathVariable Long id) {
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.statusActived(id)));
     }
+
+    @PatchMapping("/{id}/become-admin")
+    public ResponseEntity<ApiUserOutDto> becomeAdmin(@PathVariable Long id) {
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateAdmin(id)));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<BasicResponseDto> deleted(@PathVariable Long id) {
         apiUserService.deleted(id);
@@ -83,4 +94,5 @@ public class ApiUserController {
                 .message("Usuario eliminado")
                 .build());
     }
+
 }

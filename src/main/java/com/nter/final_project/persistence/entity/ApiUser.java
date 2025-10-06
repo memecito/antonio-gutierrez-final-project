@@ -28,7 +28,7 @@ public class ApiUser {
     @Column(name = "active")
     private Boolean active= true;
     @Column(name = "admin")
-    private Boolean admin;
+    private Boolean admin= false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "code")
