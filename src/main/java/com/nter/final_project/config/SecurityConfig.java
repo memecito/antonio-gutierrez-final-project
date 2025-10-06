@@ -31,6 +31,7 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
     private final HandlerExceptionResolver handlerExceptionResolver;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
@@ -40,17 +41,19 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
                                 //acceso users Admin completo, User acceso solo a search
-                                .requestMatchers("/users/*/country").authenticated()
-                                .requestMatchers("/users").authenticated()
                                 .requestMatchers("/users/*").authenticated()
+                                .requestMatchers("/users/*/country").authenticated()
                                 .requestMatchers("/users/**").hasRole("ADMIN")
                                 //acceso products Admin completo, User solo get
-                                .requestMatchers("/products/search").authenticated()
+                                .requestMatchers(HttpMethod.GET,"/products/search").authenticated()
                                 .requestMatchers("/products/**").hasRole("ADMIN")
                                 //acceso Orders Admin completo, User get and post solo los suyos
-                                .requestMatchers("/orders/**").authenticated()
+                                .requestMatchers("/orders").authenticated()
+                                .requestMatchers("/order/all").hasRole("ADMIN")
+                                .requestMatchers("/orders/deleted").hasRole("ADMIN")
+                                .requestMatchers("/orders/*/status").hasRole("ADMIN")
                                 //acceso Countries Admin completo, user solo get
-                                .requestMatchers( HttpMethod.GET,"/countries").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/countries").authenticated()
                                 .requestMatchers("/countries/**").hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

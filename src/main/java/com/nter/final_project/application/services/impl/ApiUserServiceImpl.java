@@ -33,31 +33,49 @@ public class ApiUserServiceImpl implements ApiUserService {
 
     private final JwtService jwtService;
 
-
+    /***
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
     @Override
     public Page<ApiUser> getAll(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return apiUserRepository.findAll(pageable);
     }
 
+    /***
+     *
+     * @param id
+     * @param token
+     * @return
+     */
     @Override
     public ApiUser getById(Long id, String token) {
-        ApiUser userToken = extractUser(token);
         ApiUser userfound = getById(id);
         //todo gestionar bien el acceso o con un if anidado o pensar otra condicion
-        if ((!userToken.getAdmin()) || (!Objects.equals(userfound.getEmail(), userToken.getEmail()))) {
-            throw new UnauthorizedException("No tienes permisos para entrar");
-        }
+        jwtService.authorization(id, token);
         return userfound;
     }
 
+    /***
+     *
+     * @param id
+     * @return
+     */
     @Override
     public ApiUser getById(Long id) {
         return apiUserRepository.findById(id).orElseThrow(
-                () -> new UserNotFounException("Usuario con id: " + id + " no encontrado, APS01")
+                () -> new UserNotFounException("Usuario con id: " + id + " no encontrado, APS02")
         );
     }
 
+    /***
+     *
+     * @param name
+     * @return
+     */
     @Override
     public List<ApiUser> getByName(String name) {
         return apiUserRepository.findByFullName(name).orElseThrow(
@@ -65,6 +83,11 @@ public class ApiUserServiceImpl implements ApiUserService {
         );
     }
 
+    /***
+     *
+     * @param email
+     * @return
+     */
     @Override
     public ApiUser getByEmail(String email) {
         return apiUserRepository.findByEmail(email).orElseThrow(
@@ -72,11 +95,21 @@ public class ApiUserServiceImpl implements ApiUserService {
         );
     }
 
+    /***
+     *
+     * @param userToken
+     * @return
+     */
     @Override
     public AuthToken sigin(AuthToken userToken) {
         return null;
     }
 
+    /***
+     *
+     * @param user
+     * @return
+     */
     @Override
     public AuthToken autentificate(ApiUser user) {
         ApiUser userFound = getByEmail(user.getEmail());
@@ -89,6 +122,11 @@ public class ApiUserServiceImpl implements ApiUserService {
         );
     }
 
+    /***
+     *
+     * @param user
+     * @return
+     */
     @Override
     @Transactional
     public AuthToken register(ApiUser user) {
@@ -101,6 +139,11 @@ public class ApiUserServiceImpl implements ApiUserService {
         );
     }
 
+    /***
+     *
+     * @param apiUser
+     * @return
+     */
     @Override
     @Transactional
     public ApiUser created(ApiUser apiUser) {
@@ -112,6 +155,12 @@ public class ApiUserServiceImpl implements ApiUserService {
         return apiUserRepository.save(apiUser);
     }
 
+    /***
+     *
+     * @param id
+     * @param apiUser
+     * @return
+     */
     @Override
     @Transactional
     public ApiUser update(Long id, ApiUser apiUser) {
@@ -121,6 +170,12 @@ public class ApiUserServiceImpl implements ApiUserService {
         return apiUserMapped.update(userFound, apiUser);
     }
 
+    /***
+     *
+     * @param id
+     * @param country
+     * @return
+     */
     @Override
     public ApiUser updateCountry(Long id, Country country) {
         Country countryFound = countryService.getByCode(country.getCode());
@@ -129,6 +184,11 @@ public class ApiUserServiceImpl implements ApiUserService {
         return apiUserRepository.save(userFound);
     }
 
+    /***
+     *
+     * @param id
+     * @return
+     */
     @Override
     public ApiUser statusDesactive(Long id) {
         ApiUser userFound = getById(id);
@@ -136,6 +196,11 @@ public class ApiUserServiceImpl implements ApiUserService {
         return apiUserRepository.save(userFound);
     }
 
+    /***
+     *
+     * @param id
+     * @return
+     */
     @Override
     public ApiUser statusActived(Long id) {
         ApiUser userFound = getById(id);
@@ -143,26 +208,15 @@ public class ApiUserServiceImpl implements ApiUserService {
         return apiUserRepository.save(userFound);
     }
 
-
+    /***
+     *
+     * @param id
+     */
     @Override
     @Transactional
     public void deleted(Long id) {
         ApiUser userFound = getById(id);
         userFound.setActive(false);
         apiUserRepository.save(userFound);
-    }
-
-    private ApiUser extractUser(String authorization) {
-        if (authorization == null || !authorization.startsWith("Bearer ")) {
-            throw new UnauthenticatedException("Usuario no valido");
-        }
-        try {
-            final String token = authorization.substring(7);
-            return apiUserRepository.findByEmail(jwtService.extractUsername(token)).orElseThrow(
-                    () -> new UserNotFounException("Violacion de seguridad, token no existe")
-            );
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

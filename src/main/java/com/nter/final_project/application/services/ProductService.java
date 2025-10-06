@@ -1,6 +1,7 @@
 package com.nter.final_project.application.services;
 
 import com.nter.final_project.persistence.entity.Product;
+import jakarta.servlet.http.HttpServletRequest;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 
@@ -17,7 +18,7 @@ public interface ProductService {
 
     Product getByName(String name);
 
-    Page<Product> getByCriteria(Map<String, String> params, int page, int size);
+    Page<Product> getByCriteria(Map<String, String> params, int page, int sizem);
 
     Product created(Product Product);
 
