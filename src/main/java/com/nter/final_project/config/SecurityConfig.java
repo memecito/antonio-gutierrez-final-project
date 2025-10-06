@@ -41,7 +41,9 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
                                 //acceso users Admin completo, User acceso solo a search
-                                .requestMatchers("/users/*").authenticated()
+                                .requestMatchers(HttpMethod.GET,"/users/*").authenticated()
+                                .requestMatchers(HttpMethod.PUT,"/users/*").authenticated()
+                                .requestMatchers(HttpMethod.DELETE,"/users/*").hasRole("ADMIN")
                                 .requestMatchers("/users/*/country").authenticated()
                                 .requestMatchers("/users/**").hasRole("ADMIN")
                                 //acceso products Admin completo, User solo get

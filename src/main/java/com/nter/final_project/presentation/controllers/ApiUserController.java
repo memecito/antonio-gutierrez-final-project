@@ -5,6 +5,7 @@ import com.nter.final_project.application.mappers.CountryMapped;
 import com.nter.final_project.application.mappers.PageResponseMapped;
 import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.persistence.entity.ApiUser;
+import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.PageResponse;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
@@ -69,6 +70,7 @@ public class ApiUserController {
 
     @PatchMapping("/{id}/country")
     public ResponseEntity<?> updateCountry(@PathVariable Long id, @Valid @RequestBody CountryUpdateDto country) {
+        Country pais= countryMapped.toModelUpdate(country);
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id, countryMapped.toModelUpdate(country))));
     }
 

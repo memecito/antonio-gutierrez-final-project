@@ -18,7 +18,6 @@ public interface CountryMapped {
 
     @Mapping(target = "apiUsers", ignore = true)
     @Mapping(target = "name", ignore = true)
-    @Mapping(target = "code", ignore = true)
     Country toModelUpdate(CountryUpdateDto country);
 
     //OUPUT
