@@ -90,6 +90,7 @@ public class OrderServiceImpl implements OrderService {
         jwtService.authorization(order.getUser().getId(),token);
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(StatusOrder.PENDING_PAYMENT);
+        orderRepository.save(order);
         orderProductService.created(order);
         return order;
     }

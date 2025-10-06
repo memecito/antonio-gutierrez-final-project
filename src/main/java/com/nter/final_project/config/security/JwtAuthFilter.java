@@ -70,9 +70,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (Exception ex) {
-            // Capturamos cualquier excepción durante el procesamiento del token y la delegamos al handler.
-            // Esto evita que la cadena de filtros continúe si el token es inválido.
-            // todo throw  new InvalidTokenException("Fallo en la autentificacion, JAF01");
             handlerExceptionResolver.resolveException(request, response, null, new InvalidTokenException("Token invalid or expired, JwtAFS02"));
         }
     }
