@@ -1,10 +1,8 @@
 package com.nter.final_project.application.services;
 
 import com.nter.final_project.persistence.entity.Order;
-import jakarta.servlet.http.HttpServletRequest;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
-import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.Set;

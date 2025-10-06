@@ -8,7 +8,6 @@ import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Product;
 import com.nter.final_project.persistence.entity.StatusProduct;
 import com.nter.final_project.persistence.repository.ProductRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

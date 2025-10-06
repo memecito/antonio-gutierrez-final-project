@@ -3,17 +3,18 @@ package com.nter.final_project.application.services.impl;
 import com.nter.final_project.application.mappers.ApiUserMapped;
 import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.application.services.CountryService;
-import com.nter.final_project.exception.*;
+import com.nter.final_project.exception.BadRequestException;
+import com.nter.final_project.exception.EmailAlreadyExistException;
+import com.nter.final_project.exception.EntityNotFoundException;
+import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.persistence.repository.ApiUserRepository;
-import com.nter.final_project.presentation.dto.auth.AuthToken;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +28,11 @@ public class ApiUserServiceImpl implements ApiUserService {
     private final ApiUserRepository apiUserRepository;
     private final ApiUserMapped apiUserMapped;
 
-    private final CountryService countryService;
-    private final PasswordEncoder passwordEncoder;
-    private final UserDetailsServiceImpl userDetailsService;
-
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
+
+    private final CountryService countryService;
+
 
     /***
      *
@@ -54,7 +55,6 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Override
     public ApiUser getById(Long id, String token) {
         ApiUser userfound = getById(id);
-        //todo gestionar bien el acceso o con un if anidado o pensar otra condicion
         jwtService.authorization(id, token);
         return userfound;
     }
@@ -97,50 +97,6 @@ public class ApiUserServiceImpl implements ApiUserService {
 
     /***
      *
-     * @param userToken
-     * @return
-     */
-    @Override
-    public AuthToken sigin(AuthToken userToken) {
-        return null;
-    }
-
-    /***
-     *
-     * @param user
-     * @return
-     */
-    @Override
-    public AuthToken autentificate(ApiUser user) {
-        ApiUser userFound = getByEmail(user.getEmail());
-        if (!passwordEncoder.matches(user.getPassword(), userFound.getPassword()))
-            throw new BadRequestException("Invalid credentails, APS07");
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userFound.getEmail());
-
-        return new AuthToken(
-                jwtService.generateAccessToken(userDetails)
-        );
-    }
-
-    /***
-     *
-     * @param user
-     * @return
-     */
-    @Override
-    @Transactional
-    public AuthToken register(ApiUser user) {
-
-        ApiUser userRegister = created(user);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userRegister.getEmail());
-
-        return new AuthToken(
-                jwtService.generateAccessToken(userDetails)
-        );
-    }
-
-    /***
-     *
      * @param apiUser
      * @return
      */
@@ -177,11 +133,27 @@ public class ApiUserServiceImpl implements ApiUserService {
      * @return
      */
     @Override
+    @Transactional
     public ApiUser updateCountry(Long id, Country country) {
         Country countryFound = countryService.getByCode(country.getCode());
         ApiUser userFound = getById(id);
         userFound.setCountry(countryFound);
-        return apiUserRepository.save(userFound);
+        return userFound;
+    }
+
+    @Override
+    @Transactional
+    public ApiUser updateAdmin(Long id) {
+        ApiUser userFound= getById(id);
+        userFound.setAdmin(true);
+        return userFound;
+    }
+
+    @Override
+    public ApiUser downgroudnAdmin(Long id) {
+        ApiUser userFound= getById(id);
+        userFound.setAdmin(false);
+        return userFound;
     }
 
     /***

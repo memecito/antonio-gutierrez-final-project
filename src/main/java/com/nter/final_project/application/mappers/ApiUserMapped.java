@@ -4,14 +4,12 @@ import com.nter.final_project.application.services.CountryService;
 import com.nter.final_project.application.services.OrderService;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Country;
-import com.nter.final_project.presentation.dto.PageResponse;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserUpdateDto;
 import com.nter.final_project.presentation.dto.auth.AuthInDto;
 import org.mapstruct.*;
-import org.springframework.data.domain.Page;
 
 @Mapper(
         componentModel = "spring",
@@ -48,8 +46,6 @@ public interface ApiUserMapped {
     ApiUserOutDto toDto(ApiUser apiUser);
 
     ApiUserOutDtoMini toDtoMini(ApiUser apiUser);
-
-    PageResponse<ApiUserOutDtoMini> toDtoPage(Page<ApiUser> apiUserPage);
 
     //UPDATE
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

@@ -60,15 +60,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                    filterChain.doFilter(request, response);
+                    return;
+
+                } else {
+                    handlerExceptionResolver.resolveException(request, response, null,
+                            new InvalidTokenException("Token invalid or expired, JwtAFS01"));
                 }
             }
-            // Movemos doFilter fuera del bloque condicional para asegurar que siempre se llame una vez.
             filterChain.doFilter(request, response);
         } catch (Exception ex) {
             // Capturamos cualquier excepción durante el procesamiento del token y la delegamos al handler.
             // Esto evita que la cadena de filtros continúe si el token es inválido.
             // todo throw  new InvalidTokenException("Fallo en la autentificacion, JAF01");
-            handlerExceptionResolver.resolveException(request, response, null, ex);
+            handlerExceptionResolver.resolveException(request, response, null, new InvalidTokenException("Token invalid or expired, JwtAFS02"));
         }
     }
 

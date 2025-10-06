@@ -3,7 +3,6 @@ package com.nter.final_project.application.services.impl;
 import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.exception.UnauthenticatedException;
 import com.nter.final_project.exception.UnauthorizedException;
-import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -89,7 +88,7 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+      return extractExpiration(token).before(new Date());
     }
 
     private boolean isTokenOfType(String token, String expectedType) {
@@ -143,8 +142,8 @@ public class JwtService {
         if (userToken.getAdmin()) {
             return true;
         }
-        if (!Objects.equals(apiUserService.getById(id), userToken.getEmail())) {
-            throw new UnauthorizedException("No tienes permisos para entrar, APS01");
+        if (!Objects.equals(apiUserService.getById(id).getEmail(), userToken.getEmail())) {
+            throw new UnauthorizedException("No tienes permisos para entrar, JWS01");
         }
         return true;
     }
