@@ -4,6 +4,7 @@ import com.nter.final_project.application.mappers.CountryMapped;
 import com.nter.final_project.application.services.CountryService;
 import com.nter.final_project.exception.EntityDuplicateException;
 import com.nter.final_project.exception.EntityNotFoundException;
+import com.nter.final_project.exception.UnsuportedException;
 import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.persistence.repository.CountryRepository;
 import jakarta.transaction.Transactional;
@@ -63,7 +64,9 @@ public class CountryServiceImpl implements CountryService {
     @Override
     @Transactional
     public void deleted(String code) {
-        getByCode(code);
+        Country country= getByCode(code);
+        if(!country.getApiUsers().isEmpty())
+            throw new UnsuportedException("No puede borrar el pais, contiene usuarios, CS05");
         countryRepository.deleteByCode(code);
     }
 }

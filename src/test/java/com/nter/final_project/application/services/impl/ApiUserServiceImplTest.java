@@ -2,7 +2,6 @@ package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.mappers.ApiUserMapped;
 import com.nter.final_project.application.resources.DataProviders;
-import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EmailAlreadyExistException;
 import com.nter.final_project.exception.EntityNotFoundException;
@@ -10,7 +9,6 @@ import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.persistence.repository.ApiUserRepository;
-import com.nter.final_project.presentation.dto.PageResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,9 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,10 +34,7 @@ class ApiUserServiceImplTest {
     private ApiUserRepository apiUserRepository;
     @Mock
     private JwtService jwtService;
-    @Mock
-    private PasswordEncoder passwordEncoder;
-    @Mock
-    private CountryServiceImpl countryService;
+
 
     @Mock
     private ApiUserMapped apiUserMapped;
