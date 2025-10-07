@@ -1,6 +1,7 @@
 package com.nter.final_project.presentation.dto.order;
 
 import com.nter.final_project.presentation.dto.order.orderproduct.OrderProductInDto;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,5 +15,6 @@ public final class OrderInDto {
     @NotNull(message = "Usuario obligatorio")
     private Long user;
     @NotNull(message = "Productos obligatorios")
+    @Valid
     private Set<OrderProductInDto> products;
 }

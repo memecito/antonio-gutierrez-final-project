@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
+    Page<Order> findByUser_Email(String email, Pageable pageable);
+
     Set<Order> findByOrderProducts_OrderProductId_Product(Product product);
 
     Page<Order> findByCreatedAtBetween(LocalDateTime createdAtStart, LocalDateTime createdAtEnd, Pageable pageable);

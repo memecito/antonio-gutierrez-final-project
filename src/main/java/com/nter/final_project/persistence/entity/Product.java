@@ -1,7 +1,9 @@
 package com.nter.final_project.persistence.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -10,7 +12,8 @@ import java.util.Set;
 
 @Getter
 @Setter
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "products")
 public class Product {
@@ -30,6 +33,9 @@ public class Product {
 
     @OneToMany(mappedBy = "orderProductId.product", orphanRemoval = true)
     private Set<OrderProduct> orderProducts = new LinkedHashSet<>();
+
+    public Product(String laptopProX15, double v, String inStock, String s) {
+    }
 
     //RELATIONS
 

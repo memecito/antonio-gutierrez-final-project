@@ -45,9 +45,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<Order> getUsersOrders(int pageNumber, int pageSize, String token) {
-        ApiUser user = jwtService.extractUser(token);
+        String user = jwtService.extractUsername(token);
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Order> orderPage= orderRepository.findByUser_Id(user.getId(), pageable);
+        Page<Order> orderPage= orderRepository.findByUser_Email(user, pageable);
         return orderPage;
     }
 
@@ -68,11 +68,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getById(Long id,String token) {
-        ApiUser user = jwtService.extractUser(token);
+        String userMail = jwtService.extractUsername(token);
         Order order= orderRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Orden no encontrada, OS01")
         );
-        if(!Objects.equals(user.getId(),order.getUser().getId())){
+        if(!Objects.equals(userMail,order.getUser().getEmail())){
             throw new UnauthorizedException("No tiene permisos para ver esta Orden, OS02");
         }
         return order;

@@ -1,13 +1,17 @@
 package com.nter.final_project.persistence.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Entity
 @Table(name = "users")
@@ -33,4 +37,7 @@ public class ApiUser {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "code")
     private Country country;
+
+    public ApiUser(String elenaNavarro, String s, String mail, String es, boolean b, String s1, boolean b1) {
+    }
 }

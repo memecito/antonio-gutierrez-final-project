@@ -21,6 +21,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -44,7 +46,7 @@ public class ApiUserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id, HttpServletRequest request) {
+    public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id, HttpServletRequest request, Principal principal) {
 
         String authHeader = request.getHeader("Authorization");
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id, authHeader)));

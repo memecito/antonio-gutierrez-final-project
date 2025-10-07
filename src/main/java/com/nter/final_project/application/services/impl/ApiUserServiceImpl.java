@@ -12,6 +12,7 @@ import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.persistence.repository.ApiUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ApiUserServiceImpl implements ApiUserService {
@@ -91,7 +93,10 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Override
     public ApiUser getByEmail(String email) {
         return apiUserRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("No se ha encontrado ningun usuario con ese nombre, APS04")
+                () ->{
+                    log.warn("User Not Found: {}",email);
+                    return new EntityNotFoundException("No se ha encontrado ningun usuario con ese nombre, APS04");
+                }
         );
     }
 
@@ -103,11 +108,13 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Override
     @Transactional
     public ApiUser created(ApiUser apiUser) {
-        if (apiUserRepository.findByEmail(apiUser.getEmail()).isPresent())
+        if (apiUserRepository.findByEmail(apiUser.getEmail()).isPresent()) {
+            log.warn("Created: Email in use: {}", apiUser.getEmail());
             throw new EmailAlreadyExistException("este email ya esta registrado, APS05");
+        }
 
         apiUser.setPassword(passwordEncoder.encode(apiUser.getPassword()));
-
+        log.info("usuario creado");
         return apiUserRepository.save(apiUser);
     }
 
@@ -144,14 +151,15 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Override
     @Transactional
     public ApiUser updateAdmin(Long id) {
-        ApiUser userFound= getById(id);
+        ApiUser userFound = getById(id);
         userFound.setAdmin(true);
         return userFound;
     }
 
     @Override
+    @Transactional
     public ApiUser downgroudnAdmin(Long id) {
-        ApiUser userFound= getById(id);
+        ApiUser userFound = getById(id);
         userFound.setAdmin(false);
         return userFound;
     }
@@ -162,6 +170,7 @@ public class ApiUserServiceImpl implements ApiUserService {
      * @return
      */
     @Override
+    @Transactional
     public ApiUser statusDesactive(Long id) {
         ApiUser userFound = getById(id);
         userFound.setActive(false);
@@ -174,6 +183,7 @@ public class ApiUserServiceImpl implements ApiUserService {
      * @return
      */
     @Override
+    @Transactional
     public ApiUser statusActived(Long id) {
         ApiUser userFound = getById(id);
         userFound.setActive(true);

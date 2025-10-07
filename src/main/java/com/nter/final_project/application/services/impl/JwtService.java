@@ -119,18 +119,6 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public ApiUser extractUser(String authorization) {
-        if (authorization == null || !authorization.startsWith("Bearer ")) {
-            throw new UnauthenticatedException("Usuario no valido");
-        }
-        try {
-            final String token = authorization.substring(7);
-            return apiUserService.getByEmail(extractUsername(token));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     /***
      *
      * @param id
@@ -138,7 +126,7 @@ public class JwtService {
      * @return boolean
      */
     public boolean authorization(Long id, String token) {
-        ApiUser userToken = extractUser(token);
+        ApiUser userToken = apiUserService.getByEmail(extractUsername(token.substring(7)));
         if (userToken.getAdmin()) {
             return true;
         }
