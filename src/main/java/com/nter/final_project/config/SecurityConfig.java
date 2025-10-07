@@ -56,6 +56,7 @@ public class SecurityConfig {
                                 .requestMatchers("/orders/*/status").hasRole("ADMIN")
                                 //acceso Countries Admin completo, user solo get
                                 .requestMatchers(HttpMethod.GET, "/countries").authenticated()
+                                .requestMatchers(HttpMethod.GET,"/countries/*").authenticated()
                                 .requestMatchers("/countries/**").hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

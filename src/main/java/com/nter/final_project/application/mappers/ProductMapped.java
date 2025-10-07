@@ -23,7 +23,6 @@ public interface ProductMapped {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "orderProducts", ignore = true)
-    @Mapping(target = "status", ignore = true)
     Product toModelUpdate(ProductUpdateDto productUpdateDto);
 
     default String toModelStatus( ProductStatusInDto statusInDto){
