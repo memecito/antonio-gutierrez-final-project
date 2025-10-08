@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +83,21 @@ public class DataProviders {
                 "2024-11-20 10:30:00",
                 true
         );
+    }
+
+    public static UserDetails userDetailsMock(){
+        ApiUser user= userMock();
+        return User.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .roles(getRoles(user.getAdmin()))
+                .build();
+    }
+    public static String[] getRoles(boolean rol) {
+        if (rol)
+            return new String[]{"ADMIN", "USER"};
+
+        return new String[]{"USER"};
     }
 
     public static Page<Country> pageCountryMock() {
