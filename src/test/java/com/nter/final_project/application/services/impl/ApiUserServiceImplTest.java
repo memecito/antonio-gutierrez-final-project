@@ -9,6 +9,7 @@ import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.persistence.repository.ApiUserRepository;
+import com.nter.final_project.persistence.repository.CountryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +37,14 @@ class ApiUserServiceImplTest {
     @Mock
     private JwtService jwtService;
 
-
     @Mock
     private ApiUserMapped apiUserMapped;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private CountryServiceImpl countryService;
 
     @InjectMocks
     private ApiUserServiceImpl apiUserService;
@@ -99,7 +106,7 @@ class ApiUserServiceImplTest {
     @Test
     void getByName() {
         String fullName = "nombre";
-        when(apiUserRepository.findByFullName(any(String.class))).thenReturn(DataProviders.userListMock());
+        when(apiUserRepository.findByFullName(any(String.class))).thenReturn(DataProviders.userOptionalListMock());
 
         List<ApiUser> userResult = apiUserService.getByName(fullName);
         assertNotNull(userResult);
@@ -138,9 +145,14 @@ class ApiUserServiceImplTest {
     @Test
     void created() {
         ApiUser userIn = DataProviders.userMock();
+        userIn.setEmail("correo@correo.com");
+        userIn.setPassword("password");
+        when(apiUserRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+
+        when(passwordEncoder.encode(anyString())).thenReturn("encoderr");
 
         when(apiUserRepository.save(any(ApiUser.class)))
-                .thenReturn(DataProviders.userMock());
+                .thenReturn(userIn);
 
         ApiUser userResult = apiUserService.created(userIn);
 
@@ -171,6 +183,8 @@ class ApiUserServiceImplTest {
         Long id = 1L;
         ApiUser userUpdate = DataProviders.userMock();
 
+        when(apiUserRepository.findById(id)).thenReturn(Optional.of(userUpdate));
+
         when(apiUserMapped.update(any(ApiUser.class), any(ApiUser.class))).thenReturn(userUpdate);
 
         ApiUser userResult = apiUserService.update(id, userUpdate);
@@ -199,6 +213,8 @@ class ApiUserServiceImplTest {
         assertEquals(message, exception.getMessage());
     }
 
+
+
     @Test
     void updateCountry() {
         Long id = 1L;
@@ -206,9 +222,8 @@ class ApiUserServiceImplTest {
         Country newCountry = new Country(code, "España");
         ApiUser user = DataProviders.userMock();
         user.setId(id);
-
         when(apiUserRepository.findById(anyLong())).thenReturn(Optional.of(user));
-//todo falta el country service que no se que pasa con el...
+
         ApiUser userResult = apiUserService.updateCountry(id, newCountry);
         assertNotNull(userResult);
     }

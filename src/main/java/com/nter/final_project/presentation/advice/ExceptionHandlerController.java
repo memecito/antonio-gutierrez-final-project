@@ -114,7 +114,7 @@ public class ExceptionHandlerController {
     @ExceptionHandler(value = {
             EmailAlreadyExistException.class,
             EntityDuplicateException.class})
-    public ResponseEntity<CustomError> handleBadRequestException(RuntimeException ex) {
+    public ResponseEntity<CustomError> handleBadRequestException(Exception ex) {
         CustomError customError = new CustomError(
                 HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS.value(),
                 "Duplicado",

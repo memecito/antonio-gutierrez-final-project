@@ -30,7 +30,7 @@ public class DataProviders {
         return new PageImpl<>(userList, pageable, userList.size());
     }
 
-    public static Optional<List<ApiUser>> userListMock(){
+    public static Optional<List<ApiUser>> userOptionalListMock(){
         return Optional.of( List.of(
                 new ApiUser("Elena Navarro", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "elena.navarro@example.com", "ES", true, "2024-11-20 10:30:00", true),
                 new ApiUser("John Smith", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "john.smith@example.com", "US", true, "2025-01-15 14:22:00", false),
@@ -41,6 +41,18 @@ public class DataProviders {
                 new ApiUser("Olivia Chen", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "olivia.chen@example.com", "AU", false, "2025-06-22 05:30:00", false),
                 new ApiUser("Liam O''Sullivan", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "liam.osullivan@example.com", "IE", true, "2024-12-30 13:00:00", false)
         ));
+    }
+    public static List<ApiUser> userlListMock(){
+        return  List.of(
+                new ApiUser("Elena Navarro", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "elena.navarro@example.com", "ES", true, "2024-11-20 10:30:00", true),
+                new ApiUser("John Smith", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "john.smith@example.com", "US", true, "2025-01-15 14:22:00", false),
+                new ApiUser("Marie Dubois", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "marie.dubois@example.com", "FR", false, "2025-03-10 09:00:00", false),
+                new ApiUser("Lukas Müller", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "lukas.muller@example.com", "DE", true, "2025-05-01 18:45:30", false),
+                new ApiUser("Carlos Rodriguez", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "carlos.r@example.com", "MX", true, "2024-09-05 20:15:00", false),
+                new ApiUser("Sophia Rossi", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "sophia.rossi@example.com", "IT", true, "2025-02-18 11:00:00", false),
+                new ApiUser("Olivia Chen", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "olivia.chen@example.com", "AU", false, "2025-06-22 05:30:00", false),
+                new ApiUser("Liam O''Sullivan", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "liam.osullivan@example.com", "IE", true, "2024-12-30 13:00:00", false)
+        );
     }
 
     public static Optional<ApiUser> userOptionalMock() {
