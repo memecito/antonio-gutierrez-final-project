@@ -26,6 +26,8 @@ public class Country {
     @OneToMany(mappedBy = "country", orphanRemoval = true)
     private List<ApiUser> apiUsers;
 
-    public Country(String ad, String andorra) {
+    public Country(String code, String nombre) {
+        this.code=code;
+        this.name=nombre;
     }
 }

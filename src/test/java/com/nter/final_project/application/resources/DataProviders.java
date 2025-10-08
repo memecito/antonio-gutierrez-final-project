@@ -30,8 +30,8 @@ public class DataProviders {
         return new PageImpl<>(userList, pageable, userList.size());
     }
 
-    public static Optional<List<ApiUser>> userOptionalListMock(){
-        return Optional.of( List.of(
+    public static Optional<List<ApiUser>> userOptionalListMock() {
+        return Optional.of(List.of(
                 new ApiUser("Elena Navarro", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "elena.navarro@example.com", "ES", true, "2024-11-20 10:30:00", true),
                 new ApiUser("John Smith", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "john.smith@example.com", "US", true, "2025-01-15 14:22:00", false),
                 new ApiUser("Marie Dubois", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "marie.dubois@example.com", "FR", false, "2025-03-10 09:00:00", false),
@@ -42,8 +42,9 @@ public class DataProviders {
                 new ApiUser("Liam O''Sullivan", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "liam.osullivan@example.com", "IE", true, "2024-12-30 13:00:00", false)
         ));
     }
-    public static List<ApiUser> userlListMock(){
-        return  List.of(
+
+    public static List<ApiUser> userlListMock() {
+        return List.of(
                 new ApiUser("Elena Navarro", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "elena.navarro@example.com", "ES", true, "2024-11-20 10:30:00", true),
                 new ApiUser("John Smith", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "john.smith@example.com", "US", true, "2025-01-15 14:22:00", false),
                 new ApiUser("Marie Dubois", "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW", "marie.dubois@example.com", "FR", false, "2025-03-10 09:00:00", false),
@@ -105,6 +106,7 @@ public class DataProviders {
     public static Optional<Country> countryOptionalMock() {
         return Optional.of(new Country("DE", "Alemania"));
     }
+
     public static Country countryMock() {
         return new Country("ES", "España");
     }
@@ -133,7 +135,21 @@ public class DataProviders {
         return new PageImpl<>(products, pageable, products.size());
     }
 
-    public static String tokenMock(){
+    public static Product productMock() {
+        return new Product("Laptop Pro X15", 1250.99, "IN_STOCK", "2024-01-10 09:00:00");
+
+    }
+    public static Optional<Product> productOptionalMock() {
+        return Optional.of(
+                new Product(
+                        "Laptop Pro X15",
+                        1250.99,
+                        "IN_STOCK",
+                        "2024-01-10 09:00:00"));
+
+    }
+
+    public static String tokenMock() {
         return "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJlbGVuYS5uYXZhcnJvQGV4YW1wbGUuY29tIiwiaWF0IjoxNzU5ODI5MTk4LCJleHAiOjE3NTk4MzI3OTgsImFjY2Vzc190eXBlIjoiYWNjZXNzX3Rva2VuIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XX0.Wp2ePIqF1fbhXfPDJPm2eqJAK0LmzDuS_a_O4Yx5ursHte0Q2Cm9NVrUPEHthGQ";
     }
 }

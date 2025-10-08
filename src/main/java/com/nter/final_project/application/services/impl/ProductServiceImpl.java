@@ -26,28 +26,26 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapped productMapped;
 
-    private final JwtService jwtService;
-
 
     @Override
     public Page<Product> getAllAvailable(int pageNumber, int pageSize) {
-        Pageable pageable= PageRequest.of(pageNumber, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return productRepository.findByStatusNot(StatusProduct.DISCONTINUED, pageable);
     }
 
     @Override
-    public Page<Product> getAll(int pageNumber,int pageSize) {
-        Pageable pageable= PageRequest.of(pageNumber, pageSize);
+    public Page<Product> getAll(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return productRepository.findAll(pageable);
     }
 
     @Override
     public Product getById(Long id) {
 
-        Product p= productRepository.findById(id).orElseThrow(
-                ()-> new EntityNotFoundException("Producto no encontrado, PS01")
+        Product p = productRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Producto no encontrado, PS01")
         );
-        if(Objects.equals(p.getStatus(),StatusProduct.DISCONTINUED))
+        if (Objects.equals(p.getStatus(), StatusProduct.DISCONTINUED))
             throw new EntityNotFoundException("Producto descatalogado");
         return p;
     }
@@ -56,20 +54,20 @@ public class ProductServiceImpl implements ProductService {
     public Product getByName(String name) {
 
         return productRepository.findByName(name).orElseThrow(
-                ()-> new EntityNotFoundException("Producto no encontrado, PS02")
-        ) ;
+                () -> new EntityNotFoundException("Producto no encontrado, PS02")
+        );
     }
 
     @Override
     public Page<Product> getByCriteria(Map<String, String> params, int pageNumber, int pageSize) {
-        Pageable pageable= PageRequest.of(pageNumber,pageSize);
-        return productRepository.findProductByCustomParam(params,pageable);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return productRepository.findProductByCustomParam(params, pageable);
     }
 
     @Override
     @Transactional
     public Product created(Product product) {
-        if(productRepository.findByName(product.getName()).isPresent())
+        if (productRepository.findByName(product.getName()).isPresent())
             throw new EntityDuplicateException("Ya existe un producto con este nombre");
         product.setStatus(StatusProduct.AVAILABLE);
         return productRepository.save(product);
@@ -78,13 +76,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product update(Long id, Product product) {
-        Product prorductFound= getById(id);
+        Product prorductFound = getById(id);
         return productMapped.update(prorductFound, product);
     }
 
     @Override
     @Transactional
-    public Product updateStatus(Long  id, String status) {
+    public Product updateStatus(Long id, String status) {
         Product product = getById(id);
         final String normalizedStatus = status.trim().toUpperCase();
         boolean isValidStatus = Arrays.stream(StatusProduct.values())
@@ -98,6 +96,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product getActived(String name) {
         Product product = getByName(name);
         product.setStatus(StatusProduct.AVAILABLE);
@@ -107,7 +106,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void deleted(Long id) {
-        Product productFound= getById(id);
+        Product productFound = getById(id);
         productFound.setStatus(StatusProduct.DISCONTINUED);
         productRepository.save(productFound);
 

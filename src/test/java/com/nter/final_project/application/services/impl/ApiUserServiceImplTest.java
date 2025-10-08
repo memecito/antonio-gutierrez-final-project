@@ -9,7 +9,6 @@ import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.persistence.repository.ApiUserRepository;
-import com.nter.final_project.persistence.repository.CountryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,15 +42,13 @@ class ApiUserServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-    @Mock
-    private CountryServiceImpl countryService;
-
     @InjectMocks
     private ApiUserServiceImpl apiUserService;
 
     @Test
     void getAll() {
         //Given
+        ApiUser apiUser= DataProviders.userMock();
         Page<ApiUser> apiUsers = DataProviders.pageApiUserMock();
         Pageable pageable = PageRequest.of(0, 5);
 
@@ -93,7 +90,7 @@ class ApiUserServiceImplTest {
 
         when(apiUserRepository.findById(anyLong())).thenReturn(DataProviders.userOptionalMock());
         when(jwtService.authorization(anyLong(), anyString())).thenReturn(true);
-        ApiUser apiUser = apiUserService.getById(id,token);
+        ApiUser apiUser = apiUserService.getById(id, token);
 
         boolean auth = jwtService.authorization(id, token);
 
@@ -214,7 +211,6 @@ class ApiUserServiceImplTest {
     }
 
 
-
     @Test
     void updateCountry() {
         Long id = 1L;
@@ -259,18 +255,17 @@ class ApiUserServiceImplTest {
 
     @Test
     void statusDesactive() {
-        Long id= 1L;
-        ApiUser user= DataProviders.userMock();
+        Long id = 1L;
+        ApiUser user = DataProviders.userMock();
         user.setActive(false);
 
         when(apiUserRepository.findById(id)).thenReturn(Optional.of(user));
 
-        ApiUser userResult= apiUserService.statusDesactive(id);
+        ApiUser userResult = apiUserService.statusDesactive(id);
 
         assertNotNull(userResult);
         assertFalse(user.getActive());
     }
-
 
 
     @Test

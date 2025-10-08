@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +17,17 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 public class ApiUser {
+
+    public ApiUser(String fullName, String email, String password, String created, boolean active, String code, boolean admin) {
+        this.fullName=fullName;
+        this.email=email;
+        this.password=password;
+        this.createdAt= LocalDateTime.now();
+        this.active=active;
+        this.admin=admin;
+        this.country.setCode(code);
+
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +50,5 @@ public class ApiUser {
     @JoinColumn(name= "code")
     private Country country;
 
-    public ApiUser(String elenaNavarro, String s, String mail, String es, boolean b, String s1, boolean b1) {
-    }
+
 }

@@ -19,6 +19,12 @@ import java.util.Set;
 @Table(name = "orders")
 public class Order {
 
+    public Order( String status, Long userId, OrderProduct orderProduct){
+        this.status=  StatusOrder.valueOf(status);
+        this.user.setId(id);
+        this.orderProducts.add(orderProduct);
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
@@ -29,12 +35,6 @@ public class Order {
     @Column(name = "created")
     private LocalDateTime createdAt;
 
-    //RELATIONS
-    /*
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OrderProduct> orderProducts;
-
-     */
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
