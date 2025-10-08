@@ -1,5 +1,6 @@
 package com.nter.final_project.application.services.impl;
 
+import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.repository.ApiUserRepository;
@@ -15,14 +16,21 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final ApiUserRepository apiUserRepository;
+    private final ApiUserService apiUserService;
 
     @Override
     public UserDetails loadUserByUsername(String usermail) throws UsernameNotFoundException {
 
 
+       /*
         ApiUser user = apiUserRepository.findByEmail(usermail).orElseThrow(
+
                 () -> new UserNotFounException("Usuario no encontrado, UDS01")
         );
+
+        */
+
+        ApiUser user= apiUserService.getByEmail(usermail);
 
         return User.builder()
                 .username(user.getEmail())

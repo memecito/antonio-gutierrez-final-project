@@ -25,8 +25,11 @@ public class ApiUser {
         this.createdAt= LocalDateTime.now();
         this.active=active;
         this.admin=admin;
-        this.country.setCode(code);
 
+
+    }
+    public ApiUser(Long id){
+        this.id=id;
     }
 
     @Id

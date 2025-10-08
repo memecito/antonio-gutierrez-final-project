@@ -2,13 +2,16 @@ package com.nter.final_project.application.resources;
 
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Country;
+import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.entity.Product;
 import com.nter.final_project.presentation.dto.PageResponse;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -139,6 +142,7 @@ public class DataProviders {
         return new Product("Laptop Pro X15", 1250.99, "IN_STOCK", "2024-01-10 09:00:00");
 
     }
+
     public static Optional<Product> productOptionalMock() {
         return Optional.of(
                 new Product(
@@ -151,5 +155,29 @@ public class DataProviders {
 
     public static String tokenMock() {
         return "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJlbGVuYS5uYXZhcnJvQGV4YW1wbGUuY29tIiwiaWF0IjoxNzU5ODI5MTk4LCJleHAiOjE3NTk4MzI3OTgsImFjY2Vzc190eXBlIjoiYWNjZXNzX3Rva2VuIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XX0.Wp2ePIqF1fbhXfPDJPm2eqJAK0LmzDuS_a_O4Yx5ursHte0Q2Cm9NVrUPEHthGQ";
+    }
+
+    public static Page<Order> pageOrders() {
+        List<Order> orderList = List.of(
+                new Order(1L, "COMPLETED", "2025-01-15 10:30:00"),
+                new Order(2L, "SHIPPED", "2025-09-20 11:00:00"),
+                new Order(5L, "PROCESSING", "2025-09-24 09:15:00"),
+                new Order(3L, "COMPLETED", "2025-03-05 14:00:00"),
+                new Order(4L, "CANCELLED", "2025-02-10 18:45:00"),
+                new Order(1L, "RETURNED", "2025-04-22 12:00:00"),
+                new Order(6L, "DELIVERED", "2025-08-01 16:20:00"),
+                new Order(8L, "PROCESSING", "2025-09-23 13:00:00"),
+                new Order(11L, "SHIPPED", "2025-09-21 17:00:00"),
+                new Order(12L, "CANCELLED", "2025-06-30 20:00:00"),
+                new Order(15L, "COMPLETED", "2025-07-11 09:00:00"),
+                new Order(9L, "PROCESSING", "2025-09-22 10:10:00")
+        );
+        Pageable pageable = PageRequest.of(0, 5);
+        return new PageImpl<>(orderList, pageable, orderList.size());
+    }
+
+    public static Order orderMock() {
+        return new Order(1L, "COMPLETED", "2025-01-15 10:30:00");
+
     }
 }
