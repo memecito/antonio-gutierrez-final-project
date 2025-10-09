@@ -4,10 +4,8 @@ import com.nter.final_project.application.resources.DataProviders;
 import com.nter.final_project.application.services.ProductService;
 import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EntityNotFoundException;
-import com.nter.final_project.persistence.entity.ApiUser;
-import com.nter.final_project.persistence.entity.Order;
-import com.nter.final_project.persistence.entity.Product;
-import com.nter.final_project.persistence.entity.StatusOrder;
+import com.nter.final_project.exception.UnauthorizedException;
+import com.nter.final_project.persistence.entity.*;
 import com.nter.final_project.persistence.repository.OrderRepository;
 import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.Test;
@@ -38,6 +36,9 @@ class OrderServiceImplTest {
 
     @Mock
     private JwtService jwtService;
+
+    @Mock
+    private Objects objects;
 
 
     @InjectMocks
@@ -79,6 +80,8 @@ class OrderServiceImplTest {
 
         Long id = 1L;
 
+        when(productService.getById(id)).thenReturn(DataProviders.productMock());
+
         when(orderRepository.findByOrderProducts_OrderProductId_Product(any(Product.class)))
                 .thenReturn(DataProviders.orderSetMock());
 
@@ -92,15 +95,34 @@ class OrderServiceImplTest {
         Long id = 1L;
         String token = DataProviders.tokenMock();
         ApiUser user = DataProviders.userMock();
+        Order order= DataProviders.orderMock();
+        order.setUser(user);
 
-        when(jwtService.extractUsername(token)).thenReturn("mail@mail.com");
-        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(DataProviders.orderMock()));
+        when(jwtService.extractUsername(token)).thenReturn(user.getEmail());
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
-        //when(Objects.equals(user.getEmail(),user.getId())).thenReturn(true);
 
         Order orderResult = orderService.getById(id, token);
 
         assertNotNull(orderResult);
+    }
+    @Test
+    void getByIdTokenExceptionUnauthorized() {
+        Long id = 1L;
+        String token = DataProviders.tokenMock();
+        ApiUser user = DataProviders.userMock();
+
+        String message= "No tiene permisos para ver esta Orden, OS02";
+
+        when(jwtService.extractUsername(token)).thenReturn(user.getEmail());
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(DataProviders.orderMock()));
+
+        Exception exception= assertThrows(UnauthorizedException.class,
+                ()->orderService.getById(id,token));
+
+        assertEquals(message,exception.getMessage());
+
+
     }
 
     @Test
@@ -142,14 +164,6 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void testGetAll() {
-    }
-
-    @Test
-    void testGetUsersOrders() {
-    }
-
-    @Test
     void testGetByProduct() {
         Long id = 1L;
         when(productService.getById(anyLong())).thenReturn(DataProviders.productMock());
@@ -162,24 +176,17 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void testGetById1() {
-    }
-
-    @Test
-    void testGetById2() {
-    }
-
-    @Test
-    void testCreated() {
-    }
-
-    @Test
     void testUpdate() {
         Long id= 1L;
         Order order= DataProviders.orderMock();
+        ApiUser user= DataProviders.userMock();
+        user.setId(id);
+        order.setUser(user);
+        order.setOrderProducts(DataProviders.orderProductSetMock());
         String token= DataProviders.tokenMock();
 
-        when(jwtService.authorization(anyLong(),token)).thenReturn(true);
+        when(jwtService.authorization(order.getUser().getId(), token)).thenReturn(true);
+        when(jwtService.extractUsername(token)).thenReturn(user.getEmail());
 
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
         when(productService.update(anyLong(),any(Product.class)))

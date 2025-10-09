@@ -59,8 +59,9 @@ public class DataProviders {
     public static Optional<ApiUser> userOptionalMock() {
         return Optional.of(new ApiUser(
                 "Elena Navarro",
-                "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW",
                 "elena.navarro@example.com",
+                "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW",
+
                 "ES",
                 true,
                 "2024-11-20 10:30:00",
@@ -75,8 +76,9 @@ public class DataProviders {
     public static ApiUser userMock() {
         return new ApiUser(
                 "Elena Navarro",
-                "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW",
                 "elena.navarro@example.com",
+                "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW",
+
                 "ES",
                 true,
                 "2024-11-20 10:30:00",
@@ -87,8 +89,9 @@ public class DataProviders {
     public static ApiUser userMockUser() {
         return new ApiUser(
                 "Elena Navarro",
-                "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW",
                 "elena.navarro@example.com",
+                "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW",
+
                 "ES",
                 true,
                 "2024-11-20 10:30:00",
@@ -183,7 +186,6 @@ public class DataProviders {
     }
 
 
-
     public static Page<Order> pageOrders() {
         List<Order> orderList = List.of(
                 new Order(1L, "COMPLETED", "2025-01-15 10:30:00"),
@@ -217,7 +219,24 @@ public class DataProviders {
         }};
     }
 
-    public static OrderProduct orderProductMock(){
-        return new OrderProduct(new OrderProductId(),5);
+    public static OrderProduct orderProductMock() {
+        return new OrderProduct(new OrderProductId(), 5);
+    }
+
+    public static Set<OrderProduct> orderProductSetMock() {
+        return new HashSet<>() {{
+            add(new OrderProduct(orderProductIdMock(), 5));
+            }};
+    }
+
+    public static OrderProductId orderProductIdMock(){
+        Product product= new Product();
+        product.setId(1L);
+        Order order= new Order();
+        order.setId(1L);
+        return new OrderProductId(
+                product,
+                order
+        );
     }
 }

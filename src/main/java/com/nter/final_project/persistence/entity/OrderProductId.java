@@ -3,10 +3,11 @@ package com.nter.final_project.persistence.entity;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 @Getter
 @Setter
+@NoArgsConstructor
 @Embeddable
 public class OrderProductId {
     @ManyToOne(optional = false)
@@ -17,4 +18,6 @@ public class OrderProductId {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
+    public OrderProductId(Product product, Order order) {
+    }
 }
