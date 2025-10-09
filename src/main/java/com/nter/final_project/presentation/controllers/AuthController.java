@@ -61,6 +61,7 @@ public class AuthController {
                 )
         );
     }
+
     @PostMapping("/refresh")
     public ResponseEntity<AuthOutDto> refresh(HttpServletRequest request, HttpServletResponse response) {
 

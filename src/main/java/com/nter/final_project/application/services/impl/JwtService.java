@@ -1,13 +1,13 @@
 package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.services.ApiUserService;
-import com.nter.final_project.exception.UnauthenticatedException;
 import com.nter.final_project.exception.UnauthorizedException;
 import com.nter.final_project.persistence.entity.ApiUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.Data;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
-
+@Data
 @Service
 public class JwtService {
 
@@ -88,7 +88,7 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-      return extractExpiration(token).before(new Date());
+        return extractExpiration(token).before(new Date());
     }
 
     private boolean isTokenOfType(String token, String expectedType) {

@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public final   class OrderStatusInDto {
+public final class OrderStatusInDto {
     String status;
 }

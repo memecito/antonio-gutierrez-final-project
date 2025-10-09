@@ -24,7 +24,7 @@ public class CountryController {
 
     @GetMapping
     public ResponseEntity<PageResponse<CountryOutDtoMini>> getAll(@RequestParam(defaultValue = "0", required = false) int pageNumber,
-                                               @RequestParam(defaultValue = "10", required = false) int pageSize) {
+                                                                  @RequestParam(defaultValue = "10", required = false) int pageSize) {
 
         return ResponseEntity.ok(new PageResponse<>(countryService.getAll(pageNumber, pageSize).map(countryMapped::toDtoMini)));
     }
@@ -41,7 +41,7 @@ public class CountryController {
     }
 
     @PutMapping("/{code}")
-    public ResponseEntity<?> update(@PathVariable String code,@Valid @RequestBody CountryUpdateDto country) {
+    public ResponseEntity<?> update(@PathVariable String code, @Valid @RequestBody CountryUpdateDto country) {
         return ResponseEntity.ok(countryMapped.toDto(
                 countryService.update(code, countryMapped.toModelUpdate(country))));
     }

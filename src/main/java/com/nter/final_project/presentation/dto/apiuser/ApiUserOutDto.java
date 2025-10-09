@@ -4,7 +4,7 @@ import com.nter.final_project.presentation.dto.country.CountryOutDtoMini;
 
 import java.time.LocalDate;
 
-public record ApiUserOutDto (
+public record ApiUserOutDto(
         Long id,
         String fullName,
         String email,

@@ -93,8 +93,8 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Override
     public ApiUser getByEmail(String email) {
         return apiUserRepository.findByEmail(email).orElseThrow(
-                () ->{
-                    log.warn("User Not Found: {}",email);
+                () -> {
+                    log.warn("User Not Found: {}", email);
                     return new EntityNotFoundException("No se ha encontrado ningun usuario con ese nombre, APS04");
                 }
         );
@@ -131,7 +131,7 @@ public class ApiUserServiceImpl implements ApiUserService {
         if (!Objects.equals(userFound.getEmail(), apiUser.getEmail()))
             throw new BadRequestException("No se puede cambiar el email, APS06");
         apiUser.setPassword(passwordEncoder.encode(apiUser.getPassword()));
-        log.info("usuario actualizado {}" ,apiUser.getEmail());
+        log.info("usuario actualizado {}", apiUser.getEmail());
         return apiUserMapped.update(userFound, apiUser);
     }
 

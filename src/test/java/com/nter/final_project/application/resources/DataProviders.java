@@ -1,8 +1,6 @@
 package com.nter.final_project.application.resources;
 
 import com.nter.final_project.persistence.entity.*;
-import com.nter.final_project.presentation.dto.PageResponse;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -10,7 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class DataProviders {
 
@@ -222,11 +223,22 @@ public class DataProviders {
     public static OrderProduct orderProductMock() {
         return new OrderProduct(new OrderProductId(), 5);
     }
+    public static Set<OrderProduct> orderProduct0Mock() {
+        return new HashSet<>() {{
+            add(new OrderProduct(orderProductIdMock(), -10));
+        }};    }
 
     public static Set<OrderProduct> orderProductSetMock() {
         return new HashSet<>() {{
             add(new OrderProduct(orderProductIdMock(), 5));
             }};
+    }
+
+    public static List<OrderProduct> orderProductListMock(){
+        return List.of(
+                new OrderProduct(orderProductIdMock(), 5),
+                new OrderProduct(orderProductIdMock(), 5)
+        );
     }
 
     public static OrderProductId orderProductIdMock(){

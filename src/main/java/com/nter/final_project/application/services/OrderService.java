@@ -4,7 +4,6 @@ import com.nter.final_project.persistence.entity.Order;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 
@@ -20,13 +19,13 @@ public interface OrderService {
     Set<Order> getByProduct(Long id);
 
     @Named("findOrderById")
-    Order getById(Long id,String reques);
+    Order getById(Long id, String reques);
 
     Order created(Order Order, String token);
 
     Order update(Long id, Order order, String token);
 
-    Order updateStatus(Long id , String status);
+    Order updateStatus(Long id, String status);
 
     void deleted(Long id, String token);
 }

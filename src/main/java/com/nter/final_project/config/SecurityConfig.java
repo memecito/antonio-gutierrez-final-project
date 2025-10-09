@@ -42,13 +42,13 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
                                 //acceso users Admin completo, User acceso solo a search
-                                .requestMatchers(HttpMethod.GET,"/users/*").authenticated()
-                                .requestMatchers(HttpMethod.PUT,"/users/*").authenticated()
-                                .requestMatchers(HttpMethod.DELETE,"/users/*").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/users/*").authenticated()
+                                .requestMatchers(HttpMethod.PUT, "/users/*").authenticated()
+                                .requestMatchers(HttpMethod.DELETE, "/users/*").hasRole("ADMIN")
                                 .requestMatchers("/users/*/country").authenticated()
                                 .requestMatchers("/users/**").hasRole("ADMIN")
                                 //acceso products Admin completo, User solo get
-                                .requestMatchers(HttpMethod.GET,"/products/search").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/products/search").authenticated()
                                 .requestMatchers("/products/**").hasRole("ADMIN")
                                 //acceso Orders Admin completo, User get and post solo los suyos
                                 .requestMatchers("/orders").authenticated()
@@ -57,7 +57,7 @@ public class SecurityConfig {
                                 .requestMatchers("/orders/*/status").hasRole("ADMIN")
                                 //acceso Countries Admin completo, user solo get
                                 .requestMatchers(HttpMethod.GET, "/countries").authenticated()
-                                .requestMatchers(HttpMethod.GET,"/countries/*").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/countries/*").authenticated()
                                 .requestMatchers("/countries/**").hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

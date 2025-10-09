@@ -11,7 +11,6 @@ import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderProductService orderProductService;
     private final ProductService productService;
 
-//    @Autowired
+    //    @Autowired
     private final JwtService jwtService;
 
     @Override
@@ -44,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
     public Page<Order> getUsersOrders(int pageNumber, int pageSize, String token) {
         String user = jwtService.extractUsername(token);
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Order> orderPage= orderRepository.findByUser_Email(user, pageable);
+        Page<Order> orderPage = orderRepository.findByUser_Email(user, pageable);
         return orderPage;
     }
 
@@ -66,12 +65,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order getById(Long id,String token) {
+    public Order getById(Long id, String token) {
         String userMail = jwtService.extractUsername(token);
-        Order order= orderRepository.findById(id).orElseThrow(
+        Order order = orderRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Orden no encontrada, OS01")
         );
-        if(!Objects.equals(userMail,order.getUser().getEmail())){
+        if (!Objects.equals(userMail, order.getUser().getEmail())) {
             throw new UnauthorizedException("No tiene permisos para ver esta Orden, OS02");
         }
         return order;
@@ -86,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order created(Order order, String token) {
-        jwtService.authorization(order.getUser().getId(),token);
+        jwtService.authorization(order.getUser().getId(), token);
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         orderRepository.save(order);
@@ -97,9 +96,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order update(Long id, Order order, String token) {
-        jwtService.authorization(order.getUser().getId(),token);
+        jwtService.authorization(order.getUser().getId(), token);
 
-        Order orderFound = getById(id,token);
+        Order orderFound = getById(id, token);
         order.getOrderProducts().forEach(
                 orderProduct -> {
                     orderProduct.getOrderProductId().setOrder(orderFound);
@@ -119,8 +118,9 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void deleted(Long id, String token) {
         Order order = getById(id);
-        jwtService.authorization(order.getUser().getId(),token);
+        jwtService.authorization(order.getUser().getId(), token);
         order.setStatus(StatusOrder.CANCELLED);
+        orderRepository.save(order);
     }
 
     public Order checkStatus(Order order, String status) {

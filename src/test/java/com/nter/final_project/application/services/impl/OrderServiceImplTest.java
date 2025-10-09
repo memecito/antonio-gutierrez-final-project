@@ -5,9 +5,11 @@ import com.nter.final_project.application.services.ProductService;
 import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.exception.UnauthorizedException;
-import com.nter.final_project.persistence.entity.*;
+import com.nter.final_project.persistence.entity.ApiUser;
+import com.nter.final_project.persistence.entity.Order;
+import com.nter.final_project.persistence.entity.Product;
+import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.repository.OrderRepository;
-import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,7 +25,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {
@@ -33,6 +35,9 @@ class OrderServiceImplTest {
 
     @Mock
     private ProductService productService;
+
+    @Mock
+    private OrderProductServiceImpl orderProductService;
 
     @Mock
     private JwtService jwtService;
@@ -155,7 +160,10 @@ class OrderServiceImplTest {
         String token = DataProviders.tokenMock();
 
         when(jwtService.authorization(order.getUser().getId(), token)).thenReturn(true);
+
         when(orderRepository.save(order)).thenReturn(order);
+        when(orderProductService.created(order)).thenReturn(DataProviders.orderProductListMock());
+
 
         Order orderResult = orderService.created(order, token);
 
@@ -185,12 +193,12 @@ class OrderServiceImplTest {
         order.setOrderProducts(DataProviders.orderProductSetMock());
         String token= DataProviders.tokenMock();
 
-        when(jwtService.authorization(order.getUser().getId(), token)).thenReturn(true);
-        when(jwtService.extractUsername(token)).thenReturn(user.getEmail());
+        when(jwtService.authorization(id,token)).thenReturn(true);
 
+        when(jwtService.extractUsername(token)).thenReturn(user.getEmail());
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
-        when(productService.update(anyLong(),any(Product.class)))
-                .thenReturn(DataProviders.productMock());
+
+
 
         Order orderResult=orderService.update(id,order,token);
 
@@ -215,6 +223,22 @@ class OrderServiceImplTest {
 
     @Test
     void testDeleted() {
+        /*
+        Long id= 1L;
+        String token= DataProviders.tokenMock();
+        Order order= DataProviders.orderMock();
+        order.setStatus(StatusOrder.CANCELLED);
+
+
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(DataProviders.orderMock()));
+        when(jwtService.authorization(id,token)).thenReturn(true);
+
+        doNothing().when(orderService).deleted(id,token);
+
+        verify(orderRepository,times(1)).save(order);
+
+         */
+
     }
 
     @Test

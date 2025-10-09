@@ -65,12 +65,26 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(customError, HttpStatus.I_AM_A_TEAPOT);
     }
 
-    @ExceptionHandler(value = {UnauthorizedException.class,UnauthenticatedException.class
+    @ExceptionHandler(value = {
+            UnauthorizedException.class,
+            UnauthenticatedException.class
     })
     public ResponseEntity<CustomError> handleFUnauthorizedException(Exception ex) {
         CustomError customError = new CustomError(
                 HttpStatus.I_AM_A_TEAPOT.value(),
                 "Direccion no permitida",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(customError, HttpStatus.I_AM_A_TEAPOT);
+    }
+
+    @ExceptionHandler(value = {
+            ForbiddenOperationException.class
+    })
+    public ResponseEntity<CustomError> handleForbidenOperationException(ForbiddenOperationException ex) {
+        CustomError customError = new CustomError(
+                HttpStatus.FORBIDDEN.value(),
+                "Operacion no permitida",
                 ex.getMessage()
         );
         return new ResponseEntity<>(customError, HttpStatus.I_AM_A_TEAPOT);
@@ -90,15 +104,14 @@ public class ExceptionHandlerController {
      */
 
     @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<CustomError> handleTokenException(InvalidTokenException ex){
-        CustomError customError= new CustomError(
+    public ResponseEntity<CustomError> handleTokenException(InvalidTokenException ex) {
+        CustomError customError = new CustomError(
                 HttpStatus.UNAUTHORIZED.value(),
                 "Token no valido",
                 ex.getMessage()
         );
-                return new ResponseEntity<>(customError, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(customError, HttpStatus.UNAUTHORIZED);
     }
-
 
 
     @ExceptionHandler(BadRequestException.class)
@@ -126,7 +139,7 @@ public class ExceptionHandlerController {
     @ExceptionHandler(value = {
             IllegalArgumentException.class
     })
-    public ResponseEntity<CustomError> hadleIllegalArguement(IllegalArgumentException ex){
+    public ResponseEntity<CustomError> hadleIllegalArguement(IllegalArgumentException ex) {
         CustomError customError = new CustomError(
                 HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS.value(),
                 "Argumento no valido",

@@ -64,8 +64,8 @@ public class CountryServiceImpl implements CountryService {
     @Override
     @Transactional
     public void deleted(String code) {
-        Country country= getByCode(code);
-        if(!country.getApiUsers().isEmpty())
+        Country country = getByCode(code);
+        if (!country.getApiUsers().isEmpty())
             throw new UnsuportedException("No puede borrar el pais, contiene usuarios, CS05");
         countryRepository.deleteByCode(code);
     }

@@ -17,7 +17,7 @@ import lombok.Setter;
 public class OrderProduct {
 
     @EmbeddedId
-    private OrderProductId orderProductId= new OrderProductId();
+    private OrderProductId orderProductId = new OrderProductId();
 
     private int amount;
 }

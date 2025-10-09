@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -19,17 +18,18 @@ import java.time.LocalDateTime;
 public class ApiUser {
 
     public ApiUser(String fullName, String email, String password, String created, boolean active, String code, boolean admin) {
-        this.fullName=fullName;
-        this.email=email;
-        this.password=password;
-        this.createdAt= LocalDateTime.now();
-        this.active=active;
-        this.admin=admin;
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.createdAt = LocalDateTime.now();
+        this.active = active;
+        this.admin = admin;
 
 
     }
-    public ApiUser(Long id){
-        this.id=id;
+
+    public ApiUser(Long id) {
+        this.id = id;
     }
 
     @Id
@@ -43,14 +43,14 @@ public class ApiUser {
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "created")
-    private LocalDateTime createdAt= LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
     @Column(name = "active")
-    private Boolean active= true;
+    private Boolean active = true;
     @Column(name = "admin")
-    private Boolean admin= false;
+    private Boolean admin = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name= "code")
+    @JoinColumn(name = "code")
     private Country country;
 
 

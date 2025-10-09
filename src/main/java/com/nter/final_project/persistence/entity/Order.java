@@ -19,9 +19,9 @@ import java.util.Set;
 @Table(name = "orders")
 public class Order {
 
-    public Order(  Long userId,String status, String  created){
-        this.status=  StatusOrder.valueOf(status);
-        this.user= new ApiUser(userId);
+    public Order(Long userId, String status, String created) {
+        this.status = StatusOrder.valueOf(status);
+        this.user = new ApiUser(userId);
     }
 
     @Id

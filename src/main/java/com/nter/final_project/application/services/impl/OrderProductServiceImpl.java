@@ -4,6 +4,7 @@ import com.nter.final_project.application.mappers.OrderProductMapper;
 import com.nter.final_project.application.services.OrderProductService;
 import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EntityNotFoundException;
+import com.nter.final_project.exception.ForbiddenOperationException;
 import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.entity.OrderProduct;
 import com.nter.final_project.persistence.entity.OrderProductId;
@@ -30,7 +31,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     @Override
     public OrderProduct getById(OrderProductId id) {
         return productRepository.findById(id).orElseThrow(
-                ()-> new EntityNotFoundException("Orden no encontrada, OPS01")
+                () -> new EntityNotFoundException("Orden no encontrada, OPS01")
         );
     }
 
@@ -38,23 +39,23 @@ public class OrderProductServiceImpl implements OrderProductService {
     @Transactional
     public List<OrderProduct> created(Order order) {
         order.getOrderProducts().forEach(orderProduct ->
-                {
-                    if(orderProduct.getAmount()<0)
-                        throw new BadRequestException("la candidad debe ser mayor de 0");
-                    orderProduct.getOrderProductId().setOrder(order);
-                });
+        {
+            if (orderProduct.getAmount() < 0)
+                throw new ForbiddenOperationException("la candidad debe ser mayor de 0");
+            orderProduct.getOrderProductId().setOrder(order);
+        });
         return productRepository.saveAll(order.getOrderProducts());
     }
 
     @Override
     @Transactional
     public OrderProduct update(OrderProductId id, OrderProduct orderProduct) {
-        OrderProduct orderProductFound= productRepository.findById(id).orElse(
+        OrderProduct orderProductFound = productRepository.findById(id).orElse(
                 productRepository.save(orderProduct)
         );
-        if(orderProduct.getAmount()==0)
+        if (orderProduct.getAmount() == 0)
             delete(orderProduct.getOrderProductId());
-        if(orderProduct.getAmount()<0)
+        if (orderProduct.getAmount() < 0)
             throw new BadRequestException("la candidad debe ser mayor de 0");
         return mapper.update(orderProductFound, orderProduct);
     }

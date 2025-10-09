@@ -1,38 +1,37 @@
 package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.resources.DataProviders;
-import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.mockito.Mockito.when;
-
+@ExtendWith(MockitoExtension.class)
 class JwtServiceTest {
+
+    private final static String REFRESH_TOKEN_CLAIM = "refresh_token";
+    //private final static String ACCESS_TOKEN_CLAIM = "access_token";
 
     @Mock
     private UserDetails userDetails;
 
+    @Mock
+    private ApiUserServiceImpl apiUserService;
+
+    @InjectMocks
+    private JwtService jwtService;
+
     @Test
     void generateAccessToken() {
+
     }
 
     @Test
     void generateRefreshToken() {
-        /*
-        String accessType="";
 
-        Map<String, Object> claims= new HashMap<>();
-        claims.put("authorities", userDetails.getAuthorities());
-        claims.put("access_type", accessType);
-        when(Jwts.builder().compact()).thenReturn(DataProviders.tokenMock());
-
-        String tokenResult=
-
-         */
     }
 
     @Test

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.management.ConstructorParameters;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -30,15 +29,15 @@ public class Product {
     @Column(name = "status")
     private StatusProduct status;
     @Column(name = "created")
-    private LocalDateTime created= LocalDateTime.now();
+    private LocalDateTime created = LocalDateTime.now();
 
     @OneToMany(mappedBy = "orderProductId.product", orphanRemoval = true)
     private Set<OrderProduct> orderProducts = new LinkedHashSet<>();
 
     public Product(String name, double price, String status, String created) {
-        this.name= name;
-        this.status=StatusProduct.valueOf(status);
-        this.created=LocalDateTime.now();
+        this.name = name;
+        this.status = StatusProduct.valueOf(status);
+        this.created = LocalDateTime.now();
 
     }
 

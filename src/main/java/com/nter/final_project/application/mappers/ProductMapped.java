@@ -25,7 +25,7 @@ public interface ProductMapped {
     @Mapping(target = "orderProducts", ignore = true)
     Product toModelUpdate(ProductUpdateDto productUpdateDto);
 
-    default String toModelStatus( ProductStatusInDto statusInDto){
+    default String toModelStatus(ProductStatusInDto statusInDto) {
         if (statusInDto == null) {
             return null;
         }

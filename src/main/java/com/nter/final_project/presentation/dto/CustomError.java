@@ -24,6 +24,7 @@ public class CustomError {
         this.error = error;
         this.message = message;
     }
+
     public CustomError(int status, String error, Map<String, String> details) {
         this.timestamp = LocalDateTime.now();
         this.status = status;

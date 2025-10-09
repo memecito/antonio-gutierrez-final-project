@@ -21,13 +21,13 @@ public interface OrderMapped {
     @Mapping(target = "user", source = "user", qualifiedByName = "getUserById")
     @Mapping(target = "orderProducts", source = "products")
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "status",ignore = true, defaultValue = "processing")
+    @Mapping(target = "status", ignore = true, defaultValue = "processing")
     Order toModel(OrderInDto orderInDto);
 
     @Mapping(target = "orderProducts", source = "products")
     Order toModelUpdate(OrderUpdateDto orderUpdateDto);
 
-    default String toModelStatus( OrderStatusInDto statusInDto){
+    default String toModelStatus(OrderStatusInDto statusInDto) {
         if (statusInDto == null) {
             return null;
         }

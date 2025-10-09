@@ -6,7 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public interface AuthService {
 
-    AuthToken autentificate (ApiUser user);
+    AuthToken autentificate(ApiUser user);
+
     AuthToken register(ApiUser user);
+
     AuthToken refresh(HttpServletRequest request);
 }

@@ -72,7 +72,7 @@ public class ApiUserController {
 
     @PatchMapping("/{id}/country")
     public ResponseEntity<?> updateCountry(@PathVariable Long id, @Valid @RequestBody CountryUpdateDto country) {
-        Country pais= countryMapped.toModelUpdate(country);
+        Country pais = countryMapped.toModelUpdate(country);
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id, countryMapped.toModelUpdate(country))));
     }
 

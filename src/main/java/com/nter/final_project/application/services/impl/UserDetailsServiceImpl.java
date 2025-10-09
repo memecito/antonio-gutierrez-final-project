@@ -1,9 +1,7 @@
 package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.services.ApiUserService;
-import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
-import com.nter.final_project.persistence.repository.ApiUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +18,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String usermail) throws UsernameNotFoundException {
 
-        ApiUser user= apiUserService.getByEmail(usermail);
+        ApiUser user = apiUserService.getByEmail(usermail);
 
         return User.builder()
                 .username(user.getEmail())

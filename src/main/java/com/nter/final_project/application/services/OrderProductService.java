@@ -9,8 +9,12 @@ import java.util.Set;
 
 public interface OrderProductService {
     Set<OrderProduct> getAll();
+
     OrderProduct getById(OrderProductId id);
+
     List<OrderProduct> created(Order oder);
+
     OrderProduct update(OrderProductId id, OrderProduct orderProduct);
+
     void delete(OrderProductId id);
 }
