@@ -84,13 +84,24 @@ public class DataProviders {
                 true
         );
     }
+    public static ApiUser userMockUser() {
+        return new ApiUser(
+                "Elena Navarro",
+                "$2a$10$hs/gZcOJGFaXTIRVCMNhquBQczdQEb644Rk3MQGn/Q6JUBFkgLxGW",
+                "elena.navarro@example.com",
+                "ES",
+                true,
+                "2024-11-20 10:30:00",
+                false
+        );
+    }
 
     public static UserDetails userDetailsMock(){
         ApiUser user= userMock();
         return User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .roles(getRoles(user.getAdmin()))
+                .username("email")
+                .password("password")
+                .roles(new String[]{"ADMIN","USER"})
                 .build();
     }
     public static String[] getRoles(boolean rol) {
