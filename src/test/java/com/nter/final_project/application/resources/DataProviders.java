@@ -101,19 +101,12 @@ public class DataProviders {
     }
 
     public static UserDetails userDetailsMock() {
-        ApiUser user = userMock();
+
         return User.builder()
                 .username("email")
                 .password("password")
                 .roles(new String[]{"ADMIN", "USER"})
                 .build();
-    }
-
-    public static String[] getRoles(boolean rol) {
-        if (rol)
-            return new String[]{"ADMIN", "USER"};
-
-        return new String[]{"USER"};
     }
 
     public static Page<Country> pageCountryMock() {
@@ -139,9 +132,6 @@ public class DataProviders {
         return new PageImpl<>(countries, pageable, countries.size());
     }
 
-    public static Optional<Country> countryOptionalMock() {
-        return Optional.of(new Country("DE", "Alemania"));
-    }
 
     public static Country countryMock() {
         return new Country("ES", "España");

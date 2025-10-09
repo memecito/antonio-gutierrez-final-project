@@ -1,8 +1,7 @@
 token sonarqube:
-sqp_3f1a737b8268ecb9c8729e5c623300385b8932f8
+ sqp_d86b83232f0c4ab0dca6c7cd7e14aed966f3374a
 
-mvn clean verify sonar:sonar -Dsonar.projectKey=Proyecto-final -Dsonar.projectName='Proyecto final' -Dsonar.host.url=http://localhost:9000 -Dsonar.token=sqp_3f1a737b8268ecb9c8729e5c623300385b8932f8
-
+mvn clean verify sonar:sonar -Dsonar.projectKey=Proyecto-final -Dsonar.projectName='Proyecto final' -Dsonar.host.url=http://localhost:9000 -Dsonar.token=sqp_d86b83232f0c4ab0dca6c7cd7e14aed966f3374a
 
 ¿como creo un pedido?
 ¿puedo crear una orden directamente y luego ir añadiendo productos?

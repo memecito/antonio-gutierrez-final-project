@@ -7,7 +7,6 @@ import com.nter.final_project.exception.EmailAlreadyExistException;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
-import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.persistence.repository.ApiUserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

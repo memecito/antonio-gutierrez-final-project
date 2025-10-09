@@ -3,7 +3,6 @@ package com.nter.final_project.application.services.impl;
 import com.nter.final_project.application.mappers.OrderProductMapper;
 import com.nter.final_project.application.resources.DataProviders;
 import com.nter.final_project.exception.EntityNotFoundException;
-import com.nter.final_project.exception.ForbiddenOperationException;
 import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.entity.OrderProduct;
 import com.nter.final_project.persistence.entity.OrderProductId;
@@ -19,8 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class OrderProductServiceImplTest {
