@@ -14,7 +14,7 @@ public interface OrderService {
 
     Page<Order> getUsersOrders(int pageNumber, int pageSize, String token);
 
-    Page<Order> getByDate(LocalDateTime starDate, LocalDateTime endDate, int pageNumber, int pageSize);
+    //Page<Order> getByDate(LocalDateTime starDate, LocalDateTime endDate, int pageNumber, int pageSize);
 
     @Named("findOrderByProduct")
     Set<Order> getByProduct(Long id);

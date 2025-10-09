@@ -1,9 +1,6 @@
 package com.nter.final_project.application.resources;
 
-import com.nter.final_project.persistence.entity.ApiUser;
-import com.nter.final_project.persistence.entity.Country;
-import com.nter.final_project.persistence.entity.Order;
-import com.nter.final_project.persistence.entity.Product;
+import com.nter.final_project.persistence.entity.*;
 import com.nter.final_project.presentation.dto.PageResponse;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
@@ -13,9 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class DataProviders {
 
@@ -73,6 +68,10 @@ public class DataProviders {
         );
     }
 
+    public static String tokenMock() {
+        return "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJlbGVuYS5uYXZhcnJvQGV4YW1wbGUuY29tIiwiaWF0IjoxNzU5ODI5MTk4LCJleHAiOjE3NTk4MzI3OTgsImFjY2Vzc190eXBlIjoiYWNjZXNzX3Rva2VuIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XX0.Wp2ePIqF1fbhXfPDJPm2eqJAK0LmzDuS_a_O4Yx5ursHte0Q2Cm9NVrUPEHthGQ";
+    }
+
     public static ApiUser userMock() {
         return new ApiUser(
                 "Elena Navarro",
@@ -84,6 +83,7 @@ public class DataProviders {
                 true
         );
     }
+
     public static ApiUser userMockUser() {
         return new ApiUser(
                 "Elena Navarro",
@@ -96,14 +96,15 @@ public class DataProviders {
         );
     }
 
-    public static UserDetails userDetailsMock(){
-        ApiUser user= userMock();
+    public static UserDetails userDetailsMock() {
+        ApiUser user = userMock();
         return User.builder()
                 .username("email")
                 .password("password")
-                .roles(new String[]{"ADMIN","USER"})
+                .roles(new String[]{"ADMIN", "USER"})
                 .build();
     }
+
     public static String[] getRoles(boolean rol) {
         if (rol)
             return new String[]{"ADMIN", "USER"};
@@ -181,9 +182,7 @@ public class DataProviders {
 
     }
 
-    public static String tokenMock() {
-        return "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJlbGVuYS5uYXZhcnJvQGV4YW1wbGUuY29tIiwiaWF0IjoxNzU5ODI5MTk4LCJleHAiOjE3NTk4MzI3OTgsImFjY2Vzc190eXBlIjoiYWNjZXNzX3Rva2VuIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfQURNSU4ifSx7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XX0.Wp2ePIqF1fbhXfPDJPm2eqJAK0LmzDuS_a_O4Yx5ursHte0Q2Cm9NVrUPEHthGQ";
-    }
+
 
     public static Page<Order> pageOrders() {
         List<Order> orderList = List.of(
@@ -205,7 +204,20 @@ public class DataProviders {
     }
 
     public static Order orderMock() {
-        return new Order(1L, "COMPLETED", "2025-01-15 10:30:00");
+        return new Order(1L, "PROCESSING", "2025-01-15 10:30:00");
 
+    }
+
+    public static Set<Order> orderSetMock() {
+        return new HashSet<>() {{
+            add(new Order(1L, "COMPLETED", "2025-01-15 10:30:00"));
+            add(new Order(2L, "COMPLETED", "2025-01-15 10:30:00"));
+            add(new Order(3L, "COMPLETED", "2025-01-15 10:30:00"));
+            add(new Order(4L, "COMPLETED", "2025-01-15 10:30:00"));
+        }};
+    }
+
+    public static OrderProduct orderProductMock(){
+        return new OrderProduct(new OrderProductId(),5);
     }
 }

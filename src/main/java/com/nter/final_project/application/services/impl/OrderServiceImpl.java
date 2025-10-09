@@ -1,13 +1,11 @@
 package com.nter.final_project.application.services.impl;
 
-import com.nter.final_project.application.mappers.OrderMapped;
 import com.nter.final_project.application.services.OrderProductService;
 import com.nter.final_project.application.services.OrderService;
 import com.nter.final_project.application.services.ProductService;
 import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.exception.UnauthorizedException;
-import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.repository.OrderRepository;
@@ -29,13 +27,12 @@ import java.util.Set;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderMapped orderMapped;
 
     private final OrderProductService orderProductService;
     private final ProductService productService;
 
-    @Autowired
-    private JwtService jwtService;
+//    @Autowired
+    private final JwtService jwtService;
 
     @Override
     public Page<Order> getAll(int pageNumber, int pageSize) {
@@ -51,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
         return orderPage;
     }
 
+    /*
     @Override
     public Page<Order> getByDate(LocalDateTime starDate,
                                  LocalDateTime endDate,
@@ -59,6 +57,7 @@ public class OrderServiceImpl implements OrderService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return orderRepository.findByCreatedAtBetween(starDate, endDate, pageable);
     }
+     */
 
 
     @Override
