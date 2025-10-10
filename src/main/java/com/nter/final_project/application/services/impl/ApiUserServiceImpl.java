@@ -131,7 +131,6 @@ public class ApiUserServiceImpl implements ApiUserService {
         if (!Objects.equals(userFound.getEmail(), apiUser.getEmail()))
             throw new BadRequestException("No se puede cambiar el email, APS06");
         apiUser.setPassword(passwordEncoder.encode(apiUser.getPassword()));
-        log.info("usuario actualizado {}", apiUser.getEmail());
         return apiUserMapped.update(userFound, apiUser);
     }
 
