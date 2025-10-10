@@ -27,7 +27,7 @@ public class OrderController {
                                                                         @RequestParam(defaultValue = "10", required = false) int pageSize,
                                                                         HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        return ResponseEntity.ok(new PageResponse<>(orderService.getUsersOrders(pageNumber, pageSize, authHeader)
+        return ResponseEntity.ok(new PageResponse<>(orderService.getUsersOrders(pageNumber, pageSize, authHeader.substring(7))
                 .map(orderMapped::toDtoMini)));
     }
 
@@ -41,7 +41,7 @@ public class OrderController {
     @GetMapping("/{id}")
     public ResponseEntity<OrderOutDto> getById(@PathVariable Long id, HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        return ResponseEntity.ok(orderMapped.toDto(orderService.getById(id, authHeader)));
+        return ResponseEntity.ok(orderMapped.toDto(orderService.getById(id, authHeader.substring(7))));
     }
 
     @GetMapping("/product/{id}")
@@ -54,14 +54,14 @@ public class OrderController {
                                                @NonNull HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         Order ord = orderMapped.toModel(order);
-        return ResponseEntity.ok(orderMapped.toDto(orderService.created(ord, authHeader)));
+        return ResponseEntity.ok(orderMapped.toDto(orderService.created(ord, authHeader.substring(7))));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<OrderOutDto> update(@PathVariable Long id, @Valid @RequestBody OrderUpdateDto orderUpdateDto,
                                               @NonNull HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        return ResponseEntity.ok(orderMapped.toDto(orderService.update(id, orderMapped.toModelUpdate(orderUpdateDto), authHeader)));
+        return ResponseEntity.ok(orderMapped.toDto(orderService.update(id, orderMapped.toModelUpdate(orderUpdateDto), authHeader.substring(7))));
     }
 
     @PutMapping("/{id}/status")
@@ -74,7 +74,7 @@ public class OrderController {
     public ResponseEntity<BasicResponseDto> deleted(@PathVariable Long id,
                                                     @NonNull HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        orderService.deleted(id, authHeader);
+        orderService.deleted(id, authHeader.substring(7));
         return ResponseEntity.ok(BasicResponseDto.builder()
                 .status(HttpStatus.OK.value())
                 .message("Orden cancelada")

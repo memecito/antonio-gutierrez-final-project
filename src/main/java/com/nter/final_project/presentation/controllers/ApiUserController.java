@@ -49,7 +49,7 @@ public class ApiUserController {
     public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id, HttpServletRequest request, Principal principal) {
 
         String authHeader = request.getHeader("Authorization");
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id, authHeader)));
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id, authHeader.substring(7))));
     }
 
     /*
