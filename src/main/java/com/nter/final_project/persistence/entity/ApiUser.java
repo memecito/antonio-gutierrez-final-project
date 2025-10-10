@@ -32,4 +32,12 @@ public class ApiUser {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "code")
     private Country country;
+
+    public ApiUser(String nombre, String password, String mail, String country, boolean active, String s1, boolean admin) {
+        this.fullName=nombre;
+        this.password= password;
+        this.email=mail;
+        this.isActive=active;
+
+    }
 }
