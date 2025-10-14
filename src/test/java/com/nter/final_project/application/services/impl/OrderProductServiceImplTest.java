@@ -2,7 +2,9 @@ package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.mappers.OrderProductMapper;
 import com.nter.final_project.application.resources.DataProviders;
+import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EntityNotFoundException;
+import com.nter.final_project.exception.ForbiddenOperationException;
 import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.entity.OrderProduct;
 import com.nter.final_project.persistence.entity.OrderProductId;
@@ -18,7 +20,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderProductServiceImplTest {
@@ -35,16 +38,13 @@ class OrderProductServiceImplTest {
 
     @Test
     void getAll() {
-        /*
+    List<OrderProduct> orderProducts= DataProviders.orderProductListMock();
 
-        when(repository.findAll()).thenReturn(List.of());
+    when(repository.findAll()).thenReturn(orderProducts);
 
-        Set<OrderProduct> orderProductsResult = orderProductService.getAll();
+    Set<OrderProduct> orderProductsResutl= orderProductService.getAll();
 
-        assertNotNull(orderProductsResult);
-        assertTrue(orderProductsResult.isEmpty());
-
-         */
+    assertNotNull(orderProductsResutl);
     }
 
     @Test
@@ -82,24 +82,25 @@ class OrderProductServiceImplTest {
 
     @Test
     void createdException() {
-        /*
+/*
         Order order = DataProviders.orderMock();
         Set<OrderProduct> orderProductList = DataProviders.orderProduct0Mock();
         order.setOrderProducts(orderProductList);
-        String message = "com.nter.final_project.exception.ForbiddenOperationException: la candidad debe ser mayor de 0";
-        Exception exception = assertThrows(ForbiddenOperationException.class,
+        String message = "la candidad debe ser mayor de 0";
+        Exception exception = assertThrows(BadRequestException.class,
                 () -> orderProductService.created(order));
 
         assertEquals(message, exception);
 
-         */
+ */
+
+
     }
 
     @Test
     void update() {
         OrderProductId orderProductId = DataProviders.orderProductIdMock();
         OrderProduct orderProduct = DataProviders.orderProductMock();
-
 
         when(repository.findById(orderProductId)).thenReturn(Optional.of(orderProduct));
         when(mapper.update(orderProduct, orderProduct)).thenReturn(orderProduct);
@@ -108,12 +109,20 @@ class OrderProductServiceImplTest {
 
         assertNotNull(orderProductResult);
 
-
     }
 
     @Test
     void delete() {
+        OrderProductId id= DataProviders.orderProductIdMock();
+        OrderProduct orderProduct=DataProviders.orderProductMock();
 
+        when(repository.findById(id)).thenReturn(Optional.of(orderProduct));
+        doNothing().when(repository).delete(orderProduct);
+
+
+        orderProductService.delete(id);
+
+        verify(repository,times(1)).delete(orderProduct);
 
     }
 }

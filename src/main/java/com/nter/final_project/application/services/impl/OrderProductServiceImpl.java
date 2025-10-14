@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,8 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     public Set<OrderProduct> getAll() {
-        return (Set<OrderProduct>) productRepository.findAll();
+        List<OrderProduct> orderProducts= productRepository.findAll();
+        return orderProducts.stream().collect(Collectors.toSet());
     }
 
     @Override
@@ -41,7 +43,7 @@ public class OrderProductServiceImpl implements OrderProductService {
         order.getOrderProducts().forEach(orderProduct ->
         {
             if (orderProduct.getAmount() < 0)
-                throw new ForbiddenOperationException("la candidad debe ser mayor de 0");
+                throw new BadRequestException("la candidad debe ser mayor de 0");
             orderProduct.getOrderProductId().setOrder(order);
         });
         return productRepository.saveAll(order.getOrderProducts());
