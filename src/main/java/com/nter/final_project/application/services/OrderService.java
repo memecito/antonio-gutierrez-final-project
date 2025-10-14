@@ -1,6 +1,8 @@
 package com.nter.final_project.application.services;
 
 import com.nter.final_project.persistence.entity.Order;
+import com.nter.final_project.presentation.dto.PageResponse;
+import com.nter.final_project.presentation.dto.order.OrderOutDtoMIni;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 
@@ -13,7 +15,7 @@ public interface OrderService {
 
     Page<Order> getUsersOrders(int pageNumber, int pageSize, String token);
 
-    //Page<Order> getByDate(LocalDateTime starDate, LocalDateTime endDate, int pageNumber, int pageSize);
+    Set<Order> getByUser(String name);
 
     @Named("findOrderByProduct")
     Set<Order> getByProduct(Long id);
@@ -28,4 +30,5 @@ public interface OrderService {
     Order updateStatus(Long id, String status, String token);
 
     void deleted(Long id, String token);
+
 }

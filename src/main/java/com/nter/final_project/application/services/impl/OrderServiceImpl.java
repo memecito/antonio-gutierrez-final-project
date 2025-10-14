@@ -48,6 +48,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Set<Order> getByUser(String name) {
+        return orderRepository.findByUser_Email(name);
+    }
+
+    @Override
     public Set<Order> getByProduct(Long id) {
         return orderRepository.findByOrderProducts_OrderProductId_Product(productService.getById(id));
     }
@@ -84,9 +89,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order update(Long id, Order order, String token) {
-        jwtService.authorization(order.getUser().getId(), token.substring(7));
 
-        Order orderFound = getById(id, token);
+
+        jwtService.authorization(getById(id).getUser().getId(), token.substring(7));
+        Order orderFound = getById(id);
         order.getOrderProducts().forEach(
                 orderProduct -> {
                     orderProduct.getOrderProductId().setOrder(orderFound);

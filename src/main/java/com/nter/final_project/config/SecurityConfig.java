@@ -58,6 +58,7 @@ public class SecurityConfig {
                                 .requestMatchers("/orders/all").hasRole("ADMIN")
                                 .requestMatchers("/orders/deleted").hasRole("ADMIN")
                                 .requestMatchers("/orders/*/status").authenticated()
+                                .requestMatchers("/orders/user/*").hasRole("ADMIN")
                                 //acceso Countries Admin completo, user solo get
                                 .requestMatchers(HttpMethod.GET, "/countries").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/countries/*").authenticated()

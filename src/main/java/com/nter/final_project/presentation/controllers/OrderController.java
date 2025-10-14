@@ -14,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
@@ -44,9 +47,19 @@ public class OrderController {
         return ResponseEntity.ok(orderMapped.toDto(orderService.getById(id, authHeader)));
     }
 
+    @GetMapping("/user/{name}")
+    public ResponseEntity<Set<OrderOutDtoMIni>> getByUser(@PathVariable String name) {
+        return ResponseEntity.ok( orderService.getByUser(name)
+                .stream()
+                .map(orderMapped::toDtoMini)
+                .collect(Collectors.toSet()));
+    }
+
     @GetMapping("/product/{id}")
-    public ResponseEntity<?> getByProduct(@PathVariable Long id) {
-        return ResponseEntity.ok(orderService.getByProduct(id));
+    public ResponseEntity<Set<OrderOutDtoMIni>> getByProduct(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getByProduct(id).stream()
+                .map(orderMapped::toDtoMini)
+                .collect(Collectors.toSet()));
     }
 
     @PostMapping
@@ -71,7 +84,7 @@ public class OrderController {
                                                     @NonNull HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         String statusStr = orderMapped.toModelStatus(status);
-        return ResponseEntity.ok(orderMapped.toDto(orderService.updateStatus(id, statusStr,authHeader)));
+        return ResponseEntity.ok(orderMapped.toDto(orderService.updateStatus(id, statusStr, authHeader)));
     }
 
     @DeleteMapping("/{id}")
