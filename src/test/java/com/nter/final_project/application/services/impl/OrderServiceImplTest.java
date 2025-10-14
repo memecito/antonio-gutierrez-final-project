@@ -159,7 +159,7 @@ class OrderServiceImplTest {
         Order order = DataProviders.orderMock();
         String token = DataProviders.tokenMock();
 
-        when(jwtService.authorization(order.getUser().getId(), token)).thenReturn(true);
+        when(jwtService.authorization(order.getUser().getId(), token.substring(7))).thenReturn(true);
 
         when(orderRepository.save(order)).thenReturn(order);
         when(orderProductService.created(order)).thenReturn(DataProviders.orderProductListMock());
@@ -193,9 +193,9 @@ class OrderServiceImplTest {
         order.setOrderProducts(DataProviders.orderProductSetMock());
         String token= DataProviders.tokenMock();
 
-        when(jwtService.authorization(id,token)).thenReturn(true);
+        when(jwtService.authorization(id,token.substring(7))).thenReturn(true);
 
-        when(jwtService.extractUsername(token)).thenReturn(user.getEmail());
+        when(jwtService.extractUsername(token.substring(7))).thenReturn(user.getEmail());
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
 
@@ -212,10 +212,12 @@ class OrderServiceImplTest {
         Order order = DataProviders.orderMock();
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         String status = StatusOrder.PROCESSING.toString();
+        String token= DataProviders.tokenMock();
+
 
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
-        Order orderResult = orderService.updateStatus(1L, status);
+        Order orderResult = orderService.updateStatus(1L, status,token);
 
         assertNotNull(orderResult);
 
@@ -246,11 +248,12 @@ class OrderServiceImplTest {
         Order order = DataProviders.orderMock();
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         String status = StatusOrder.SHIPPED.toString();
+        String token= DataProviders.tokenMock();
 
         String message = "Cambio de estado no valido, OS04";
 
         Exception exception = assertThrows(BadRequestException.class,
-                () -> orderService.checkStatus(order, status));
+                () -> orderService.checkStatus(order, status,token));
 
         assertEquals(message, exception.getMessage());
 
@@ -261,11 +264,12 @@ class OrderServiceImplTest {
         Order order = DataProviders.orderMock();
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         String status = "shiped";
+        String token= DataProviders.tokenMock();
 
         String message = "El estado 'shiped' no es válido., OS03";
 
         Exception exception = assertThrows(BadRequestException.class,
-                () -> orderService.checkStatus(order, status));
+                () -> orderService.checkStatus(order, status, token));
 
         assertEquals(message, exception.getMessage());
 
@@ -276,8 +280,9 @@ class OrderServiceImplTest {
         Order order = DataProviders.orderMock();
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         String status = StatusOrder.PROCESSING.toString();
+        String token= DataProviders.tokenMock();
 
-        Order orderResutl = orderService.checkStatus(order, status);
+        Order orderResutl = orderService.checkStatus(order, status,token);
 
         assertNotNull(orderResutl);
 

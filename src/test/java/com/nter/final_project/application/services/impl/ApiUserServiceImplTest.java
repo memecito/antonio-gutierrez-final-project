@@ -60,6 +60,21 @@ class ApiUserServiceImplTest {
     }
 
     @Test
+    void getAllActive(){
+        //Given
+        ApiUser apiUser= DataProviders.userMock();
+        Page<ApiUser> apiUsers = DataProviders.pageApiUserMock();
+        Pageable pageable = PageRequest.of(0, 5);
+
+        //When
+        when(apiUserRepository.findByActiveTrue(pageable)).thenReturn(apiUsers);
+        Page<ApiUser> apiUserPage = apiUserService.getActive(0, 5);
+        //Then
+        assertNotNull(apiUserPage);
+        assertFalse(apiUserPage.isEmpty());
+    }
+
+    @Test
     void getById() {
 
         Long id = 1L;

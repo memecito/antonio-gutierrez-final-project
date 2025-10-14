@@ -41,23 +41,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<Order> getUsersOrders(int pageNumber, int pageSize, String token) {
-        String user = jwtService.extractUsername(token);
+        String user = jwtService.extractUsername(token.substring(7));
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Order> orderPage = orderRepository.findByUser_Email(user, pageable);
         return orderPage;
     }
-
-    /*
-    @Override
-    public Page<Order> getByDate(LocalDateTime starDate,
-                                 LocalDateTime endDate,
-                                 int pageNumber,
-                                 int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return orderRepository.findByCreatedAtBetween(starDate, endDate, pageable);
-    }
-     */
-
 
     @Override
     public Set<Order> getByProduct(Long id) {
@@ -66,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getById(Long id, String token) {
-        String userMail = jwtService.extractUsername(token);
+        String userMail = jwtService.extractUsername(token.substring(7));
         Order order = orderRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Orden no encontrada, OS01")
         );
@@ -85,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order created(Order order, String token) {
-        jwtService.authorization(order.getUser().getId(), token);
+        jwtService.authorization(order.getUser().getId(), token.substring(7));
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         orderRepository.save(order);
@@ -96,7 +84,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order update(Long id, Order order, String token) {
-        jwtService.authorization(order.getUser().getId(), token);
+        jwtService.authorization(order.getUser().getId(), token.substring(7));
 
         Order orderFound = getById(id, token);
         order.getOrderProducts().forEach(
@@ -110,31 +98,40 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order updateStatus(Long id, String status) {
-        return checkStatus(getById(id), status);
+    public Order updateStatus(Long id, String status,String token) {
+        Order orderFound = getById(id);
+        if(Objects.equals(orderFound.getStatus(),StatusOrder.CANCELLED))
+            throw new BadRequestException("Orden cancelada no se puede modificar");
+        jwtService.authorization(orderFound.getUser().getId(), token.substring(7));
+        return checkStatus(getById(id), status,token);
     }
 
     @Override
     @Transactional
     public void deleted(Long id, String token) {
         Order order = getById(id);
-        jwtService.authorization(order.getUser().getId(), token);
+        jwtService.authorization(order.getUser().getId(), token.substring(7));
+        if(Objects.equals(order.getStatus(),StatusOrder.COMPLETED))
+            throw new BadRequestException("Orden completada no se puede eliminar");
         order.setStatus(StatusOrder.CANCELLED);
         orderRepository.save(order);
     }
 
-    public Order checkStatus(Order order, String status) {
+    public Order checkStatus(Order order, String status, String token) {
         final String normalizedStatus = status.trim().toUpperCase();
         boolean isValidStatus = Arrays.stream(StatusOrder.values())
                 .anyMatch(enumValue -> enumValue.name().equals(normalizedStatus));
-
         if (!isValidStatus) {
             throw new BadRequestException("El estado '" + status + "' no es válido., OS03");
         }
+        if(Objects.equals(normalizedStatus, StatusOrder.CANCELLED.toString())){
+            deleted(order.getId(),token);
+        }
         int saltos = order.getStatus().compareTo(StatusOrder.valueOf(normalizedStatus));
-        if ((saltos < (-1) || saltos > 1) && !Objects.equals(normalizedStatus, StatusOrder.CANCELLED.toString())) {
+        if ((saltos < (-1) || saltos > 1)) {
             throw new BadRequestException("Cambio de estado no valido, OS04");
         }
+
         order.setStatus(StatusOrder.valueOf(normalizedStatus));
         return order;
     }

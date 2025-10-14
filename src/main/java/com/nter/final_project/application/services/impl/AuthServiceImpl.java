@@ -5,6 +5,7 @@ import com.nter.final_project.application.services.AuthService;
 import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.InvalidTokenException;
 import com.nter.final_project.exception.UnauthenticatedException;
+import com.nter.final_project.exception.UserNotActived;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.presentation.dto.auth.AuthToken;
 import jakarta.servlet.http.Cookie;
@@ -39,8 +40,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthToken autentificate(ApiUser user) {
         ApiUser userFound = apiUserService.getByEmail(user.getEmail());
+        if(!userFound.getActive())
+            throw new UserNotActived("Usuario no activo,APS11");
         if (!passwordEncoder.matches(user.getPassword(), userFound.getPassword()))
-            throw new BadRequestException("Invalid credentails, APS07");
+            throw new BadRequestException("");
         UserDetails userDetails = userDetailsService.loadUserByUsername(userFound.getEmail());
 
         return new AuthToken(

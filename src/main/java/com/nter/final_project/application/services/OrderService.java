@@ -25,7 +25,7 @@ public interface OrderService {
 
     Order update(Long id, Order order, String token);
 
-    Order updateStatus(Long id, String status);
+    Order updateStatus(Long id, String status, String token);
 
     void deleted(Long id, String token);
 }

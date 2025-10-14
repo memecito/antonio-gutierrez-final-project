@@ -7,7 +7,6 @@ import com.nter.final_project.presentation.dto.PageResponse;
 import com.nter.final_project.presentation.dto.product.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,19 +30,20 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Page<ProductOutDtoMIni>> getAll(@RequestParam(defaultValue = "0", required = false) int page,
+    public ResponseEntity<PageResponse<ProductOutDtoMIni>> getAll(@RequestParam(defaultValue = "0", required = false) int page,
                                                           @RequestParam(defaultValue = "10", required = false) int size) {
 
-        return ResponseEntity.ok(productService.getAll(page, size)
-                .map(productMapped::toDtoMini));
+        return ResponseEntity.ok(new PageResponse<>(
+                productService.getAll(page, size)
+                .map(productMapped::toDtoMini)));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<ProductOutDtoMIni>> getSearch(@RequestParam Map<String, String> params,
+    public ResponseEntity<PageResponse<ProductOutDtoMIni>> getSearch(@RequestParam Map<String, String> params,
                                                              @RequestParam(name = "page", defaultValue = "0", required = false) int page,
                                                              @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
-        return ResponseEntity.ok(
-                productService.getByCriteria(params, page, size).map(productMapped::toDtoMini));
+        return ResponseEntity.ok(new PageResponse<>(
+                productService.getByCriteria(params, page, size).map(productMapped::toDtoMini)));
     }
 
     @GetMapping("/{id}")

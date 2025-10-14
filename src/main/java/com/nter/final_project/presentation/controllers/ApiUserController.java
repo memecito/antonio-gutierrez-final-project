@@ -45,11 +45,23 @@ public class ApiUserController {
                 .map(apiUserMapped::toDtoMini)));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<PageResponse<ApiUserOutDtoMini>> getAllActive(
+            @RequestParam(defaultValue = "0", required = false) int pageNumber,
+            @RequestParam(defaultValue = "10", required = false) int pageSize
+    ) {
+        Page<ApiUser> apiUsers = apiUserService.getActive(pageNumber, pageSize);
+        return ResponseEntity.ok(new PageResponse<>(apiUsers
+                .map(apiUserMapped::toDtoMini)));
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id, HttpServletRequest request, Principal principal) {
+    public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id,
+                                                 HttpServletRequest request,
+                                                 Principal principal) {
 
         String authHeader = request.getHeader("Authorization");
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id, authHeader.substring(7))));
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id, authHeader)));
     }
 
     /*
@@ -69,6 +81,8 @@ public class ApiUserController {
         ApiUser user = apiUserMapped.toModelUpdate(apiUser);
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id, user)));
     }
+
+    @PutMapping
 
     @PatchMapping("/{id}/country")
     public ResponseEntity<?> updateCountry(@PathVariable Long id, @Valid @RequestBody CountryUpdateDto country) {

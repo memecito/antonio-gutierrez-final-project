@@ -48,6 +48,12 @@ public class ApiUserServiceImpl implements ApiUserService {
         return apiUserRepository.findAll(pageable);
     }
 
+    @Override
+    public Page<ApiUser> getActive(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return apiUserRepository.findByActiveTrue(pageable);
+    }
+
     /***
      *
      * @param id
@@ -57,7 +63,7 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Override
     public ApiUser getById(Long id, String token) {
         ApiUser userfound = getById(id);
-        jwtService.authorization(id, token);
+        jwtService.authorization(id, token.substring(7));
         return userfound;
     }
 
@@ -130,7 +136,8 @@ public class ApiUserServiceImpl implements ApiUserService {
         ApiUser userFound = getById(id);
         if (!Objects.equals(userFound.getEmail(), apiUser.getEmail()))
             throw new BadRequestException("No se puede cambiar el email, APS06");
-        apiUser.setPassword(passwordEncoder.encode(apiUser.getPassword()));
+        if (!Objects.equals(null, apiUser.getPassword()))
+            apiUser.setPassword(passwordEncoder.encode(apiUser.getPassword()));
         return apiUserMapped.update(userFound, apiUser);
     }
 

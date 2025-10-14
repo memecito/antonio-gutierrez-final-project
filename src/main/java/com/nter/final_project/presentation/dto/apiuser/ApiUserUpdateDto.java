@@ -8,6 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public final class ApiUserUpdateDto {
+
+
     private String fullName;
 
     @Email(message = "formato no valido")

@@ -9,7 +9,10 @@ import java.util.List;
 
 public interface ApiUserService {
 
+
     Page<ApiUser> getAll(int pageNumber, int pageSize);
+
+    Page<ApiUser> getActive(int pageNumber, int pageSize);
 
     ApiUser getById(Long id, String authHeader);
 
