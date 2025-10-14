@@ -47,7 +47,6 @@ class ApiUserServiceImplTest {
     @Test
     void getAll() {
         //Given
-        ApiUser apiUser= DataProviders.userMock();
         Page<ApiUser> apiUsers = DataProviders.pageApiUserMock();
         Pageable pageable = PageRequest.of(0, 5);
 
@@ -62,7 +61,6 @@ class ApiUserServiceImplTest {
     @Test
     void getAllActive(){
         //Given
-        ApiUser apiUser= DataProviders.userMock();
         Page<ApiUser> apiUsers = DataProviders.pageApiUserMock();
         Pageable pageable = PageRequest.of(0, 5);
 

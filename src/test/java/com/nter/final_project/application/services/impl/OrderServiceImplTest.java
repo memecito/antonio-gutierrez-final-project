@@ -42,10 +42,6 @@ class OrderServiceImplTest {
     @Mock
     private JwtService jwtService;
 
-    @Mock
-    private Objects objects;
-
-
     @InjectMocks
     private OrderServiceImpl orderService;
 
@@ -73,7 +69,6 @@ class OrderServiceImplTest {
         when(jwtService.extractUsername(anyString())).thenReturn(user.getEmail());
         when(orderRepository.findByUser_Email(user.getEmail(), pageable)).thenReturn(orders);
 
-        String usermail=jwtService.extractUsername(token);
         Page<Order> ordersResult = orderService.getUsersOrders(0, 5, token);
 
         assertNotNull(ordersResult);

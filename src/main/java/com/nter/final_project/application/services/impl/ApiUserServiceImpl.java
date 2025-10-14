@@ -185,11 +185,10 @@ public class ApiUserServiceImpl implements ApiUserService {
         return apiUserRepository.save(userFound);
     }
 
-    /***
-     *
-     * @param id
-     * @return
-     */
+    ///*
+    ///
+    /// @param id
+    /// @return
     @Override
     @Transactional
     public ApiUser statusActived(Long id) {

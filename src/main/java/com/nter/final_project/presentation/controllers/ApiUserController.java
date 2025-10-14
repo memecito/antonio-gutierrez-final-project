@@ -31,7 +31,6 @@ public class ApiUserController {
     private final ApiUserService apiUserService;
     private final ApiUserMapped apiUserMapped;
 
-    private final PageResponseMapped pageMapped;
     private final CountryMapped countryMapped;
 
 
@@ -57,19 +56,11 @@ public class ApiUserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id,
-                                                 HttpServletRequest request,
-                                                 Principal principal) {
+                                                 HttpServletRequest request) {
 
         String authHeader = request.getHeader("Authorization");
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id, authHeader)));
     }
-
-    /*
-    @GetMapping("/{id}/orders")
-    public ResponseEntity<ApiUserOutDtoOrders> getUserOrderById(@PathVariable Long id) {
-        return ResponseEntity.ok(apiUserMapped.toDtoOrders(apiUserService.getById(id)));
-    }
-     */
 
     @PostMapping
     public ResponseEntity<ApiUserOutDto> created(@Valid @RequestBody ApiUserInDto apiUser) {
@@ -86,7 +77,6 @@ public class ApiUserController {
 
     @PatchMapping("/{id}/country")
     public ResponseEntity<?> updateCountry(@PathVariable Long id, @Valid @RequestBody CountryUpdateDto country) {
-        Country pais = countryMapped.toModelUpdate(country);
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id, countryMapped.toModelUpdate(country))));
     }
 

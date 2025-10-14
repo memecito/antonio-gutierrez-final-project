@@ -43,8 +43,7 @@ public class OrderServiceImpl implements OrderService {
     public Page<Order> getUsersOrders(int pageNumber, int pageSize, String token) {
         String user = jwtService.extractUsername(token.substring(7));
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Order> orderPage = orderRepository.findByUser_Email(user, pageable);
-        return orderPage;
+        return orderRepository.findByUser_Email(user, pageable);
     }
 
     @Override
@@ -124,7 +123,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public Order checkStatus(Order order, String status, String token) {
-        final String normalizedStatus = status.trim().toUpperCase();
+        String normalizedStatus = status.trim().toUpperCase();
         boolean isValidStatus = Arrays.stream(StatusOrder.values())
                 .anyMatch(enumValue -> enumValue.name().equals(normalizedStatus));
         if (!isValidStatus) {
