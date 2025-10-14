@@ -63,7 +63,7 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Override
     public ApiUser getById(Long id, String token) {
         ApiUser userfound = getById(id);
-        jwtService.authorization(id, token.substring(7));
+        jwtService.authorization(id, token);
         return userfound;
     }
 
@@ -75,7 +75,11 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Override
     public ApiUser getById(Long id) {
         return apiUserRepository.findById(id).orElseThrow(
-                () -> new UserNotFounException("Usuario con id: " + id + " no encontrado, APS02")
+                () ->{
+                    log.warn("usuario no encontrado {}", id);
+                           return new UserNotFounException("Usuario con id: " + id + " no encontrado, APS02");
+                }
+
         );
     }
 
@@ -87,7 +91,10 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Override
     public List<ApiUser> getByName(String name) {
         return apiUserRepository.findByFullName(name).orElseThrow(
-                () -> new EntityNotFoundException("No se ha encontrado ningun usuario con ese nombre, APS03")
+                () -> {
+                    log.warn("usuario no encontrado {}", name);
+                    return new  EntityNotFoundException("No se ha encontrado ningun usuario con ese nombre, APS03");
+                }
         );
     }
 
@@ -139,6 +146,11 @@ public class ApiUserServiceImpl implements ApiUserService {
         if (!Objects.equals(null, apiUser.getPassword()))
             apiUser.setPassword(passwordEncoder.encode(apiUser.getPassword()));
         return apiUserMapped.update(userFound, apiUser);
+    }
+
+    @Override
+    public void updatePassword(Long id, String password) {
+
     }
 
     /***
@@ -194,6 +206,7 @@ public class ApiUserServiceImpl implements ApiUserService {
     public ApiUser statusActived(Long id) {
         ApiUser userFound = getById(id);
         userFound.setActive(true);
+        log.info("Usuario activado id {}", id);
         return apiUserRepository.save(userFound);
     }
 
@@ -206,6 +219,7 @@ public class ApiUserServiceImpl implements ApiUserService {
     public void deleted(Long id) {
         ApiUser userFound = getById(id);
         userFound.setActive(false);
+        log.info("Usuario desactivado id: {}",id);
         apiUserRepository.save(userFound);
     }
 }

@@ -27,6 +27,8 @@ public interface ApiUserService {
 
     ApiUser update(Long id, ApiUser apiUser);
 
+    void updatePassword(Long id, String password);
+
     ApiUser updateCountry(Long id, Country country);
 
     ApiUser updateAdmin(Long id);

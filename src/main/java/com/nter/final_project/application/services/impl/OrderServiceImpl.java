@@ -77,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order created(Order order, String token) {
-        jwtService.authorization(order.getUser().getId(), token.substring(7));
+        jwtService.authorization(order.getUser().getId(), token);
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         orderRepository.save(order);
@@ -90,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
     public Order update(Long id, Order order, String token) {
 
 
-        jwtService.authorization(getById(id).getUser().getId(), token.substring(7));
+        jwtService.authorization(getById(id).getUser().getId(), token);
         Order orderFound = getById(id);
         order.getOrderProducts().forEach(
                 orderProduct -> {
@@ -107,7 +107,7 @@ public class OrderServiceImpl implements OrderService {
         Order orderFound = getById(id);
         if(Objects.equals(orderFound.getStatus(),StatusOrder.CANCELLED))
             throw new BadRequestException("Orden cancelada no se puede modificar");
-        jwtService.authorization(orderFound.getUser().getId(), token.substring(7));
+        jwtService.authorization(orderFound.getUser().getId(), token);
         return checkStatus(getById(id), status,token);
     }
 
@@ -115,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void deleted(Long id, String token) {
         Order order = getById(id);
-        jwtService.authorization(order.getUser().getId(), token.substring(7));
+        jwtService.authorization(order.getUser().getId(), token);
         if(Objects.equals(order.getStatus(),StatusOrder.COMPLETED))
             throw new BadRequestException("Orden completada no se puede eliminar");
         order.setStatus(StatusOrder.CANCELLED);

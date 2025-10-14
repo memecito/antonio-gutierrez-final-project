@@ -126,7 +126,7 @@ public class JwtService {
      * @return boolean
      */
     public boolean authorization(Long id, String token) {
-        ApiUser userToken = apiUserService.getByEmail(extractUsername(token));
+        ApiUser userToken = apiUserService.getByEmail(extractUsername(token.substring(7)));
         if (userToken.getAdmin()) {
             return true;
         }

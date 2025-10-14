@@ -12,12 +12,13 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -40,10 +41,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthToken autentificate(ApiUser user) {
         ApiUser userFound = apiUserService.getByEmail(user.getEmail());
-        if(!userFound.getActive())
+        if(!userFound.getActive()) {
+            log.warn("fallo autentificación user: {} desactivado",user.getEmail());
             throw new UserNotActived("Usuario no activo,APS11");
-        if (!passwordEncoder.matches(user.getPassword(), userFound.getPassword()))
-            throw new BadRequestException("");
+        }
+        if (!passwordEncoder.matches(user.getPassword(), userFound.getPassword())) {
+            log.warn("fallo autentificación user: {} contraseña erronea", user.getEmail());
+            throw new BadRequestException("fallo autentificación");
+        }
         UserDetails userDetails = userDetailsService.loadUserByUsername(userFound.getEmail());
 
         return new AuthToken(
@@ -64,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
 
         ApiUser userRegister = apiUserService.created(user);
         UserDetails userDetails = userDetailsService.loadUserByUsername(userRegister.getEmail());
-
+        log.info("Usuario registrado {}", user.getEmail());
         return new AuthToken(
                 jwtService.generateAccessToken(userDetails),
                 jwtService.generateRefreshToken(userDetails)

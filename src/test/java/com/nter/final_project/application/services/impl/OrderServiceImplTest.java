@@ -25,7 +25,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {
@@ -154,7 +154,7 @@ class OrderServiceImplTest {
         Order order = DataProviders.orderMock();
         String token = DataProviders.tokenMock();
 
-        when(jwtService.authorization(order.getUser().getId(), token.substring(7))).thenReturn(true);
+        when(jwtService.authorization(order.getUser().getId(), token)).thenReturn(true);
 
         when(orderRepository.save(order)).thenReturn(order);
         when(orderProductService.created(order)).thenReturn(DataProviders.orderProductListMock());
@@ -188,9 +188,9 @@ class OrderServiceImplTest {
         order.setOrderProducts(DataProviders.orderProductSetMock());
         String token= DataProviders.tokenMock();
 
-        when(jwtService.authorization(id,token.substring(7))).thenReturn(true);
+        when(jwtService.authorization(id,token)).thenReturn(true);
 
-        when(jwtService.extractUsername(token.substring(7))).thenReturn(user.getEmail());
+        when(jwtService.extractUsername(token)).thenReturn(user.getEmail());
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
 
@@ -220,21 +220,20 @@ class OrderServiceImplTest {
 
     @Test
     void testDeleted() {
-        /*
+
         Long id= 1L;
         String token= DataProviders.tokenMock();
         Order order= DataProviders.orderMock();
         order.setStatus(StatusOrder.CANCELLED);
 
 
-        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(DataProviders.orderMock()));
-        when(jwtService.authorization(id,token)).thenReturn(true);
+        when(orderRepository.findById(anyLong()))
+                .thenReturn(Optional.of(order));
+        when(jwtService.authorization(anyLong(),anyString())).thenReturn(true);
+        when(orderRepository.save(any(Order.class))).thenReturn(null);
 
-        doNothing().when(orderService).deleted(id,token);
-
+        orderService.deleted(id,token);
         verify(orderRepository,times(1)).save(order);
-
-         */
 
     }
 

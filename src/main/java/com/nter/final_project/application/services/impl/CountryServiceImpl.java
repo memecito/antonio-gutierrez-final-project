@@ -9,12 +9,14 @@ import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.persistence.repository.CountryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CountryServiceImpl implements CountryService {
@@ -51,6 +53,7 @@ public class CountryServiceImpl implements CountryService {
         if (countryRepository.findByName(country.getName()).isPresent())
             throw new EntityDuplicateException("este nombre de pais ya esta en uso, CS04");
         country.setCode(country.getCode().toUpperCase());
+        log.info("Pais creado {}", country.getName());
         return countryRepository.save(country);
     }
 
@@ -67,6 +70,7 @@ public class CountryServiceImpl implements CountryService {
         Country country = getByCode(code);
         if (!country.getApiUsers().isEmpty())
             throw new UnsuportedException("No puede borrar el pais, contiene usuarios, CS05");
+        log.info("Pais eliminado {}", code);
         countryRepository.deleteByCode(code);
     }
 }
