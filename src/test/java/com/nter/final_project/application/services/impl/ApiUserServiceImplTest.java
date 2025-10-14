@@ -33,7 +33,7 @@ class ApiUserServiceImplTest {
     @Mock
     private ApiUserRepository apiUserRepository;
     @Mock
-    private JwtService jwtService;
+    private SecurityService securityService;
 
     @Mock
     private ApiUserMapped apiUserMapped;
@@ -101,10 +101,8 @@ class ApiUserServiceImplTest {
         String token = DataProviders.tokenMock();
 
         when(apiUserRepository.findById(anyLong())).thenReturn(DataProviders.userOptionalMock());
-        when(jwtService.authorization(anyLong(), anyString())).thenReturn(true);
         ApiUser apiUser = apiUserService.getById(id, token);
 
-        boolean auth = jwtService.authorization(id, token);
 
         assertNotNull(apiUser);
         verify(apiUserRepository).findById(anyLong());

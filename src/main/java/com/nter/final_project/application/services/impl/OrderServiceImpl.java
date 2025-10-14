@@ -40,10 +40,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<Order> getUsersOrders(int pageNumber, int pageSize, String token) {
-        String user = jwtService.extractUsername(token.substring(7));
+    public Page<Order> getUsersOrders(int pageNumber, int pageSize, String userMail) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return orderRepository.findByUser_Email(user, pageable);
+        return orderRepository.findByUser_Email(userMail, pageable);
     }
 
     @Override
@@ -56,9 +55,8 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findByOrderProducts_OrderProductId_Product(productService.getById(id));
     }
 
-    @Override
-    public Order getById(Long id, String token) {
-        String userMail = jwtService.extractUsername(token.substring(7));
+    public Order getById(Long id, String userMail) {
+
         Order order = orderRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Orden no encontrada, OS01")
         );
@@ -67,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
         }
         return order;
     }
-
+    @Override
     public Order getById(Long id) {
         return orderRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Orden no encontrada, OS01")
@@ -76,8 +74,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order created(Order order, String token) {
-        jwtService.authorization(order.getUser().getId(), token);
+    public Order created(Order order) {
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         orderRepository.save(order);
@@ -87,10 +84,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order update(Long id, Order order, String token) {
+    public Order update(Long id, Order order) {
 
 
-        jwtService.authorization(getById(id).getUser().getId(), token);
         Order orderFound = getById(id);
         order.getOrderProducts().forEach(
                 orderProduct -> {
@@ -103,26 +99,24 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order updateStatus(Long id, String status,String token) {
+    public Order updateStatus(Long id, String status) {
         Order orderFound = getById(id);
         if(Objects.equals(orderFound.getStatus(),StatusOrder.CANCELLED))
             throw new BadRequestException("Orden cancelada no se puede modificar");
-        jwtService.authorization(orderFound.getUser().getId(), token);
-        return checkStatus(getById(id), status,token);
+        return checkStatus(getById(id), status);
     }
 
     @Override
     @Transactional
-    public void deleted(Long id, String token) {
+    public void deleted(Long id) {
         Order order = getById(id);
-        jwtService.authorization(order.getUser().getId(), token);
         if(Objects.equals(order.getStatus(),StatusOrder.COMPLETED))
             throw new BadRequestException("Orden completada no se puede eliminar");
         order.setStatus(StatusOrder.CANCELLED);
         orderRepository.save(order);
     }
 
-    public Order checkStatus(Order order, String status, String token) {
+    public Order checkStatus(Order order, String status) {
         String normalizedStatus = status.trim().toUpperCase();
         boolean isValidStatus = Arrays.stream(StatusOrder.values())
                 .anyMatch(enumValue -> enumValue.name().equals(normalizedStatus));
@@ -130,7 +124,7 @@ public class OrderServiceImpl implements OrderService {
             throw new BadRequestException("El estado '" + status + "' no es válido., OS03");
         }
         if(Objects.equals(normalizedStatus, StatusOrder.CANCELLED.toString())){
-            deleted(order.getId(),token);
+            deleted(order.getId());
         }
         int saltos = order.getStatus().compareTo(StatusOrder.valueOf(normalizedStatus));
         if ((saltos < (-1) || saltos > 1)) {

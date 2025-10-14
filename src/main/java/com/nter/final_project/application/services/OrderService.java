@@ -13,7 +13,7 @@ public interface OrderService {
 
     Page<Order> getAll(int pageNumber, int pageSize);
 
-    Page<Order> getUsersOrders(int pageNumber, int pageSize, String token);
+    Page<Order> getUsersOrders(int pageNumber, int pageSize, String userMail);
 
     Set<Order> getByUser(String name);
 
@@ -21,14 +21,14 @@ public interface OrderService {
     Set<Order> getByProduct(Long id);
 
     @Named("findOrderById")
-    Order getById(Long id, String reques);
+    Order getById(Long id);
 
-    Order created(Order Order, String token);
+    Order created(Order Order);
 
-    Order update(Long id, Order order, String token);
+    Order update(Long id, Order order);
 
-    Order updateStatus(Long id, String status, String token);
+    Order updateStatus(Long id, String status);
 
-    void deleted(Long id, String token);
+    void deleted(Long id);
 
 }

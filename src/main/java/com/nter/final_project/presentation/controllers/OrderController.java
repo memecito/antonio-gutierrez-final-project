@@ -12,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,9 +30,8 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<PageResponse<OrderOutDtoMIni>> getUsersOrders(@RequestParam(defaultValue = "0", required = false) int pageNumber,
                                                                         @RequestParam(defaultValue = "10", required = false) int pageSize,
-                                                                        HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        return ResponseEntity.ok(new PageResponse<>(orderService.getUsersOrders(pageNumber, pageSize, authHeader)
+                                                                        Principal principal) {
+        return ResponseEntity.ok(new PageResponse<>(orderService.getUsersOrders(pageNumber, pageSize, principal.getName())
                 .map(orderMapped::toDtoMini)));
     }
 
@@ -42,12 +43,13 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderOutDto> getById(@PathVariable Long id, HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        return ResponseEntity.ok(orderMapped.toDto(orderService.getById(id, authHeader)));
+    @PreAuthorize("hasRole('ADMIN') or @SecurityService.isOwner(authentication, @id)")
+    public ResponseEntity<OrderOutDto> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(orderMapped.toDto(orderService.getById(id)));
     }
 
     @GetMapping("/user/{name}")
+    @PreAuthorize("hasRole('ADMIN') or @SecurityService.isOwner(authentication, @id)")
     public ResponseEntity<Set<OrderOutDtoMIni>> getByUser(@PathVariable String name) {
         return ResponseEntity.ok( orderService.getByUser(name)
                 .stream()
@@ -63,35 +65,35 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderOutDto> created(@Valid @RequestBody OrderInDto order,
-                                               @NonNull HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        Order ord = orderMapped.toModel(order);
-        return ResponseEntity.ok(orderMapped.toDto(orderService.created(ord, authHeader)));
+    @PreAuthorize("hasRole('ADMIN') or @SecurityService.isOwner(authentication, @id)")
+    public ResponseEntity<OrderOutDto> created(@Valid @RequestBody OrderInDto orderInDto){
+        Order order = orderMapped.toModel(orderInDto);
+        return ResponseEntity.ok(orderMapped.toDto(orderService.created(order)));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @SecurityService.isOwner(authentication, @id)")
     public ResponseEntity<OrderOutDto> update(@PathVariable Long id,
                                               @Valid @RequestBody OrderUpdateDto orderUpdateDto,
                                               @NonNull HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        return ResponseEntity.ok(orderMapped.toDto(orderService.update(id, orderMapped.toModelUpdate(orderUpdateDto), authHeader)));
+        return ResponseEntity.ok(orderMapped.toDto(orderService.update(id, orderMapped.toModelUpdate(orderUpdateDto))));
     }
 
     @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN') or @SecurityService.isOwner(authentication, @id)")
     public ResponseEntity<OrderOutDto> updateStatus(@PathVariable Long id,
                                                     @RequestBody OrderStatusInDto status,
                                                     @NonNull HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
         String statusStr = orderMapped.toModelStatus(status);
-        return ResponseEntity.ok(orderMapped.toDto(orderService.updateStatus(id, statusStr, authHeader)));
+        return ResponseEntity.ok(orderMapped.toDto(orderService.updateStatus(id, statusStr)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<BasicResponseDto> deleted(@PathVariable Long id,
                                                     @NonNull HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        orderService.deleted(id, authHeader);
+        orderService.deleted(id);
         return ResponseEntity.ok(BasicResponseDto.builder()
                 .status(HttpStatus.OK.value())
                 .message("Orden cancelada")

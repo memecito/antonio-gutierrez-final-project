@@ -30,7 +30,6 @@ public class ApiUserServiceImpl implements ApiUserService {
     private final ApiUserRepository apiUserRepository;
     private final ApiUserMapped apiUserMapped;
 
-    private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
     private final CountryService countryService;
@@ -63,7 +62,6 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Override
     public ApiUser getById(Long id, String token) {
         ApiUser userfound = getById(id);
-        jwtService.authorization(id, token);
         return userfound;
     }
 
@@ -139,8 +137,7 @@ public class ApiUserServiceImpl implements ApiUserService {
      */
     @Override
     @Transactional
-    public ApiUser update(Long id, ApiUser apiUser, String token) {
-        jwtService.authorization(id, token);
+    public ApiUser update(Long id, ApiUser apiUser) {
         ApiUser userFound = getById(id);
         if (!Objects.equals(userFound.getEmail(), apiUser.getEmail()))
             throw new BadRequestException("No se puede cambiar el email, APS06");
@@ -165,8 +162,7 @@ public class ApiUserServiceImpl implements ApiUserService {
      */
     @Override
     @Transactional
-    public ApiUser updateCountry(Long id, Country country, String token) {
-        jwtService.authorization(id, token);
+    public ApiUser updateCountry(Long id, Country country) {
         Country countryFound = countryService.getByCode(country.getCode());
         ApiUser userFound = getById(id);
         userFound.setCountry(countryFound);

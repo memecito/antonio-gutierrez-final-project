@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -55,11 +56,11 @@ public class ApiUserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id,
-                                                 HttpServletRequest request) {
+    @PreAuthorize("hasRole('ADMIN') or @SecurityService.isOwner(authentication, @id)")
+    public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id
+                                                 ) {
 
-        String authHeader = request.getHeader("Authorization");
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id, authHeader)));
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id)));
     }
 
     @PostMapping
@@ -68,30 +69,29 @@ public class ApiUserController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @SecurityService.isOwner(authentication, @id)")
     public ResponseEntity<ApiUserOutDto> update(@PathVariable Long id,
-                                    @Valid @RequestBody ApiUserUpdateDto apiUser,
-                                    HttpServletRequest request) {
+                                    @Valid @RequestBody ApiUserUpdateDto apiUser
+                                    ) {
 
-        String authHeader = request.getHeader("Authorization");
         ApiUser user = apiUserMapped.toModelUpdate(apiUser);
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id, user,authHeader)));
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id, user)));
     }
 
     @PutMapping("/{id}/password")
-    public ResponseEntity<BasicResponseDto> updatePassword(@PathVariable Long id,HttpServletRequest request
-                                                           ){
+    @PreAuthorize("hasRole('ADMIN') or @SecurityService.isOwner(authentication, @id)")
+
+    public ResponseEntity<BasicResponseDto> updatePassword(@PathVariable Long id                                                           ){
         return null;
     }
 
     @PatchMapping("/{id}/country")
+    @PreAuthorize("hasRole('ADMIN') or @SecurityService.isOwner(authentication, @id)")
     public ResponseEntity<?> updateCountry(@PathVariable Long id,
-                                           @Valid @RequestBody CountryUpdateDto country,
-                                           HttpServletRequest request) {
-
-        String authHeader = request.getHeader("Authorization");
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id,
-                countryMapped.toModelUpdate(country),
-                authHeader)));
+                                           @Valid @RequestBody CountryUpdateDto country
+                                           ) {
+                return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id,
+                countryMapped.toModelUpdate(country))));
     }
 
     @PutMapping("/{id}/desactived")
