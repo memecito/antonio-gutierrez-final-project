@@ -98,7 +98,7 @@ class OrderServiceImplTest {
         Order order= DataProviders.orderMock();
         order.setUser(user);
 
-        when(jwtService.extractUsername(token)).thenReturn(user.getEmail());
+        when(jwtService.extractUsername(token.substring(7))).thenReturn(user.getEmail());
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
 
@@ -114,7 +114,7 @@ class OrderServiceImplTest {
 
         String message= "No tiene permisos para ver esta Orden, OS02";
 
-        when(jwtService.extractUsername(token)).thenReturn(user.getEmail());
+        when(jwtService.extractUsername(token.substring(7))).thenReturn(user.getEmail());
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(DataProviders.orderMock()));
 
         Exception exception= assertThrows(UnauthorizedException.class,
@@ -189,8 +189,6 @@ class OrderServiceImplTest {
         String token= DataProviders.tokenMock();
 
         when(jwtService.authorization(id,token)).thenReturn(true);
-
-        when(jwtService.extractUsername(token)).thenReturn(user.getEmail());
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
 

@@ -19,13 +19,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ApiUserServiceImplTest {
@@ -196,7 +196,7 @@ class ApiUserServiceImplTest {
 
         when(apiUserMapped.update(any(ApiUser.class), any(ApiUser.class))).thenReturn(userUpdate);
 
-        ApiUser userResult = apiUserService.update(id, userUpdate);
+        ApiUser userResult = apiUserService.update(id, userUpdate, DataProviders.tokenMock());
 
         assertNotNull(userResult);
         verify(apiUserMapped).update(any(ApiUser.class), any(ApiUser.class));
@@ -217,9 +217,27 @@ class ApiUserServiceImplTest {
         when(apiUserRepository.findById(anyLong())).thenReturn(Optional.of(oldUser));
 
         Exception exception = assertThrows(BadRequestException.class,
-                () -> apiUserService.update(id, newUser));
+                () -> apiUserService.update(id, newUser, DataProviders.tokenMock()));
 
         assertEquals(message, exception.getMessage());
+    }
+
+    @Test
+    void updatePassword(){
+        Long id= 1l;
+        ApiUser user= DataProviders.userMock();
+        String token= DataProviders.tokenMock();
+
+        when(apiUserRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(jwtService.authorization(anyLong(),anyString())).thenReturn(true);
+        when(apiUserRepository.save(user)).thenReturn(null);
+
+        apiUserService.updatePassword(id,"contraseña",token);
+
+        verify(apiUserRepository,times(1)).save(user);
+
+
+
     }
 
 

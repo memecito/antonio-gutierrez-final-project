@@ -68,16 +68,30 @@ public class ApiUserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ApiUserUpdateDto apiUser) {
+    public ResponseEntity<ApiUserOutDto> update(@PathVariable Long id,
+                                    @Valid @RequestBody ApiUserUpdateDto apiUser,
+                                    HttpServletRequest request) {
+
+        String authHeader = request.getHeader("Authorization");
         ApiUser user = apiUserMapped.toModelUpdate(apiUser);
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id, user)));
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id, user,authHeader)));
     }
 
-    @PutMapping
+    @PutMapping("/{id}/password")
+    public ResponseEntity<BasicResponseDto> updatePassword(@PathVariable Long id,HttpServletRequest request
+                                                           ){
+        return null;
+    }
 
     @PatchMapping("/{id}/country")
-    public ResponseEntity<?> updateCountry(@PathVariable Long id, @Valid @RequestBody CountryUpdateDto country) {
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id, countryMapped.toModelUpdate(country))));
+    public ResponseEntity<?> updateCountry(@PathVariable Long id,
+                                           @Valid @RequestBody CountryUpdateDto country,
+                                           HttpServletRequest request) {
+
+        String authHeader = request.getHeader("Authorization");
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id,
+                countryMapped.toModelUpdate(country),
+                authHeader)));
     }
 
     @PutMapping("/{id}/desactived")

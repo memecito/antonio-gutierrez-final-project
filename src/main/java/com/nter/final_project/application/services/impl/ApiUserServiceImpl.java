@@ -77,7 +77,7 @@ public class ApiUserServiceImpl implements ApiUserService {
         return apiUserRepository.findById(id).orElseThrow(
                 () ->{
                     log.warn("usuario no encontrado {}", id);
-                           return new UserNotFounException("Usuario con id: " + id + " no encontrado, APS02");
+                    return new UserNotFounException("Usuario con id: " + id + " no encontrado, APS02");
                 }
 
         );
@@ -139,7 +139,8 @@ public class ApiUserServiceImpl implements ApiUserService {
      */
     @Override
     @Transactional
-    public ApiUser update(Long id, ApiUser apiUser) {
+    public ApiUser update(Long id, ApiUser apiUser, String token) {
+        jwtService.authorization(id, token);
         ApiUser userFound = getById(id);
         if (!Objects.equals(userFound.getEmail(), apiUser.getEmail()))
             throw new BadRequestException("No se puede cambiar el email, APS06");
@@ -149,8 +150,11 @@ public class ApiUserServiceImpl implements ApiUserService {
     }
 
     @Override
-    public void updatePassword(Long id, String password) {
-
+    @Transactional
+    public void updatePassword(Long id, String password, String token) {
+        ApiUser userFound = getById(id,token);
+        userFound.setPassword(passwordEncoder.encode(userFound.getPassword()));
+        apiUserRepository.save(userFound);
     }
 
     /***
@@ -161,7 +165,8 @@ public class ApiUserServiceImpl implements ApiUserService {
      */
     @Override
     @Transactional
-    public ApiUser updateCountry(Long id, Country country) {
+    public ApiUser updateCountry(Long id, Country country, String token) {
+        jwtService.authorization(id, token);
         Country countryFound = countryService.getByCode(country.getCode());
         ApiUser userFound = getById(id);
         userFound.setCountry(countryFound);

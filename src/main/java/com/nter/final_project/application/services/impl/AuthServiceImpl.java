@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
         }
         if (!passwordEncoder.matches(user.getPassword(), userFound.getPassword())) {
             log.warn("fallo autentificación user: {} contraseña erronea", user.getEmail());
-            throw new BadRequestException("fallo autentificación");
+            throw new BadRequestException("Invalid credentails, APS07");
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(userFound.getEmail());
 

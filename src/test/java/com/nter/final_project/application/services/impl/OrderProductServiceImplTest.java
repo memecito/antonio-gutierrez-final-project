@@ -2,6 +2,7 @@ package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.mappers.OrderProductMapper;
 import com.nter.final_project.application.resources.DataProviders;
+import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.entity.OrderProduct;
@@ -79,7 +80,7 @@ class OrderProductServiceImplTest {
 
     @Test
     void createdException() {
-/*
+
         Order order = DataProviders.orderMock();
         Set<OrderProduct> orderProductList = DataProviders.orderProduct0Mock();
         order.setOrderProducts(orderProductList);
@@ -87,9 +88,9 @@ class OrderProductServiceImplTest {
         Exception exception = assertThrows(BadRequestException.class,
                 () -> orderProductService.created(order));
 
-        assertEquals(message, exception);
+        assertEquals(message, exception.getMessage());
 
- */
+
 
 
     }

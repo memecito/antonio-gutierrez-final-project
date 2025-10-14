@@ -25,11 +25,11 @@ public interface ApiUserService {
 
     ApiUser created(ApiUser apiUser);
 
-    ApiUser update(Long id, ApiUser apiUser);
+    ApiUser update(Long id, ApiUser apiUser, String token);
 
-    void updatePassword(Long id, String password);
+    void updatePassword(Long id, String password, String token);
 
-    ApiUser updateCountry(Long id, Country country);
+    ApiUser updateCountry(Long id, Country country, String token);
 
     ApiUser updateAdmin(Long id);
 
