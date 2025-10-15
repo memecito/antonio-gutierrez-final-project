@@ -3,7 +3,6 @@ package com.nter.final_project.config.security;
 import com.nter.final_project.application.services.impl.JwtService;
 import com.nter.final_project.application.services.impl.UserDetailsServiceImpl;
 import com.nter.final_project.exception.InvalidTokenException;
-import com.nter.final_project.presentation.advice.ExceptionHandlerController;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

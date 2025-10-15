@@ -2,10 +2,8 @@ package com.nter.final_project.presentation.controllers;
 
 import com.nter.final_project.application.mappers.ApiUserMapped;
 import com.nter.final_project.application.mappers.CountryMapped;
-import com.nter.final_project.application.mappers.PageResponseMapped;
 import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.persistence.entity.ApiUser;
-import com.nter.final_project.persistence.entity.Country;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.PageResponse;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
@@ -13,15 +11,12 @@ import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
 import com.nter.final_project.presentation.dto.apiuser.ApiUserUpdateDto;
 import com.nter.final_project.presentation.dto.country.CountryUpdateDto;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/users")

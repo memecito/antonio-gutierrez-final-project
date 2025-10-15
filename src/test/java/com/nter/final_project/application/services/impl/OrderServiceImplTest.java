@@ -4,7 +4,6 @@ import com.nter.final_project.application.resources.DataProviders;
 import com.nter.final_project.application.services.AuthService;
 import com.nter.final_project.application.services.ProductService;
 import com.nter.final_project.exception.BadRequestException;
-import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.exception.UnauthorizedException;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Order;
@@ -22,8 +21,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import javax.xml.crypto.Data;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 

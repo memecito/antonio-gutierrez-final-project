@@ -78,7 +78,7 @@ class ProductServiceImplTest {
 
     @Test
     void getByIdException() {
-        Long id = 1l;
+        Long id = 1L;
         String message = "Producto no encontrado, PS01";
 
         when(productRepository.findById(id)).thenReturn(Optional.empty());

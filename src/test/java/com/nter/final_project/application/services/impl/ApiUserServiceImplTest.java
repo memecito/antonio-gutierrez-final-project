@@ -2,7 +2,6 @@ package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.mappers.ApiUserMapped;
 import com.nter.final_project.application.resources.DataProviders;
-import com.nter.final_project.application.services.AuthService;
 import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EmailAlreadyExistException;
 import com.nter.final_project.exception.EntityNotFoundException;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.Optional;
 
@@ -232,7 +229,7 @@ class ApiUserServiceImplTest {
 
     @Test
     void updatePassword() {
-        Long id = 1l;
+        Long id = 1L;
         ApiUser user = DataProviders.userMock();
         String token = DataProviders.tokenMock();
 
