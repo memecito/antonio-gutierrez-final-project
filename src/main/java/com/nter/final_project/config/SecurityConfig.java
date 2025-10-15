@@ -51,6 +51,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/users/*").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/users/*").hasRole("ADMIN")
                                 .requestMatchers("/users/*/country").authenticated()
+                                .requestMatchers("/users/*/password").authenticated()
+
                                 .requestMatchers("/users/**").hasRole("ADMIN")
 
                                 //acceso products Admin completo, User solo get
@@ -61,7 +63,7 @@ public class SecurityConfig {
                                 .requestMatchers("/orders/all").hasRole("ADMIN")
                                 .requestMatchers("/orders/deleted").hasRole("ADMIN")
                                 .requestMatchers("/orders/*/status").authenticated()
-                                .requestMatchers("/orders/user/*").hasRole("ADMIN")
+                                .requestMatchers("/orders/user/*").authenticated()
                                 //acceso Countries Admin completo, user solo get
                                 .requestMatchers(HttpMethod.GET, "/countries").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/countries/*").authenticated()

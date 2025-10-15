@@ -36,6 +36,7 @@ public class ApiUserServiceImpl implements ApiUserService {
     @Lazy
     @Autowired
     private AuthService authService;
+
     private final PasswordEncoder passwordEncoder;
 
     private final CountryService countryService;
@@ -147,8 +148,7 @@ public class ApiUserServiceImpl implements ApiUserService {
         ApiUser userFound = getById(id);
         if (!Objects.equals(userFound.getEmail(), apiUser.getEmail()))
             throw new BadRequestException("No se puede cambiar el email, APS06");
-        if (!Objects.equals(null, apiUser.getPassword()))
-            apiUser.setPassword(passwordEncoder.encode(apiUser.getPassword()));
+
         return apiUserMapped.update(userFound, apiUser);
     }
 

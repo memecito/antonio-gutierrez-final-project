@@ -51,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Set<Order> getByUser(String name) {
+        authService.havePermision(name);
         return orderRepository.findByUser_Email(name);
     }
 
@@ -61,11 +62,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getById(Long id) {
-        authService.havePermision(id);
-       
+
         Order order = orderRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Orden no encontrada, OS01")
         );
+        authService.havePermision(order.getUser().getId());
+
         if (!Objects.equals(authService.currentUser().getEmail(), order.getUser().getEmail())) {
             throw new UnauthorizedException("No tiene permisos para ver esta Orden, OS02");
         }
@@ -96,9 +98,10 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Order update(Long id, Order order) {
 
-        authService.havePermision(order.getUser().getId());
 
         Order orderFound = getById(id);
+        authService.havePermision(orderFound.getUser().getId());
+
         order.getOrderProducts().forEach(
                 orderProduct -> {
                     orderProduct.getOrderProductId().setOrder(orderFound);

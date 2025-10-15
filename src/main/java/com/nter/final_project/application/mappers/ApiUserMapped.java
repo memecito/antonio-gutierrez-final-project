@@ -4,10 +4,7 @@ import com.nter.final_project.application.services.CountryService;
 import com.nter.final_project.application.services.OrderService;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Country;
-import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
-import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
-import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
-import com.nter.final_project.presentation.dto.apiuser.ApiUserUpdateDto;
+import com.nter.final_project.presentation.dto.apiuser.*;
 import com.nter.final_project.presentation.dto.auth.AuthInDto;
 import org.mapstruct.*;
 
@@ -61,6 +58,8 @@ public interface ApiUserMapped {
     default Country mapCountry(Country country) {
         return country;
     }
+
+    default String passToModel(UpdatePassword newPassword) {return newPassword.getPassword();};
 
 
 }

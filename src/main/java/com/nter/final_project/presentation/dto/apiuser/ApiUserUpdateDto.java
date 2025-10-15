@@ -15,9 +15,6 @@ public final class ApiUserUpdateDto {
     @Email(message = "formato no valido")
     private String email;
 
-    @Size(min = 8, message = "tamaño minimo de 8")
-    private String password;
-
     @Size(min = 2, max = 2, message = "tamaño del codigo erroneo")
     private String country;
 }

@@ -103,14 +103,16 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void havePermision(String email){
         ApiUser userLogin= currentUser();
-        if(!userLogin.getAdmin()) throw new UnauthorizedException("no tiene permiso, AS11");
-        if(!userLogin.getEmail().equals(email)) throw new UnauthorizedException("no tiene permiso, AS11");
+        if(!userLogin.getEmail().equals(email)){
+            if(!userLogin.getAdmin()) throw new UnauthorizedException("no tiene permiso, AS11");
+        }
     }
     @Override
     public void havePermision(Long id){
         ApiUser userLogin= currentUser();
-        if(!userLogin.getAdmin()) throw new UnauthorizedException("no tiene permiso, AS11");
-        if(!userLogin.getId().equals(id)) throw new UnauthorizedException("no tiene permiso, AS11");
+        if(!userLogin.getId().equals(id)){
+            if(!userLogin.getAdmin()) throw new UnauthorizedException("no tiene permiso, AS11");
+        }
     }
 
     public ApiUser currentUser(){

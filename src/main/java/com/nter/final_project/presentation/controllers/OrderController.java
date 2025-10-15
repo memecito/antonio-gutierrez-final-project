@@ -71,9 +71,7 @@ public class OrderController {
 
     @PutMapping("/{id}")
     public ResponseEntity<OrderOutDto> update(@PathVariable Long id,
-                                              @Valid @RequestBody OrderUpdateDto orderUpdateDto,
-                                              @NonNull HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
+                                              @Valid @RequestBody OrderUpdateDto orderUpdateDto) {
         return ResponseEntity.ok(orderMapped.toDto(orderService.update(id, orderMapped.toModelUpdate(orderUpdateDto))));
     }
 

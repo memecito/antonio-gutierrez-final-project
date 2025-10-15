@@ -6,10 +6,7 @@ import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.presentation.dto.BasicResponseDto;
 import com.nter.final_project.presentation.dto.PageResponse;
-import com.nter.final_project.presentation.dto.apiuser.ApiUserInDto;
-import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDto;
-import com.nter.final_project.presentation.dto.apiuser.ApiUserOutDtoMini;
-import com.nter.final_project.presentation.dto.apiuser.ApiUserUpdateDto;
+import com.nter.final_project.presentation.dto.apiuser.*;
 import com.nter.final_project.presentation.dto.country.CountryUpdateDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -71,9 +68,15 @@ public class ApiUserController {
     }
 
     @PutMapping("/{id}/password")
-    public ResponseEntity<BasicResponseDto> updatePassword(@PathVariable Long id
-                                                           ){
-        return null;
+    public ResponseEntity<BasicResponseDto> updatePassword(@PathVariable Long id,
+                                                           @Valid @RequestBody UpdatePassword newPassword){
+
+        apiUserService.updatePassword(id,apiUserMapped.passToModel(newPassword));
+        return ResponseEntity.ok(BasicResponseDto.builder()
+                .status(HttpStatus.OK.value())
+                .message("Contraseña actualizada")
+                .build());
+
     }
 
     @PatchMapping("/{id}/country")
