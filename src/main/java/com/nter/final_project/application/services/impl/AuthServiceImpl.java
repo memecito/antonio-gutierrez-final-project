@@ -101,24 +101,22 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean havePermision(String email){
+    public void havePermision(String email){
         ApiUser userLogin= currentUser();
-        if(userLogin.getAdmin()) return true;
+        if(!userLogin.getAdmin()) throw new UnauthorizedException("no tiene permiso, AS11");
         if(!userLogin.getEmail().equals(email)) throw new UnauthorizedException("no tiene permiso, AS11");
-        return true;
     }
     @Override
-    public boolean havePermision(Long id){
+    public void havePermision(Long id){
         ApiUser userLogin= currentUser();
-        if(userLogin.getAdmin()) return true;
+        if(!userLogin.getAdmin()) throw new UnauthorizedException("no tiene permiso, AS11");
         if(!userLogin.getId().equals(id)) throw new UnauthorizedException("no tiene permiso, AS11");
-        return true;
     }
 
     public ApiUser currentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+        if ( !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
 
             return null;
         }

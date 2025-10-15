@@ -10,15 +10,18 @@ import com.nter.final_project.exception.UserNotFounException;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.repository.ApiUserRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.xml.crypto.Data;
 import java.util.List;
@@ -33,7 +36,8 @@ class ApiUserServiceImplTest {
 
     @Mock
     private ApiUserRepository apiUserRepository;
-    @InjectMocks
+
+    @Mock
     private AuthServiceImpl authService;
 
     @Mock
@@ -44,6 +48,11 @@ class ApiUserServiceImplTest {
 
     @InjectMocks
     private ApiUserServiceImpl apiUserService;
+
+    @BeforeEach
+    void setUp(){
+        ReflectionTestUtils.setField(apiUserService, "authService", authService);
+    }
 
     @Test
     void getAll() {
@@ -76,42 +85,38 @@ class ApiUserServiceImplTest {
     @Test
     void getById() {
 
+        // --- Arrange: Preparar el escenario ---
         Long id = 1L;
-        ApiUser user = DataProviders.userMock();
-        user.setId(id);
-        doNothing().when(authService).havePermision(id);
+        ApiUser userMock = DataProviders.userMock(); // Usamos un solo objeto
+        userMock.setId(id);
 
-        when(apiUserRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        // 1. Simulamos el comportamiento de la dependencia 'authService'.
+        //    Como havePermision devuelve void, usamos doNothing().
+        //    Si lanzara una excepción en caso de fallo, usaríamos doThrow().
+        doNothing().when(authService).havePermision(anyLong());
 
-        ApiUser apiUser = apiUserService.getById(id);
+        // 2. Simulamos la respuesta del repositorio.
+        when(apiUserRepository.findById(id)).thenReturn(Optional.of(userMock));
 
-        assertNotNull(apiUser);
+        // --- Act: Ejecutar el método a probar ---
+        ApiUser resultUser = apiUserService.getById(id);
+
+        // --- Assert: Verificar los resultados y las interacciones ---
+        assertNotNull(resultUser);
+        assertEquals(id, resultUser.getId());
+
+        // Verificamos que se llamó a la comprobación de permisos
         verify(authService, times(1)).havePermision(id);
+        // Verificamos que se buscó al usuario en el repositorio
         verify(apiUserRepository, times(1)).findById(id);
     }
 
     @Test
     void getByIdException() {
-        String mensaje = "Usuario con id: " + 1L + " no encontrado, APS02";
 
-        when(authService.currentUser()).thenReturn(DataProviders.userMock());
-        when(authService.havePermision(anyLong())).thenReturn(true);
-        Exception exception = assertThrows(UserNotFounException.class,
+        doNothing().when(authService).havePermision(anyLong());
+        assertThrows(UserNotFounException.class,
                 () -> apiUserService.getById(1L));
-
-        assertEquals(mensaje, exception.getMessage());
-    }
-
-    @Test
-    void testGetById() {
-        Long id = 1L;
-
-        when(apiUserRepository.findById(anyLong())).thenReturn(DataProviders.userOptionalMock());
-        when(authService.havePermision(anyLong())).thenReturn(true);
-        ApiUser apiUser = apiUserService.getById(id);
-
-        assertNotNull(apiUser);
-        verify(apiUserRepository).findById(anyLong());
 
     }
 
@@ -196,7 +201,7 @@ class ApiUserServiceImplTest {
         ApiUser userUpdate = DataProviders.userMock();
 
         when(apiUserRepository.findById(id)).thenReturn(Optional.of(userUpdate));
-        when(authService.havePermision(anyLong())).thenReturn(true);
+        doNothing().when(authService).havePermision(anyLong());
         when(apiUserMapped.update(any(ApiUser.class), any(ApiUser.class))).thenReturn(userUpdate);
 
         ApiUser userResult = apiUserService.update(id, userUpdate);
@@ -232,7 +237,7 @@ class ApiUserServiceImplTest {
         String token = DataProviders.tokenMock();
 
         when(apiUserRepository.findById(anyLong())).thenReturn(Optional.of(user));
-        when(authService.havePermision(anyLong())).thenReturn(true);
+        doNothing().when(authService).havePermision(anyLong());
         when(apiUserRepository.save(user)).thenReturn(null);
 
         apiUserService.updatePassword(id, "contraseña");

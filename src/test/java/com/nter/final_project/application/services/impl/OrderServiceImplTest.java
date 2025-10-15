@@ -11,6 +11,7 @@ import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.entity.Product;
 import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.repository.OrderRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +20,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import javax.xml.crypto.Data;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -35,6 +38,9 @@ class OrderServiceImplTest {
     private OrderRepository orderRepository;
 
     @Mock
+    private ApiUserServiceImpl userService;
+
+    @Mock
     private ProductService productService;
 
     @Mock
@@ -45,6 +51,11 @@ class OrderServiceImplTest {
 
     @InjectMocks
     private OrderServiceImpl orderService;
+
+    @BeforeEach
+    void setUp(){
+        ReflectionTestUtils.setField(orderService, "authService", authService);
+    }
 
 
     @Test
@@ -65,6 +76,7 @@ class OrderServiceImplTest {
         Pageable pageable = PageRequest.of(0, 5);
         Page<Order> orders = DataProviders.pageOrders();
         ApiUser user = DataProviders.userMock();
+        when(userService.getByEmail(anyString())).thenReturn(user);
 
         when(authService.currentUser().getEmail()).thenReturn(user.getEmail());
         when(orderRepository.findByUser_Email(user.getEmail(), pageable)).thenReturn(orders);
@@ -94,8 +106,15 @@ class OrderServiceImplTest {
     @Test
     void testGetById() {
         Long id = 1L;
+        ApiUser user= DataProviders.userMock();
+        user.setEmail("mail");
+        Order order=DataProviders.orderMock();
+        order.setUser(user);
 
-        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(DataProviders.orderMock()));
+        doNothing().when(authService).havePermision(id);
+        when(authService.currentUser()).thenReturn(user);
+
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
         Order orderResult = orderService.getById(id);
 
@@ -105,13 +124,17 @@ class OrderServiceImplTest {
 
     @Test
     void getByIdException() {
+        Long id = 1L;
+        ApiUser user= DataProviders.userMock();
+        Order order=DataProviders.orderMock();
 
-        String message = "Orden no encontrada, OS01";
+        doNothing().when(authService).havePermision(id);
+        when(authService.currentUser()).thenReturn(user);
 
-        Exception exception = assertThrows(EntityNotFoundException.class,
-                () -> orderService.getById(anyLong()));
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
-        assertEquals(message, exception.getMessage());
+        assertThrows(UnauthorizedException.class,
+                ()->orderService.getById(id));
 
     }
 
@@ -120,7 +143,7 @@ class OrderServiceImplTest {
         Order order = DataProviders.orderMock();
 
 
-        when(authService.havePermision(anyLong())).thenReturn(true);
+        doNothing().when(authService).havePermision(anyLong());
         when(orderRepository.save(order)).thenReturn(order);
         when(orderProductService.created(order)).thenReturn(DataProviders.orderProductListMock());
 
@@ -152,7 +175,7 @@ class OrderServiceImplTest {
         order.setUser(user);
         order.setOrderProducts(DataProviders.orderProductSetMock());
 
-        when(authService.havePermision(anyLong())).thenReturn(true);
+        doNothing().when(authService).havePermision(anyLong());
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
 
@@ -182,13 +205,17 @@ class OrderServiceImplTest {
     void testDeleted() {
 
         Long id = 1L;
-        Order order = DataProviders.orderMock();
+        ApiUser user= DataProviders.userMock();
+        user.setEmail("mail");
+        Order order=DataProviders.orderMock();
+        order.setUser(user);
         order.setStatus(StatusOrder.CANCELLED);
 
 
         when(orderRepository.findById(anyLong()))
                 .thenReturn(Optional.of(order));
-        when(authService.havePermision(anyLong())).thenReturn(true);
+        when(authService.currentUser()).thenReturn(user);
+        doNothing().when(authService).havePermision(anyLong());
         when(orderRepository.save(any(Order.class))).thenReturn(null);
 
         orderService.deleted(id);

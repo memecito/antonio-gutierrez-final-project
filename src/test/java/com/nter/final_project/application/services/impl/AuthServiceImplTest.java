@@ -3,6 +3,7 @@ package com.nter.final_project.application.services.impl;
 import com.nter.final_project.application.resources.DataProviders;
 import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.UnauthenticatedException;
+import com.nter.final_project.exception.UnauthorizedException;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.presentation.dto.auth.AuthToken;
 import jakarta.servlet.http.Cookie;
@@ -11,14 +12,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
@@ -27,7 +31,10 @@ class AuthServiceImplTest {
     private UserDetailsServiceImpl userDetailsService;
 
     @Mock
-    private ApiUserServiceImpl apiUserService;
+    private SecurityContext securityContext;
+
+    @Mock
+    private Authentication authentication;
 
     @Mock
     private JwtService jwtService;
@@ -38,7 +45,10 @@ class AuthServiceImplTest {
     @Mock
     private HttpServletRequest request;
 
+    @Mock
+    private ApiUserServiceImpl apiUserService;
 
+    @Spy
     @InjectMocks
     private AuthServiceImpl authService;
 
@@ -149,11 +159,60 @@ class AuthServiceImplTest {
         assertEquals(message, exception.getMessage());
 
     }
+
     @Test
-    void testCurrentUser(){
+    void testHavePermissionId() {
+        Long id=1L;
         ApiUser user= DataProviders.userMock();
-        UserDetails userDetails=DataProviders.userDetailsMock();
-        when(apiUserService.getByEmail(anyString())).thenReturn(user);
-        ApiUser userResult= authService.currentUser();
+        user.setId(id);
+        user.setAdmin(false);
+
+        doReturn(user).when(authService).currentUser();
+
+        assertThrows(UnauthorizedException.class,
+                ()->authService.havePermision(id));
+    }
+    @Test
+    void testHavePermissionIdEx() {
+        Long id=1L;
+        ApiUser user= DataProviders.userMock();
+        user.setId(id);
+        user.setAdmin(true);
+
+        doReturn(user).when(authService).currentUser();
+
+        assertThrows(UnauthorizedException.class,
+                ()->authService.havePermision(2L));
+    }
+
+    @Test
+    void testHavePermissionEmail() {
+        Long id=1L;
+        String mail= "mail@mail.com";
+        ApiUser user= DataProviders.userMock();
+        user.setId(id);
+        user.setAdmin(false);
+        user.setEmail(mail);
+
+        doReturn(user).when(authService).currentUser();
+
+        assertThrows(UnauthorizedException.class,
+                ()->authService.havePermision(mail));
+
+    }
+    @Test
+    void testHavePermissionEmailEx() {
+        Long id=1L;
+        String mail= "mail@mail.com";
+        ApiUser user= DataProviders.userMock();
+        user.setId(id);
+        user.setAdmin(true);
+        user.setEmail("rue@mail");
+
+        doReturn(user).when(authService).currentUser();
+
+        assertThrows(UnauthorizedException.class,
+                ()->authService.havePermision(mail));
+
     }
 }
