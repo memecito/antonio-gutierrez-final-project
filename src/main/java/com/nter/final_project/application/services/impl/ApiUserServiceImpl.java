@@ -157,7 +157,7 @@ public class ApiUserServiceImpl implements ApiUserService {
     public void updatePassword(Long id, String password) {
         authService.havePermision(id);
         ApiUser userFound = getById(id);
-        userFound.setPassword(passwordEncoder.encode(userFound.getPassword()));
+        userFound.setPassword(passwordEncoder.encode(password));
         apiUserRepository.save(userFound);
     }
 
