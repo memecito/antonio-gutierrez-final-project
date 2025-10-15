@@ -27,8 +27,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-
     private final ApiUserService apiUserService;
+
     public final static String REFRESH_TOKEN_COOKIE = "refreshToken";
 
 

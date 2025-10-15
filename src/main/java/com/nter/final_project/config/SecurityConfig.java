@@ -41,6 +41,9 @@ public class SecurityConfig {
                                 //acceso permitido a todos
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
+                                .requestMatchers(  "/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/swagger-ui.html").permitAll()
                                 //acceso users Admin completo, User acceso solo a search
                                 .requestMatchers("/users/all").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/users/*").authenticated()

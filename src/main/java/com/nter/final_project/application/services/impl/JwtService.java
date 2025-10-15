@@ -26,10 +26,6 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Lazy
-    @Autowired
-    private ApiUserService apiUserService;
-
     @Value("${security.jwt.secret-key}")
     private String secretKey;
 
@@ -119,20 +115,4 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    /***
-     *
-     * @param id
-     * @param token
-     * @return boolean
-     */
-    public boolean  authorization(Long id, String token) {
-        ApiUser userToken = apiUserService.getByEmail(extractUsername(token.substring(7)));
-        if (userToken.getAdmin()) {
-            return true;
-        }
-        if (!Objects.equals(apiUserService.getById(id).getEmail(), userToken.getEmail())) {
-            throw new UnauthorizedException("No tienes permisos para entrar, JWS01");
-        }
-        return true;
-    }
 }
