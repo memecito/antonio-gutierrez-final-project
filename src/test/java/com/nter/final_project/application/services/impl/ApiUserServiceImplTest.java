@@ -184,7 +184,8 @@ class ApiUserServiceImplTest {
 
         when(apiUserRepository.findByEmail(any(String.class))).thenReturn(oldUser);
 
-        Exception exception = assertThrows(EmailAlreadyExistException.class, () -> {
+        Exception exception = assertThrows(EmailAlreadyExistException.class,
+                () -> {
             apiUserService.created(newUser);
         });
 
@@ -231,7 +232,6 @@ class ApiUserServiceImplTest {
     void updatePassword() {
         Long id = 1L;
         ApiUser user = DataProviders.userMock();
-        String token = DataProviders.tokenMock();
 
         when(apiUserRepository.findById(anyLong())).thenReturn(Optional.of(user));
         doNothing().when(authService).havePermision(anyLong());

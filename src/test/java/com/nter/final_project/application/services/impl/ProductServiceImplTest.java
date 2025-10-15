@@ -65,7 +65,6 @@ class ProductServiceImplTest {
     void getById() {
 
         Long id = 1L;
-        Product product = DataProviders.productMock();
 
         when(productRepository.findById(id)).thenReturn(DataProviders.productOptionalMock());
 

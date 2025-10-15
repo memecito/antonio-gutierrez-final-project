@@ -32,12 +32,6 @@ class AuthServiceImplTest {
     private UserDetailsServiceImpl userDetailsService;
 
     @Mock
-    private SecurityContext securityContext;
-
-    @Mock
-    private Authentication authentication;
-
-    @Mock
     private JwtService jwtService;
 
     @Mock
