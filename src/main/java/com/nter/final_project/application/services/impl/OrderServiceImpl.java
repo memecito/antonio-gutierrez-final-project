@@ -1,11 +1,10 @@
 package com.nter.final_project.application.services.impl;
 
-import com.nter.final_project.application.services.OrderProductService;
-import com.nter.final_project.application.services.OrderService;
-import com.nter.final_project.application.services.ProductService;
+import com.nter.final_project.application.services.*;
 import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EntityNotFoundException;
 import com.nter.final_project.exception.UnauthorizedException;
+import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.repository.OrderRepository;
@@ -14,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,8 +31,9 @@ public class OrderServiceImpl implements OrderService {
     private final OrderProductService orderProductService;
     private final ProductService productService;
 
-    //    @Autowired
-    private final JwtService jwtService;
+    private final ApiUser userLog= (ApiUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+  private final AuthService authService;
 
     @Override
     public Page<Order> getAll(int pageNumber, int pageSize) {
@@ -41,9 +43,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<Order> getUsersOrders(int pageNumber, int pageSize, String token) {
-        String user = jwtService.extractUsername(token.substring(7));
+        //String user = authService.extractUsername(token.substring(7));
+
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return orderRepository.findByUser_Email(user, pageable);
+        return orderRepository.findByUser_Email(userLog.getEmail(), pageable);
     }
 
     @Override
@@ -58,11 +61,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getById(Long id, String token) {
-        String userMail = jwtService.extractUsername(token.substring(7));
+        ApiUser userLogger= (ApiUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Order order = orderRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Orden no encontrada, OS01")
         );
-        if (!Objects.equals(userMail, order.getUser().getEmail())) {
+        if (!Objects.equals(userLogger.getEmail(), order.getUser().getEmail())) {
             throw new UnauthorizedException("No tiene permisos para ver esta Orden, OS02");
         }
         return order;
@@ -77,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order created(Order order, String token) {
-        jwtService.authorization(order.getUser().getId(), token);
+        authService.authorization(order.getUser().getId(), token);
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         orderRepository.save(order);
@@ -90,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
     public Order update(Long id, Order order, String token) {
 
 
-        jwtService.authorization(getById(id).getUser().getId(), token);
+        authService.authorization(getById(id).getUser().getId(), token);
         Order orderFound = getById(id);
         order.getOrderProducts().forEach(
                 orderProduct -> {
@@ -107,7 +111,7 @@ public class OrderServiceImpl implements OrderService {
         Order orderFound = getById(id);
         if(Objects.equals(orderFound.getStatus(),StatusOrder.CANCELLED))
             throw new BadRequestException("Orden cancelada no se puede modificar");
-        jwtService.authorization(orderFound.getUser().getId(), token);
+        authService.authorization(orderFound.getUser().getId(), token);
         return checkStatus(getById(id), status,token);
     }
 
@@ -115,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void deleted(Long id, String token) {
         Order order = getById(id);
-        jwtService.authorization(order.getUser().getId(), token);
+        authService.authorization(order.getUser().getId(), token);
         if(Objects.equals(order.getStatus(),StatusOrder.COMPLETED))
             throw new BadRequestException("Orden completada no se puede eliminar");
         order.setStatus(StatusOrder.CANCELLED);

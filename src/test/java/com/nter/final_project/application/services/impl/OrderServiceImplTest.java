@@ -154,7 +154,7 @@ class OrderServiceImplTest {
         Order order = DataProviders.orderMock();
         String token = DataProviders.tokenMock();
 
-        when(jwtService.authorization(order.getUser().getId(), token)).thenReturn(true);
+        //when(jwtService.authorization(order.getUser().getId(), token)).thenReturn(true);
 
         when(orderRepository.save(order)).thenReturn(order);
         when(orderProductService.created(order)).thenReturn(DataProviders.orderProductListMock());
@@ -188,7 +188,7 @@ class OrderServiceImplTest {
         order.setOrderProducts(DataProviders.orderProductSetMock());
         String token= DataProviders.tokenMock();
 
-        when(jwtService.authorization(id,token)).thenReturn(true);
+        //when(jwtService.authorization(id,token)).thenReturn(true);
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
 
@@ -227,7 +227,7 @@ class OrderServiceImplTest {
 
         when(orderRepository.findById(anyLong()))
                 .thenReturn(Optional.of(order));
-        when(jwtService.authorization(anyLong(),anyString())).thenReturn(true);
+        //when(jwtService.authorization(anyLong(),anyString())).thenReturn(true);
         when(orderRepository.save(any(Order.class))).thenReturn(null);
 
         orderService.deleted(id,token);

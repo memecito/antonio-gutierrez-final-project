@@ -11,4 +11,8 @@ public interface AuthService {
     AuthToken register(ApiUser user);
 
     AuthToken refresh(HttpServletRequest request);
+
+    boolean authorization(Long id, String token);
+
+    boolean isOwner(Long id);
 }

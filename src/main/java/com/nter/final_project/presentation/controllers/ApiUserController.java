@@ -16,6 +16,7 @@ import com.nter.final_project.presentation.dto.country.CountryUpdateDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,11 +56,9 @@ public class ApiUserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id,
-                                                 HttpServletRequest request) {
+    public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id) {
 
-        String authHeader = request.getHeader("Authorization");
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id, authHeader)));
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id)));
     }
 
     @PostMapping
@@ -69,12 +68,10 @@ public class ApiUserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiUserOutDto> update(@PathVariable Long id,
-                                    @Valid @RequestBody ApiUserUpdateDto apiUser,
-                                    HttpServletRequest request) {
+                                    @Valid @RequestBody ApiUserUpdateDto apiUser) {
 
-        String authHeader = request.getHeader("Authorization");
         ApiUser user = apiUserMapped.toModelUpdate(apiUser);
-        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id, user,authHeader)));
+        return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id, user)));
     }
 
     @PutMapping("/{id}/password")
@@ -85,13 +82,9 @@ public class ApiUserController {
 
     @PatchMapping("/{id}/country")
     public ResponseEntity<?> updateCountry(@PathVariable Long id,
-                                           @Valid @RequestBody CountryUpdateDto country,
-                                           HttpServletRequest request) {
-
-        String authHeader = request.getHeader("Authorization");
+                                           @Valid @RequestBody CountryUpdateDto country) {
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id,
-                countryMapped.toModelUpdate(country),
-                authHeader)));
+                countryMapped.toModelUpdate(country))));
     }
 
     @PutMapping("/{id}/desactived")

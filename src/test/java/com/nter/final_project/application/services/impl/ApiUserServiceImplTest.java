@@ -101,15 +101,15 @@ class ApiUserServiceImplTest {
         String token = DataProviders.tokenMock();
 
         when(apiUserRepository.findById(anyLong())).thenReturn(DataProviders.userOptionalMock());
-        when(jwtService.authorization(anyLong(), anyString())).thenReturn(true);
+       // when(jwtService.authorization(anyLong(), anyString())).thenReturn(true);
         ApiUser apiUser = apiUserService.getById(id, token);
 
-        boolean auth = jwtService.authorization(id, token);
+        //boolean auth = jwtService.authorization(id, token);
 
         assertNotNull(apiUser);
         verify(apiUserRepository).findById(anyLong());
 
-        assertTrue(auth);
+        //assertTrue(auth);
     }
 
     @Test
@@ -196,7 +196,7 @@ class ApiUserServiceImplTest {
 
         when(apiUserMapped.update(any(ApiUser.class), any(ApiUser.class))).thenReturn(userUpdate);
 
-        ApiUser userResult = apiUserService.update(id, userUpdate, DataProviders.tokenMock());
+        ApiUser userResult = apiUserService.update(id, userUpdate);
 
         assertNotNull(userResult);
         verify(apiUserMapped).update(any(ApiUser.class), any(ApiUser.class));
@@ -217,7 +217,7 @@ class ApiUserServiceImplTest {
         when(apiUserRepository.findById(anyLong())).thenReturn(Optional.of(oldUser));
 
         Exception exception = assertThrows(BadRequestException.class,
-                () -> apiUserService.update(id, newUser, DataProviders.tokenMock()));
+                () -> apiUserService.update(id, newUser));
 
         assertEquals(message, exception.getMessage());
     }
@@ -229,10 +229,10 @@ class ApiUserServiceImplTest {
         String token= DataProviders.tokenMock();
 
         when(apiUserRepository.findById(anyLong())).thenReturn(Optional.of(user));
-        when(jwtService.authorization(anyLong(),anyString())).thenReturn(true);
+        //when(jwtService.authorization(anyLong(),anyString())).thenReturn(true);
         when(apiUserRepository.save(user)).thenReturn(null);
 
-        apiUserService.updatePassword(id,"contraseña",token);
+        apiUserService.updatePassword(id,"contraseña");
 
         verify(apiUserRepository,times(1)).save(user);
 

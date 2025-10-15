@@ -2,10 +2,7 @@ package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.application.services.AuthService;
-import com.nter.final_project.exception.BadRequestException;
-import com.nter.final_project.exception.InvalidTokenException;
-import com.nter.final_project.exception.UnauthenticatedException;
-import com.nter.final_project.exception.UserNotActived;
+import com.nter.final_project.exception.*;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.presentation.dto.auth.AuthToken;
 import jakarta.servlet.http.Cookie;
@@ -13,11 +10,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Objects;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
 
     private final PasswordEncoder passwordEncoder;
+
 
 
     private final ApiUserService apiUserService;
@@ -41,8 +44,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthToken autentificate(ApiUser user) {
         ApiUser userFound = apiUserService.getByEmail(user.getEmail());
-        if(!userFound.getActive()) {
-            log.warn("fallo autentificación user: {} desactivado",user.getEmail());
+        if (!userFound.getActive()) {
+            log.warn("fallo autentificación user: {} desactivado", user.getEmail());
             throw new UserNotActived("Usuario no activo,APS11");
         }
         if (!passwordEncoder.matches(user.getPassword(), userFound.getPassword())) {
@@ -99,5 +102,35 @@ public class AuthServiceImpl implements AuthService {
                 jwtService.generateAccessToken(userDetails),
                 jwtService.generateRefreshToken(userDetails)
         );
+    }
+
+    /***
+     *
+     * @param id
+     * @param token
+     * @return boolean
+     */
+    @Override
+    public boolean authorization(Long id, String token) {
+        ApiUser userToken = apiUserService.getByEmail(jwtService.extractUsername(token.substring(7)));
+        if (userToken.getAdmin()) {
+            return true;
+        }
+        if (!Objects.equals(apiUserService.getById(id).getEmail(), userToken.getEmail())) {
+            throw new UnauthorizedException("No tienes permisos para entrar, JWS01");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isOwner(Long id) {
+        ApiUser userLog = (ApiUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (userLog.getAdmin()) {
+            return true;
+        }
+        if (!Objects.equals(apiUserService.getById(id).getEmail(), userLog.getEmail())) {
+            throw new UnauthorizedException("No tienes permisos para entrar, JWS01");
+        }
+        return true;
     }
 }
