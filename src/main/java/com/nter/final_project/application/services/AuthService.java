@@ -11,4 +11,8 @@ public interface AuthService {
     AuthToken register(ApiUser user);
 
     AuthToken refresh(HttpServletRequest request);
+    boolean havePermision(String email);
+    boolean havePermision(Long id);
+    ApiUser currentUser();
+
 }

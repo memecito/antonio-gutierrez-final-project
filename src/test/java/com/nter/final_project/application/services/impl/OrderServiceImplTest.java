@@ -1,6 +1,7 @@
 package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.resources.DataProviders;
+import com.nter.final_project.application.services.AuthService;
 import com.nter.final_project.application.services.ProductService;
 import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EntityNotFoundException;
@@ -40,7 +41,7 @@ class OrderServiceImplTest {
     private OrderProductServiceImpl orderProductService;
 
     @Mock
-    private JwtService jwtService;
+    private AuthService authService;
 
     @InjectMocks
     private OrderServiceImpl orderService;
@@ -61,15 +62,14 @@ class OrderServiceImplTest {
     @Test
     void getUsersOrders() {
 
-        String token = DataProviders.tokenMock();
         Pageable pageable = PageRequest.of(0, 5);
         Page<Order> orders = DataProviders.pageOrders();
-        ApiUser user= DataProviders.userMock();
+        ApiUser user = DataProviders.userMock();
 
-        when(jwtService.extractUsername(anyString())).thenReturn(user.getEmail());
+        when(authService.currentUser().getEmail()).thenReturn(user.getEmail());
         when(orderRepository.findByUser_Email(user.getEmail(), pageable)).thenReturn(orders);
 
-        Page<Order> ordersResult = orderService.getUsersOrders(0, 5, token);
+        Page<Order> ordersResult = orderService.getUsersOrders(0, 5);
 
         assertNotNull(ordersResult);
 
@@ -90,40 +90,6 @@ class OrderServiceImplTest {
         assertNotNull(ordersResult);
     }
 
-    @Test
-    void getByIdToken() {
-        Long id = 1L;
-        String token = DataProviders.tokenMock();
-        ApiUser user = DataProviders.userMock();
-        Order order= DataProviders.orderMock();
-        order.setUser(user);
-
-        when(jwtService.extractUsername(token.substring(7))).thenReturn(user.getEmail());
-        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
-
-
-        Order orderResult = orderService.getById(id, token);
-
-        assertNotNull(orderResult);
-    }
-    @Test
-    void getByIdTokenExceptionUnauthorized() {
-        Long id = 1L;
-        String token = DataProviders.tokenMock();
-        ApiUser user = DataProviders.userMock();
-
-        String message= "No tiene permisos para ver esta Orden, OS02";
-
-        when(jwtService.extractUsername(token.substring(7))).thenReturn(user.getEmail());
-        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(DataProviders.orderMock()));
-
-        Exception exception= assertThrows(UnauthorizedException.class,
-                ()->orderService.getById(id,token));
-
-        assertEquals(message,exception.getMessage());
-
-
-    }
 
     @Test
     void testGetById() {
@@ -152,15 +118,14 @@ class OrderServiceImplTest {
     @Test
     void created() {
         Order order = DataProviders.orderMock();
-        String token = DataProviders.tokenMock();
 
-        when(jwtService.authorization(order.getUser().getId(), token)).thenReturn(true);
 
+        when(authService.havePermision(anyLong())).thenReturn(true);
         when(orderRepository.save(order)).thenReturn(order);
         when(orderProductService.created(order)).thenReturn(DataProviders.orderProductListMock());
 
 
-        Order orderResult = orderService.created(order, token);
+        Order orderResult = orderService.created(order);
 
         assertNotNull(orderResult);
 
@@ -180,20 +145,18 @@ class OrderServiceImplTest {
 
     @Test
     void testUpdate() {
-        Long id= 1L;
-        Order order= DataProviders.orderMock();
-        ApiUser user= DataProviders.userMock();
+        Long id = 1L;
+        Order order = DataProviders.orderMock();
+        ApiUser user = DataProviders.userMock();
         user.setId(id);
         order.setUser(user);
         order.setOrderProducts(DataProviders.orderProductSetMock());
-        String token= DataProviders.tokenMock();
 
-        when(jwtService.authorization(id,token)).thenReturn(true);
+        when(authService.havePermision(anyLong())).thenReturn(true);
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
 
-
-        Order orderResult=orderService.update(id,order,token);
+        Order orderResult = orderService.update(id, order);
 
         assertNotNull(orderResult);
 
@@ -205,12 +168,11 @@ class OrderServiceImplTest {
         Order order = DataProviders.orderMock();
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         String status = StatusOrder.PROCESSING.toString();
-        String token= DataProviders.tokenMock();
 
 
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
-        Order orderResult = orderService.updateStatus(1L, status,token);
+        Order orderResult = orderService.updateStatus(1L, status);
 
         assertNotNull(orderResult);
 
@@ -219,19 +181,18 @@ class OrderServiceImplTest {
     @Test
     void testDeleted() {
 
-        Long id= 1L;
-        String token= DataProviders.tokenMock();
-        Order order= DataProviders.orderMock();
+        Long id = 1L;
+        Order order = DataProviders.orderMock();
         order.setStatus(StatusOrder.CANCELLED);
 
 
         when(orderRepository.findById(anyLong()))
                 .thenReturn(Optional.of(order));
-        when(jwtService.authorization(anyLong(),anyString())).thenReturn(true);
+        when(authService.havePermision(anyLong())).thenReturn(true);
         when(orderRepository.save(any(Order.class))).thenReturn(null);
 
-        orderService.deleted(id,token);
-        verify(orderRepository,times(1)).save(order);
+        orderService.deleted(id);
+        verify(orderRepository, times(1)).save(order);
 
     }
 
@@ -240,12 +201,11 @@ class OrderServiceImplTest {
         Order order = DataProviders.orderMock();
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         String status = StatusOrder.SHIPPED.toString();
-        String token= DataProviders.tokenMock();
 
         String message = "Cambio de estado no valido, OS04";
 
         Exception exception = assertThrows(BadRequestException.class,
-                () -> orderService.checkStatus(order, status,token));
+                () -> orderService.checkStatus(order, status));
 
         assertEquals(message, exception.getMessage());
 
@@ -256,12 +216,11 @@ class OrderServiceImplTest {
         Order order = DataProviders.orderMock();
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         String status = "shiped";
-        String token= DataProviders.tokenMock();
 
         String message = "El estado 'shiped' no es válido., OS03";
 
         Exception exception = assertThrows(BadRequestException.class,
-                () -> orderService.checkStatus(order, status, token));
+                () -> orderService.checkStatus(order, status));
 
         assertEquals(message, exception.getMessage());
 
@@ -272,9 +231,8 @@ class OrderServiceImplTest {
         Order order = DataProviders.orderMock();
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         String status = StatusOrder.PROCESSING.toString();
-        String token= DataProviders.tokenMock();
 
-        Order orderResutl = orderService.checkStatus(order, status,token);
+        Order orderResutl = orderService.checkStatus(order, status);
 
         assertNotNull(orderResutl);
 

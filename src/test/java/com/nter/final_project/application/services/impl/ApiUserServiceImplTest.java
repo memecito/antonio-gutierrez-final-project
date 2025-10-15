@@ -2,6 +2,7 @@ package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.mappers.ApiUserMapped;
 import com.nter.final_project.application.resources.DataProviders;
+import com.nter.final_project.application.services.AuthService;
 import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EmailAlreadyExistException;
 import com.nter.final_project.exception.EntityNotFoundException;
@@ -32,8 +33,8 @@ class ApiUserServiceImplTest {
 
     @Mock
     private ApiUserRepository apiUserRepository;
-    @Mock
-    private JwtService jwtService;
+    @InjectMocks
+    private AuthServiceImpl authService;
 
     @Mock
     private ApiUserMapped apiUserMapped;
@@ -59,7 +60,7 @@ class ApiUserServiceImplTest {
     }
 
     @Test
-    void getAllActive(){
+    void getAllActive() {
         //Given
         Page<ApiUser> apiUsers = DataProviders.pageApiUserMock();
         Pageable pageable = PageRequest.of(0, 5);
@@ -76,19 +77,25 @@ class ApiUserServiceImplTest {
     void getById() {
 
         Long id = 1L;
+        ApiUser user = DataProviders.userMock();
+        user.setId(id);
+        doNothing().when(authService).havePermision(id);
 
-        when(apiUserRepository.findById(anyLong())).thenReturn(DataProviders.userOptionalMock());
+        when(apiUserRepository.findById(anyLong())).thenReturn(Optional.of(user));
 
         ApiUser apiUser = apiUserService.getById(id);
 
         assertNotNull(apiUser);
-        verify(apiUserRepository).findById(anyLong());
+        verify(authService, times(1)).havePermision(id);
+        verify(apiUserRepository, times(1)).findById(id);
     }
 
     @Test
     void getByIdException() {
         String mensaje = "Usuario con id: " + 1L + " no encontrado, APS02";
 
+        when(authService.currentUser()).thenReturn(DataProviders.userMock());
+        when(authService.havePermision(anyLong())).thenReturn(true);
         Exception exception = assertThrows(UserNotFounException.class,
                 () -> apiUserService.getById(1L));
 
@@ -98,18 +105,14 @@ class ApiUserServiceImplTest {
     @Test
     void testGetById() {
         Long id = 1L;
-        String token = DataProviders.tokenMock();
 
         when(apiUserRepository.findById(anyLong())).thenReturn(DataProviders.userOptionalMock());
-        when(jwtService.authorization(anyLong(), anyString())).thenReturn(true);
-        ApiUser apiUser = apiUserService.getById(id, token);
-
-        boolean auth = jwtService.authorization(id, token);
+        when(authService.havePermision(anyLong())).thenReturn(true);
+        ApiUser apiUser = apiUserService.getById(id);
 
         assertNotNull(apiUser);
         verify(apiUserRepository).findById(anyLong());
 
-        assertTrue(auth);
     }
 
     @Test
@@ -193,10 +196,10 @@ class ApiUserServiceImplTest {
         ApiUser userUpdate = DataProviders.userMock();
 
         when(apiUserRepository.findById(id)).thenReturn(Optional.of(userUpdate));
-
+        when(authService.havePermision(anyLong())).thenReturn(true);
         when(apiUserMapped.update(any(ApiUser.class), any(ApiUser.class))).thenReturn(userUpdate);
 
-        ApiUser userResult = apiUserService.update(id, userUpdate, DataProviders.tokenMock());
+        ApiUser userResult = apiUserService.update(id, userUpdate);
 
         assertNotNull(userResult);
         verify(apiUserMapped).update(any(ApiUser.class), any(ApiUser.class));
@@ -217,25 +220,24 @@ class ApiUserServiceImplTest {
         when(apiUserRepository.findById(anyLong())).thenReturn(Optional.of(oldUser));
 
         Exception exception = assertThrows(BadRequestException.class,
-                () -> apiUserService.update(id, newUser, DataProviders.tokenMock()));
+                () -> apiUserService.update(id, newUser));
 
         assertEquals(message, exception.getMessage());
     }
 
     @Test
-    void updatePassword(){
-        Long id= 1l;
-        ApiUser user= DataProviders.userMock();
-        String token= DataProviders.tokenMock();
+    void updatePassword() {
+        Long id = 1l;
+        ApiUser user = DataProviders.userMock();
+        String token = DataProviders.tokenMock();
 
         when(apiUserRepository.findById(anyLong())).thenReturn(Optional.of(user));
-        when(jwtService.authorization(anyLong(),anyString())).thenReturn(true);
+        when(authService.havePermision(anyLong())).thenReturn(true);
         when(apiUserRepository.save(user)).thenReturn(null);
 
-        apiUserService.updatePassword(id,"contraseña",token);
+        apiUserService.updatePassword(id, "contraseña");
 
-        verify(apiUserRepository,times(1)).save(user);
-
+        verify(apiUserRepository, times(1)).save(user);
 
 
     }

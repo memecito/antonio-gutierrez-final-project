@@ -149,4 +149,11 @@ class AuthServiceImplTest {
         assertEquals(message, exception.getMessage());
 
     }
+    @Test
+    void testCurrentUser(){
+        ApiUser user= DataProviders.userMock();
+        UserDetails userDetails=DataProviders.userDetailsMock();
+        when(apiUserService.getByEmail(anyString())).thenReturn(user);
+        ApiUser userResult= authService.currentUser();
+    }
 }

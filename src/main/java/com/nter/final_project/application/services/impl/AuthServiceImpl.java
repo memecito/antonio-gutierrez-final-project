@@ -2,10 +2,7 @@ package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.services.ApiUserService;
 import com.nter.final_project.application.services.AuthService;
-import com.nter.final_project.exception.BadRequestException;
-import com.nter.final_project.exception.InvalidTokenException;
-import com.nter.final_project.exception.UnauthenticatedException;
-import com.nter.final_project.exception.UserNotActived;
+import com.nter.final_project.exception.*;
 import com.nter.final_project.persistence.entity.ApiUser;
 import com.nter.final_project.presentation.dto.auth.AuthToken;
 import jakarta.servlet.http.Cookie;
@@ -13,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -100,4 +99,36 @@ public class AuthServiceImpl implements AuthService {
                 jwtService.generateRefreshToken(userDetails)
         );
     }
+
+    @Override
+    public boolean havePermision(String email){
+        ApiUser userLogin= currentUser();
+        if(userLogin.getAdmin()) return true;
+        if(!userLogin.getEmail().equals(email)) throw new UnauthorizedException("no tiene permiso, AS11");
+        return true;
+    }
+    @Override
+    public boolean havePermision(Long id){
+        ApiUser userLogin= currentUser();
+        if(userLogin.getAdmin()) return true;
+        if(!userLogin.getId().equals(id)) throw new UnauthorizedException("no tiene permiso, AS11");
+        return true;
+    }
+
+    public ApiUser currentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+
+            return null;
+        }
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            return apiUserService.getByEmail(((UserDetails) principal).getUsername());
+        }
+        throw new IllegalStateException("El objeto principal del usuario no es del tipo esperado (ApiUser).");
+    }
+
+
 }

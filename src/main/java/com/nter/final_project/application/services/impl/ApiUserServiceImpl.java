@@ -2,6 +2,7 @@ package com.nter.final_project.application.services.impl;
 
 import com.nter.final_project.application.mappers.ApiUserMapped;
 import com.nter.final_project.application.services.ApiUserService;
+import com.nter.final_project.application.services.AuthService;
 import com.nter.final_project.application.services.CountryService;
 import com.nter.final_project.exception.BadRequestException;
 import com.nter.final_project.exception.EmailAlreadyExistException;
@@ -13,6 +14,8 @@ import com.nter.final_project.persistence.repository.ApiUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +33,9 @@ public class ApiUserServiceImpl implements ApiUserService {
     private final ApiUserRepository apiUserRepository;
     private final ApiUserMapped apiUserMapped;
 
-    private final JwtService jwtService;
+    @Lazy
+    @Autowired
+    private AuthService authService;
     private final PasswordEncoder passwordEncoder;
 
     private final CountryService countryService;
@@ -54,18 +59,15 @@ public class ApiUserServiceImpl implements ApiUserService {
         return apiUserRepository.findByActiveTrue(pageable);
     }
 
-    /***
-     *
-     * @param id
-     * @param token
-     * @return
-     */
+    /*
     @Override
-    public ApiUser getById(Long id, String token) {
+    public ApiUser getById(Long id) {
         ApiUser userfound = getById(id);
         jwtService.authorization(id, token);
         return userfound;
     }
+
+     */
 
     /***
      *
@@ -74,8 +76,9 @@ public class ApiUserServiceImpl implements ApiUserService {
      */
     @Override
     public ApiUser getById(Long id) {
+        authService.havePermision(id);
         return apiUserRepository.findById(id).orElseThrow(
-                () ->{
+                () -> {
                     log.warn("usuario no encontrado {}", id);
                     return new UserNotFounException("Usuario con id: " + id + " no encontrado, APS02");
                 }
@@ -93,7 +96,7 @@ public class ApiUserServiceImpl implements ApiUserService {
         return apiUserRepository.findByFullName(name).orElseThrow(
                 () -> {
                     log.warn("usuario no encontrado {}", name);
-                    return new  EntityNotFoundException("No se ha encontrado ningun usuario con ese nombre, APS03");
+                    return new EntityNotFoundException("No se ha encontrado ningun usuario con ese nombre, APS03");
                 }
         );
     }
@@ -139,8 +142,8 @@ public class ApiUserServiceImpl implements ApiUserService {
      */
     @Override
     @Transactional
-    public ApiUser update(Long id, ApiUser apiUser, String token) {
-        jwtService.authorization(id, token);
+    public ApiUser update(Long id, ApiUser apiUser) {
+        authService.havePermision(id);
         ApiUser userFound = getById(id);
         if (!Objects.equals(userFound.getEmail(), apiUser.getEmail()))
             throw new BadRequestException("No se puede cambiar el email, APS06");
@@ -151,8 +154,9 @@ public class ApiUserServiceImpl implements ApiUserService {
 
     @Override
     @Transactional
-    public void updatePassword(Long id, String password, String token) {
-        ApiUser userFound = getById(id,token);
+    public void updatePassword(Long id, String password) {
+        authService.havePermision(id);
+        ApiUser userFound = getById(id);
         userFound.setPassword(passwordEncoder.encode(userFound.getPassword()));
         apiUserRepository.save(userFound);
     }
@@ -165,8 +169,8 @@ public class ApiUserServiceImpl implements ApiUserService {
      */
     @Override
     @Transactional
-    public ApiUser updateCountry(Long id, Country country, String token) {
-        jwtService.authorization(id, token);
+    public ApiUser updateCountry(Long id, Country country) {
+        authService.havePermision(id);
         Country countryFound = countryService.getByCode(country.getCode());
         ApiUser userFound = getById(id);
         userFound.setCountry(countryFound);
@@ -202,7 +206,7 @@ public class ApiUserServiceImpl implements ApiUserService {
         return apiUserRepository.save(userFound);
     }
 
-    ///*
+    /// *
     ///
     /// @param id
     /// @return
@@ -224,7 +228,7 @@ public class ApiUserServiceImpl implements ApiUserService {
     public void deleted(Long id) {
         ApiUser userFound = getById(id);
         userFound.setActive(false);
-        log.info("Usuario desactivado id: {}",id);
+        log.info("Usuario desactivado id: {}", id);
         apiUserRepository.save(userFound);
     }
 }
