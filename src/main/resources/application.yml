@@ -1,24 +1,16 @@
 server:
   port: 8080
 spring:
-  sql:
-    init:
-      mode: always
-      platform: h2
   application:
     name: final_project
   datasource:
-    url: jdbc:h2:file:./final_project
-    username: sa
-    password: 1234
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    url: jdbc:postgresql://localhost:5432/javadb
+    username: postgres
+    password: contrasena
   jpa:
-    defer-datasource-initialization: true
     hibernate:
       ddl-auto: create-drop
+    defer-datasource-initialization: true
 
 security:
   jwt:

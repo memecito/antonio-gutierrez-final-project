@@ -21,5 +21,6 @@ public final class ApiUserInDto {
     private String password;
 
     @Size(min = 2, max = 2, message = "tamaño del codigo erroneo")
+    @NotBlank(message = "country requerido")
     private String country;
 }

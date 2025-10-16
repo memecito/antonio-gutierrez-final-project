@@ -1,0 +1,22 @@
+services:
+  app:
+    container_name: java-app
+    image: i_java-app
+    build: .
+
+    ports:
+      - 8080:8080
+    environment:
+      - DATABAS_URL= jdbc:postgresql://postgres:5432/javadb
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=contrasena
+    depends_on:
+      - db
+  db:
+    container_name: postgres
+    image: postgres:12
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: contrasena
+      POSTGRES_DB: javadb
