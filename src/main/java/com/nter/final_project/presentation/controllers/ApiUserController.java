@@ -48,7 +48,7 @@ public class ApiUserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiUserOutDto> getById(@PathVariable Long id
-                                                 ) {
+    ) {
 
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.getById(id)));
     }
@@ -60,8 +60,8 @@ public class ApiUserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiUserOutDto> update(@PathVariable Long id,
-                                    @Valid @RequestBody ApiUserUpdateDto apiUser
-                                    ) {
+                                                @Valid @RequestBody ApiUserUpdateDto apiUser
+    ) {
 
         ApiUser user = apiUserMapped.toModelUpdate(apiUser);
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.update(id, user)));
@@ -69,9 +69,9 @@ public class ApiUserController {
 
     @PutMapping("/{id}/password")
     public ResponseEntity<BasicResponseDto> updatePassword(@PathVariable Long id,
-                                                           @Valid @RequestBody UpdatePassword newPassword){
+                                                           @Valid @RequestBody UpdatePassword newPassword) {
 
-        apiUserService.updatePassword(id,apiUserMapped.passToModel(newPassword));
+        apiUserService.updatePassword(id, apiUserMapped.passToModel(newPassword));
         return ResponseEntity.ok(BasicResponseDto.builder()
                 .status(HttpStatus.OK.value())
                 .message("Contraseña actualizada")
@@ -82,30 +82,34 @@ public class ApiUserController {
     @PatchMapping("/{id}/country")
     public ResponseEntity<?> updateCountry(@PathVariable Long id,
                                            @Valid @RequestBody CountryUpdateDto country
-                                           ) {
+    ) {
 
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateCountry(id,
                 countryMapped.toModelUpdate(country)
-                )));
+        )));
     }
 
     @PutMapping("/{id}/desactived")
     public ResponseEntity<ApiUserOutDto> statusDesactived(@PathVariable Long id) {
+
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.statusDesactive(id)));
     }
 
     @PutMapping("/{id}/actived")
     public ResponseEntity<ApiUserOutDto> statusActived(@PathVariable Long id) {
+
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.statusActived(id)));
     }
 
     @PatchMapping("/{id}/become-admin")
     public ResponseEntity<ApiUserOutDto> becomeAdmin(@PathVariable Long id) {
+
         return ResponseEntity.ok(apiUserMapped.toDto(apiUserService.updateAdmin(id)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<BasicResponseDto> deleted(@PathVariable Long id) {
+
         apiUserService.deleted(id);
         return ResponseEntity.ok(BasicResponseDto.builder()
                 .status(HttpStatus.OK.value())

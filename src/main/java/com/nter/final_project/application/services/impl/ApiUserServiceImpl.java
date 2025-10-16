@@ -33,13 +33,13 @@ public class ApiUserServiceImpl implements ApiUserService {
     private final ApiUserRepository apiUserRepository;
     private final ApiUserMapped apiUserMapped;
 
-    @Lazy
-    @Autowired
-    private AuthService authService;
-
     private final PasswordEncoder passwordEncoder;
 
     private final CountryService countryService;
+
+    @Lazy
+    @Autowired
+    private AuthService authService;
 
 
     /***
@@ -59,16 +59,6 @@ public class ApiUserServiceImpl implements ApiUserService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return apiUserRepository.findByActiveTrue(pageable);
     }
-
-    /*
-    @Override
-    public ApiUser getById(Long id) {
-        ApiUser userfound = getById(id);
-        jwtService.authorization(id, token);
-        return userfound;
-    }
-
-     */
 
     /***
      *

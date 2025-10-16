@@ -31,7 +31,6 @@ public class AuthServiceImpl implements AuthService {
 
     public final static String REFRESH_TOKEN_COOKIE = "refreshToken";
 
-
     /***
      *
      * @param user
@@ -55,7 +54,6 @@ public class AuthServiceImpl implements AuthService {
                 jwtService.generateRefreshToken(userDetails)
         );
     }
-
 
     /***
      *
@@ -115,6 +113,7 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
     public ApiUser currentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -129,6 +128,4 @@ public class AuthServiceImpl implements AuthService {
         }
         throw new IllegalStateException("El objeto principal del usuario no es del tipo esperado (ApiUser).");
     }
-
-
 }

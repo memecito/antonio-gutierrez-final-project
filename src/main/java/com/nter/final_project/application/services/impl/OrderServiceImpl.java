@@ -74,15 +74,6 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    /*
-    public Order getById(Long id) {
-        return orderRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Orden no encontrada, OS01")
-        );
-    }
-
-     */
-
     @Override
     @Transactional
     public Order created(Order order) {

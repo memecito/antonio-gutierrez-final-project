@@ -26,29 +26,34 @@ public class OrderController {
     private final OrderMapped orderMapped;
 
     @GetMapping
-    public ResponseEntity<PageResponse<OrderOutDtoMIni>> getUsersOrders(@RequestParam(defaultValue = "0", required = false) int pageNumber,
-                                                                        @RequestParam(defaultValue = "10", required = false) int pageSize,
-                                                                        HttpServletRequest request) {
+    public ResponseEntity<PageResponse<OrderOutDtoMIni>> getUsersOrders(
+            @RequestParam(defaultValue = "0", required = false) int pageNumber,
+            @RequestParam(defaultValue = "10", required = false) int pageSize,
+            HttpServletRequest request) {
+
         return ResponseEntity.ok(new PageResponse<>(orderService.getUsersOrders(pageNumber, pageSize)
                 .map(orderMapped::toDtoMini)));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<PageResponse<OrderOutDtoMIni>> getAll(@RequestParam(defaultValue = "0", required = false) int pageNumber,
-                                                                @RequestParam(defaultValue = "10", required = false) int pageSize) {
+    public ResponseEntity<PageResponse<OrderOutDtoMIni>> getAll(
+            @RequestParam(defaultValue = "0", required = false) int pageNumber,
+            @RequestParam(defaultValue = "10", required = false) int pageSize) {
+
         return ResponseEntity.ok(new PageResponse<>(orderService.getAll(pageNumber, pageSize)
                 .map(orderMapped::toDtoMini)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderOutDto> getById(@PathVariable Long id, HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
+    public ResponseEntity<OrderOutDto> getById(@PathVariable Long id) {
+
         return ResponseEntity.ok(orderMapped.toDto(orderService.getById(id)));
     }
 
     @GetMapping("/user/{name}")
     public ResponseEntity<Set<OrderOutDtoMIni>> getByUser(@PathVariable String name) {
-        return ResponseEntity.ok( orderService.getByUser(name)
+
+        return ResponseEntity.ok(orderService.getByUser(name)
                 .stream()
                 .map(orderMapped::toDtoMini)
                 .collect(Collectors.toSet()));
@@ -62,11 +67,9 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderOutDto> created(@Valid @RequestBody OrderInDto order,
-                                               @NonNull HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        Order ord = orderMapped.toModel(order);
-        return ResponseEntity.ok(orderMapped.toDto(orderService.created(ord)));
+    public ResponseEntity<OrderOutDto> created(@Valid @RequestBody OrderInDto order) {
+
+        return ResponseEntity.ok(orderMapped.toDto(orderService.created(orderMapped.toModel(order))));
     }
 
     @PutMapping("/{id}")
@@ -77,17 +80,14 @@ public class OrderController {
 
     @PutMapping("/{id}/status")
     public ResponseEntity<OrderOutDto> updateStatus(@PathVariable Long id,
-                                                    @RequestBody OrderStatusInDto status,
-                                                    @NonNull HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        String statusStr = orderMapped.toModelStatus(status);
-        return ResponseEntity.ok(orderMapped.toDto(orderService.updateStatus(id, statusStr)));
+                                                    @RequestBody OrderStatusInDto status) {
+
+        return ResponseEntity.ok(orderMapped.toDto(orderService.updateStatus(id, orderMapped.toModelStatus(status))));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BasicResponseDto> deleted(@PathVariable Long id,
-                                                    @NonNull HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
+    public ResponseEntity<BasicResponseDto> deleted(@PathVariable Long id) {
+
         orderService.deleted(id);
         return ResponseEntity.ok(BasicResponseDto.builder()
                 .status(HttpStatus.OK.value())

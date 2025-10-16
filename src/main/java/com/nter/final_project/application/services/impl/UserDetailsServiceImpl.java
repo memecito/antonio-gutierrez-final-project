@@ -19,19 +19,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private ApiUserService apiUserService;
 
-    //cambios anteriores al fallo
-    //private  final ApiUserRepository apiUserRepository;
+
 
     @Override
     public UserDetails loadUserByUsername(String usermail) throws UsernameNotFoundException {
 
         ApiUser user = apiUserService.getByEmail(usermail);
-        /*
-        ApiUser user = apiUserRepository.findByEmail(usermail).orElseThrow(
-                () -> new UserNotFounException("Usuario no encontrado, UDS01")
-        );
-
-         */
 
         return User.builder()
                 .username(user.getEmail())

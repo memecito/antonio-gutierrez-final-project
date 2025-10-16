@@ -52,9 +52,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, "/users/*").hasRole("ADMIN")
                                 .requestMatchers("/users/*/country").authenticated()
                                 .requestMatchers("/users/*/password").authenticated()
-
                                 .requestMatchers("/users/**").hasRole("ADMIN")
-
                                 //acceso products Admin completo, User solo get
                                 .requestMatchers(HttpMethod.GET, "/products/search").authenticated()
                                 .requestMatchers("/products/**").hasRole("ADMIN")

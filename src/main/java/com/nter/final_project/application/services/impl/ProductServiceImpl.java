@@ -109,6 +109,5 @@ public class ProductServiceImpl implements ProductService {
         Product productFound = getById(id);
         productFound.setStatus(StatusProduct.DISCONTINUED);
         productRepository.save(productFound);
-
     }
 }

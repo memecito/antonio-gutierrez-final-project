@@ -23,10 +23,12 @@ public class CountryController {
     private final CountryMapped countryMapped;
 
     @GetMapping
-    public ResponseEntity<PageResponse<CountryOutDtoMini>> getAll(@RequestParam(defaultValue = "0", required = false) int pageNumber,
-                                                                  @RequestParam(defaultValue = "10", required = false) int pageSize) {
+    public ResponseEntity<PageResponse<CountryOutDtoMini>> getAll(
+            @RequestParam(defaultValue = "0", required = false) int pageNumber,
+            @RequestParam(defaultValue = "10", required = false) int pageSize) {
 
-        return ResponseEntity.ok(new PageResponse<>(countryService.getAll(pageNumber, pageSize).map(countryMapped::toDtoMini)));
+        return ResponseEntity.ok(new PageResponse<>(
+                countryService.getAll(pageNumber, pageSize).map(countryMapped::toDtoMini)));
     }
 
     @GetMapping("/{code}")
@@ -37,13 +39,14 @@ public class CountryController {
 
     @PostMapping
     public ResponseEntity<?> created(@Valid @RequestBody CountryInDto country) {
-        return ResponseEntity.ok(countryMapped.toDto(countryService.created(countryMapped.toModel(country))));
+        return ResponseEntity.ok(
+                countryMapped.toDto(countryService.created(countryMapped.toModel(country))));
     }
 
     @PutMapping("/{code}")
     public ResponseEntity<?> update(@PathVariable String code, @Valid @RequestBody CountryUpdateDto country) {
-        return ResponseEntity.ok(countryMapped.toDto(
-                countryService.update(code, countryMapped.toModelUpdate(country))));
+        return ResponseEntity.ok(
+                countryMapped.toDto(countryService.update(code, countryMapped.toModelUpdate(country))));
     }
 
     @DeleteMapping("/{code}")

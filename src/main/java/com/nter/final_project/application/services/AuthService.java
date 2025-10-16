@@ -11,8 +11,11 @@ public interface AuthService {
     AuthToken register(ApiUser user);
 
     AuthToken refresh(HttpServletRequest request);
+
     void havePermision(String email);
+
     void havePermision(Long id);
+
     ApiUser currentUser();
 
 }
