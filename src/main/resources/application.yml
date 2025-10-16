@@ -4,7 +4,7 @@ spring:
   application:
     name: final_project
   datasource:
-    url: jdbc:postgresql://localhost:5432/javadb
+    url: jdbc:postgresql://postgres:5432/javadb
     username: postgres
     password: contrasena
   jpa:

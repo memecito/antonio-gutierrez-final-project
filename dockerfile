@@ -1,5 +1,5 @@
 FROM openjdk:17-jdk-alpine AS build
-COPY ./target/final-project-0.0.1-SNAPSHOT.jar java-app.jar
+COPY ./target/Proyecto-Final-0.0.1-SNAPSHOT.jar java-app.jar
 WORKDIR /app
 COPY . .
 RUN ./mvnw clean package -DskipTests
