@@ -10,6 +10,7 @@ import com.nter.final_project.persistence.entity.Order;
 import com.nter.final_project.persistence.entity.Product;
 import com.nter.final_project.persistence.entity.StatusOrder;
 import com.nter.final_project.persistence.repository.OrderRepository;
+import io.swagger.annotations.Api;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,9 +74,8 @@ class OrderServiceImplTest {
         Pageable pageable = PageRequest.of(0, 5);
         Page<Order> orders = DataProviders.pageOrders();
         ApiUser user = DataProviders.userMock();
-        when(userService.getByEmail(anyString())).thenReturn(user);
 
-        when(authService.currentUser().getEmail()).thenReturn(user.getEmail());
+        when(authService.currentUser()).thenReturn(user);
         when(orderRepository.findByUser_Email(user.getEmail(), pageable)).thenReturn(orders);
 
         Page<Order> ordersResult = orderService.getUsersOrders(0, 5);
@@ -104,6 +104,7 @@ class OrderServiceImplTest {
     void testGetById() {
         Long id = 1L;
         ApiUser user= DataProviders.userMock();
+        user.setId(id);
         user.setEmail("mail");
         Order order=DataProviders.orderMock();
         order.setUser(user);
@@ -173,6 +174,7 @@ class OrderServiceImplTest {
         order.setOrderProducts(DataProviders.orderProductSetMock());
 
         doNothing().when(authService).havePermision(anyLong());
+        when(authService.currentUser()).thenReturn(user);
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
 
@@ -186,10 +188,12 @@ class OrderServiceImplTest {
     @Test
     void testUpdateStatus() {
         Order order = DataProviders.orderMock();
+        ApiUser user= DataProviders.userMock();
+        order.setUser(user);
         order.setStatus(StatusOrder.PENDING_PAYMENT);
         String status = StatusOrder.PROCESSING.toString();
 
-
+        when(authService.currentUser()).thenReturn(user);
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
         Order orderResult = orderService.updateStatus(1L, status);
@@ -203,16 +207,17 @@ class OrderServiceImplTest {
 
         Long id = 1L;
         ApiUser user= DataProviders.userMock();
+        user.setId(id);
         user.setEmail("mail");
         Order order=DataProviders.orderMock();
         order.setUser(user);
         order.setStatus(StatusOrder.CANCELLED);
 
+        doNothing().when(authService).havePermision(anyLong());
 
         when(orderRepository.findById(anyLong()))
                 .thenReturn(Optional.of(order));
         when(authService.currentUser()).thenReturn(user);
-        doNothing().when(authService).havePermision(anyLong());
         when(orderRepository.save(any(Order.class))).thenReturn(null);
 
         orderService.deleted(id);

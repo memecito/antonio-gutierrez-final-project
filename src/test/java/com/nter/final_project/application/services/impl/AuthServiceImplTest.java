@@ -157,7 +157,7 @@ class AuthServiceImplTest {
     void testHavePermissionId() {
         Long id=1L;
         ApiUser user= DataProviders.userMock();
-        user.setId(id);
+        user.setId(2l);
         user.setAdmin(false);
 
         doReturn(user).when(authService).currentUser();
@@ -170,7 +170,7 @@ class AuthServiceImplTest {
         Long id=1L;
         ApiUser user= DataProviders.userMock();
         user.setId(id);
-        user.setAdmin(true);
+        user.setAdmin(false);
 
         doReturn(user).when(authService).currentUser();
 
@@ -183,9 +183,9 @@ class AuthServiceImplTest {
         Long id=1L;
         String mail= "mail@mail.com";
         ApiUser user= DataProviders.userMock();
-        user.setId(id);
+        user.setId(2l);
         user.setAdmin(false);
-        user.setEmail(mail);
+        user.setEmail("mail");
 
         doReturn(user).when(authService).currentUser();
 
@@ -199,7 +199,7 @@ class AuthServiceImplTest {
         String mail= "mail@mail.com";
         ApiUser user= DataProviders.userMock();
         user.setId(id);
-        user.setAdmin(true);
+        user.setAdmin(false);
         user.setEmail("rue@mail");
 
         doReturn(user).when(authService).currentUser();
