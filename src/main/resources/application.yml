@@ -1,10 +1,13 @@
 server:
   port: 8080
 spring:
+  sql:
+    init:
+      mode: always
   application:
     name: final_project
   datasource:
-    url: jdbc:postgresql://postgres:5432/javadb
+    url: jdbc:postgresql://localhost:5432/javadb
     username: postgres
     password: contrasena
   jpa:
@@ -20,6 +23,9 @@ security:
     refresh-token-expiration: 604800000
 
 loggin:
+  level:
+    org.springframework.jdbc.datasource.init.ScriptUtils: DEBUG
+    org.hibernate.SQL: DEBUG
   file:
     path:
       logs/
